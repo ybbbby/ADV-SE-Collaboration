@@ -69,8 +69,8 @@ export default function App() {
           Example text
         </Typography>
         <ProTip />
-        <Copyright />
         <SimpleMap />
+        <Copyright />
       </Box>
     </Container>
   </div>
