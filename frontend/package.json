@@ -3,17 +3,20 @@
   "version": "4.0.0",
   "private": true,
   "scripts": {
-    "start": "PORT=2000 react-scripts start",
+    "start": "set PORT=3000 &&  react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "@material-ui/core": "latest",
+    "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^5.0.0-alpha.14",
     "clsx": "latest",
-    "react": "latest",
-    "react-dom": "latest",
+    "core-js": "^3.6.5",
+    "google-map-react": "^2.1.9",
+    "google-maps-react": "^2.0.6",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0",
     "react-scripts": "latest"
   },
   "browserslist": {

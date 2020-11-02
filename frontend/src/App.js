@@ -12,6 +12,7 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/core/styles';
 import ProTip from './ProTip';
+import SimpleMap from './map';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,7 +43,7 @@ export default function App() {
   const classes = useStyles();
 
   return (
-    <div>
+  <div>
     <AppBar position="static">
     <Toolbar>
       <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
@@ -61,6 +62,7 @@ export default function App() {
         </Typography>
         <ProTip />
         <Copyright />
+        <SimpleMap />
       </Box>
     </Container>
   </div>
