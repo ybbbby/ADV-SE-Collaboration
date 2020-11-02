@@ -2,13 +2,10 @@ import functools
 import os
 
 import flask
-from flask_cors import CORS, cross_origin
 
 from authlib.client import OAuth2Session
 import google.oauth2.credentials
 import googleapiclient.discovery
-
-
 
 ACCESS_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 AUTHORIZATION_URL = 'https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&prompt=consent'
@@ -24,7 +21,6 @@ AUTH_TOKEN_KEY = 'auth_token'
 AUTH_STATE_KEY = 'auth_state'
 
 app = flask.Blueprint('google_auth', __name__)
-CORS(app)
 
 def is_logged_in():
     return True if AUTH_TOKEN_KEY in flask.session else False
