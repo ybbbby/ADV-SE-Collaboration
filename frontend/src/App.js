@@ -42,6 +42,14 @@ function Copyright() {
 export default function App() {
   const classes = useStyles();
 
+  function login() {
+    fetch('/google/login', {
+      method: "GET"
+    })
+      .then(response => response.text())
+      .then(data => window.location.href = data);
+  }
+
   return (
   <div>
     <AppBar position="static">
@@ -52,7 +60,7 @@ export default function App() {
       <Typography variant="h6" className={classes.title}>
         YesOK
       </Typography>
-      <Button color="inherit" >Login</Button>
+      <Button color="inherit" onClick={login}>Login</Button>
     </Toolbar>
     </AppBar>
     <Container maxWidth="sm">
