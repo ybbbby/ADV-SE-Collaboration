@@ -6,3 +6,10 @@
 
 - install ESlink and Prettier extensions on VSCode
 - set Prettier as the Default Formatter in Settings
+
+## Test and coverage
+
+- All test files should name with the pattern xx.spec.js
+- Run `yarn test` to run all the tests
+- The coverage would be displayed
+- Jest settings are in jest.config.json

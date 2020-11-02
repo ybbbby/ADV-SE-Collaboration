@@ -11,8 +11,8 @@ import {
 } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
 import { makeStyles } from '@material-ui/core/styles'
-import ProTip from './ProTip'
-import SimpleMap from './map'
+import ProTip from './components/ProTip/ProTip'
+import SimpleMap from './components/GoogleMap/map'
 
 const useStyles = makeStyles((theme) => ({
   root: {
