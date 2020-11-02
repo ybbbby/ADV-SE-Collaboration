@@ -1,18 +1,17 @@
-import React, { Component } from 'react';
-import GoogleMapReact from 'google-map-react';
-import Crendential from './credential';
-import Marker from './Marker';
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
- 
+import React, { Component } from 'react'
+import GoogleMapReact from 'google-map-react'
+import Crendential from './credential'
+import Marker from './Marker'
+
 class SimpleMap extends Component {
   static defaultProps = {
     center: {
       lat: 59.95,
-      lng: 30.33
+      lng: 30.33,
     },
-    zoom: 11
-  };
- 
+    zoom: 11,
+  }
+
   render() {
     return (
       // Important! Always set the container height explicitly
@@ -22,20 +21,12 @@ class SimpleMap extends Component {
           defaultCenter={this.props.center}
           defaultZoom={this.props.zoom}
         >
-          <Marker
-            lat={59.966513}
-            lng={30.337844}
-            name={'asdas'}
-          />
-          <Marker
-            lat={59.955414}
-            lng={30.337844}
-            name={'Here I amaaa'}
-          />
+          <Marker lat={59.966513} lng={30.337844} name={'asdas'} />
+          <Marker lat={59.955414} lng={30.337844} name={'Here I amaaa'} />
         </GoogleMapReact>
       </div>
-    );
+    )
   }
 }
- 
-export default SimpleMap;
+
+export default SimpleMap

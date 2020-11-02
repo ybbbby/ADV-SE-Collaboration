@@ -1,25 +1,8 @@
-# Create React App example
+# Frontend
 
-## How to use
+## Code style
 
-Download the example [or clone the repo](https://github.com/mui-org/material-ui):
+[How To Format Code with Prettier in Visual Studio Code?](https://www.digitalocean.com/community/tutorials/how-to-format-code-with-prettier-in-visual-studio-code#:~:text=To%20open%20the%20command%20palette,and%20then%20choose%20Format%20Document.&text=Then%20choose%20Prettier%20%2D%20Code%20Formatter.)
 
-```sh
-curl https://codeload.github.com/mui-org/material-ui/tar.gz/master | tar -xz --strip=2 material-ui-master/examples/create-react-app
-cd create-react-app
-```
-
-Install it and run:
-
-```sh
-npm install
-npm start
-```
-
-or:
-
-[![Edit on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/mui-org/material-ui/tree/master/examples/create-react-app)
-
-## The idea behind the example
-
-This example demonstrates how you can use [Create React App](https://github.com/facebookincubator/create-react-app).
+- install ESlink and Prettier extensions on VSCode
+- set Prettier as the Default Formatter in Settings
