@@ -11,9 +11,10 @@ import googleapiclient.discovery
 import google_auth
 
 app = flask.Flask(__name__)
-app.secret_key = os.environ.get("FN_FLASK_SECRET_KEY", default=False)
 
+app.secret_key = os.environ.get("FN_FLASK_SECRET_KEY", default=False)
 app.register_blueprint(google_auth.app)
+
 
 @app.route('/')
 def index():
@@ -22,3 +23,4 @@ def index():
         return '<div>You are currently logged in as ' + user_info['given_name'] + '<div><pre>' + json.dumps(user_info, indent=4) + "</pre>"
 
     return 'You are not currently logged in.'
+    # return app.send_static_file('index.html')
