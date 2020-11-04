@@ -18,6 +18,7 @@
     "jest": "26.6.0",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "latest"
   },
   "browserslist": {

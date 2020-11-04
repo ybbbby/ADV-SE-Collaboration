@@ -12,7 +12,8 @@ import {
 import MenuIcon from '@material-ui/icons/Menu'
 import { makeStyles } from '@material-ui/core/styles'
 import ProTip from './components/ProTip/ProTip'
-import SimpleMap from './components/GoogleMap/map'
+import { BrowserRouter as Router } from 'react-router-dom'
+import Routes from './routes'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,7 +32,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+        YesOK
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -52,34 +53,36 @@ export default function App() {
 
   return (
     <div>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            YesOK
-          </Typography>
-          <Button color="inherit" onClick={login}>
-            Login
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <Container maxWidth="sm">
-        <Box my={4}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Example text
-          </Typography>
-          <ProTip />
-          <SimpleMap />
-          <Copyright />
-        </Box>
-      </Container>
+      <Router>
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="menu"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              YesOK
+            </Typography>
+            <Button color="inherit" onClick={login}>
+              Login
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <Container maxWidth="sm">
+          <Box my={4}>
+            <Typography variant="h4" component="h1" gutterBottom>
+              Example text
+            </Typography>
+            <ProTip />
+            <Routes />
+            <Copyright />
+          </Box>
+        </Container>
+      </Router>
     </div>
   )
 }
