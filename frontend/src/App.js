@@ -7,23 +7,26 @@ import {
   Box,
   Toolbar,
   Typography,
-  IconButton,
+  Grid,
 } from '@material-ui/core'
-import MenuIcon from '@material-ui/icons/Menu'
 import { makeStyles } from '@material-ui/core/styles'
-import ProTip from './components/ProTip/ProTip'
 import { BrowserRouter as Router } from 'react-router-dom'
+import UserCard from './components/UserCard/UserCard'
+import Categories from './components/Categories/Categories'
 import Routes from './routes'
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
   menuButton: {
     marginRight: theme.spacing(2),
   },
   title: {
     flexGrow: 1,
+  },
+  container: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(12, 1fr)',
+    gridGap: theme.spacing(3),
+    backgroundColor: '#fafafa',
   },
 }))
 
@@ -56,14 +59,6 @@ export default function App() {
       <Router>
         <AppBar position="static">
           <Toolbar>
-            <IconButton
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="menu"
-            >
-              <MenuIcon />
-            </IconButton>
             <Typography variant="h6" className={classes.title}>
               YesOK
             </Typography>
@@ -72,13 +67,17 @@ export default function App() {
             </Button>
           </Toolbar>
         </AppBar>
-        <Container maxWidth="sm">
+        <Container>
           <Box my={4}>
-            <Typography variant="h4" component="h1" gutterBottom>
-              Example text
-            </Typography>
-            <ProTip />
-            <Routes />
+            <Grid container spacing={3}>
+              <Grid item xs={4}>
+                <UserCard />
+                <Categories />
+              </Grid>
+              <Grid item xs={8}>
+                <Routes />
+              </Grid>
+            </Grid>
             <Copyright />
           </Box>
         </Container>

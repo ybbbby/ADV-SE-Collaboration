@@ -24,3 +24,11 @@ def index():
 
     return 'You are not currently logged in.'
     # return app.send_static_file('index.html')
+
+@app.route('/userinfo')
+def userinfo():
+    if google_auth.is_logged_in():
+        user_info = google_auth.get_user_info()
+        return json.dumps(user_info, indent = 4)
+
+    return "NOUSER"

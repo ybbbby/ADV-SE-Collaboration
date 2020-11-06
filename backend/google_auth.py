@@ -59,7 +59,6 @@ def no_cache(view):
     return functools.update_wrapper(no_cache_impl, view)
 
 @app.route('/google/login', methods = ['GET'])
-@cross_origin()
 def login():
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
                             scope=AUTHORIZATION_SCOPE,
@@ -91,11 +90,7 @@ def google_auth_redirect():
 
     flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
 
-    user_info = "?user="
-    if is_logged_in():
-        user_info += get_user_info()['given_name']
-
-    return flask.redirect(BASE_URI + user_info, code=302)
+    return flask.redirect(BASE_URI, code=302)
 
 @app.route('/google/logout')
 def logout():
