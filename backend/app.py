@@ -49,14 +49,14 @@ def create_user():
 #     return "success"
 
 # Test create event
-@app.route('/event/new', methods=['POST'])
+@app.route('/user/event/new', methods=['POST'])
 def test():
     address = request.form.get("address")
     e = Event('aa@cc.com', '110st bb', '10022', datetime.datetime.now(), 21.2452, 11.2345)
     return Event.create_event(e)
 
 
-@app.route('/event/hosted', methods=['GET'])
+@app.route('/user/event/hosted', methods=['GET'])
 def get_all_created_events():
     #TODO: get email from session?
     email = request.args.get('email')

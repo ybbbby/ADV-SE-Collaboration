@@ -4,6 +4,7 @@ import random
 import time
 
 import utils.database_connector as db_connector
+from models.Like import Like
 
 
 class Event:
@@ -39,6 +40,9 @@ class Event:
 
     @staticmethod
     def get_all_event_created_by_user(email: str):
+        likes = json.loads(Like.get_like_by_user(email))
+        liked_events = set(like['event'] for like in likes)
+
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
         query = ("SELECT * FROM `event` WHERE host='" + email + "'")
@@ -51,7 +55,9 @@ class Event:
             newEvent.description = description
             newEvent.image = image
             newEvent.num_likes = num_likes
-            # TODO: query in JOIN table to find if user has liked the event
+            if event_id in liked_events:
+                newEvent.liked = True
+            newEvent.isAttend = True
             events.append(newEvent)
         cursor.close()
         cnx.close()
@@ -71,7 +77,8 @@ class Event:
             newEvent.description = description
             newEvent.image = image
             newEvent.num_likes = num_likes
-            # TODO: query in JOIN table to find if user has liked the event
+            newEvent.liked = Like.exist(host, event_id)
+            newEvent.isAttend = True
         cursor.close()
         cnx.close()
         return json.dumps(newEvent.__dict__, use_decimal=True, default=str)
