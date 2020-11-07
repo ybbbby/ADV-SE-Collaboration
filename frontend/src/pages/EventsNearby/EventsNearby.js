@@ -1,31 +1,29 @@
 import React from 'react'
-import { Typography, Paper } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-    whiteSpace: 'nowrap',
-    marginBottom: theme.spacing(1),
-  },
-}))
+import { Typography, Container, Box, Grid } from '@material-ui/core'
+import EventCard from '../../components/EventCard/EventCard'
 
 export default function EventsNearby({ match }) {
   const {
     params: { user },
   } = match
 
-  const classes = useStyles()
-
   return (
     <div>
-      <Paper className={classes.paper}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          EventsNearby user: {user}
-        </Typography>
-      </Paper>
+      <Typography variant="h5" component="h5">
+        EventsNearby user: {user}
+      </Typography>
+      <Container>
+        <Box my={4}>
+          <Grid container spacing={3}>
+            <Grid item xs={6}>
+              <EventCard />
+            </Grid>
+            <Grid item xs={6}>
+              <EventCard />
+            </Grid>
+          </Grid>
+        </Box>
+      </Container>
     </div>
   )
 }

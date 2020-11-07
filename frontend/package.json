@@ -3,7 +3,7 @@
   "version": "4.0.0",
   "private": true,
   "scripts": {
-    "start": "set PORT=2000 && react-scripts start",
+    "start": "PORT=2000 react-scripts start",
     "build": "react-scripts build",
     "test": "jest --config ./jest.config.json",
     "eject": "react-scripts eject"
@@ -11,12 +11,14 @@
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^5.0.0-alpha.14",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "clsx": "latest",
     "core-js": "^3.6.5",
     "google-map-react": "^2.1.9",
     "google-maps-react": "^2.0.6",
     "jest": "26.6.0",
     "react": "^16.8.0",
+    "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.8.0",
     "react-places-autocomplete": "^7.3.0",
     "react-router-dom": "^5.2.0",

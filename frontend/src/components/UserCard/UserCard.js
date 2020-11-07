@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Typography, Card, CardContent, Avatar } from '@material-ui/core'
 import { withStyles } from '@material-ui/styles'
-import { deepOrange } from '@material-ui/core/colors'
 
 const styles = (theme) => ({
   root: {

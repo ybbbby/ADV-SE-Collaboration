@@ -32,16 +32,16 @@ export default function Categories() {
 
   return (
     <List component="nav" className={classes.root}>
-      <Link to="/map" className={classes.link}>
+      <Link to="/" className={classes.link}>
         <ListItem button>
           <ListItemIcon>
             <FavoriteIcon />
           </ListItemIcon>
-          <ListItemText primary="Saved" />
+          <ListItemText primary="Favourites" />
         </ListItem>
       </Link>
       <Divider />
-      <Link to="/" className={classes.link}>
+      <Link to="/eventsnearby/togo" className={classes.link}>
         <ListItem button>
           <ListItemIcon>
             <FormatListNumberedIcon />
@@ -50,7 +50,7 @@ export default function Categories() {
         </ListItem>
       </Link>
       <Divider />
-      <Link to="/eventsnearby/test" className={classes.link}>
+      <Link to="/eventsnearby/history" className={classes.link}>
         <ListItem button>
           <ListItemIcon>
             <HistoryIcon />
