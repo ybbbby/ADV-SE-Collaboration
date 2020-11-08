@@ -10,7 +10,6 @@ import {
   Button,
   IconButton,
   Snackbar,
-  Dialog,
 } from '@material-ui/core'
 import MuiAlert from '@material-ui/lab/Alert'
 import FavoriteIcon from '@material-ui/icons/Favorite'
@@ -26,7 +25,7 @@ function Alert(props) {
 
 const styles = (theme) => ({
   root: {
-    borderRadius: 0,
+    borderRadius: '10px',
     boxShadow:
       '0px 0px 0px -1px rgba(0,0,0,0.2), -2px -1px 1px -1px rgba(0,0,0,0.14), 0px 1px 4px 1px rgba(0,0,0,0.12);',
   },
@@ -115,16 +114,11 @@ class EventCard extends Component {
             </Link>
           </CardActions>
         </Card>
-        <Dialog
+        <ShareModal
+          url="https://www.google.com/"
+          handleClose={this.closeShare}
           open={this.state.shareModalOpen}
-          onClose={this.closeShare}
-          aria-labelledby="form-dialog-title"
-        >
-          <ShareModal
-            url="https://www.google.com/"
-            handleClose={this.closeShare}
-          />
-        </Dialog>
+        />
         <Snackbar
           open={this.state.alertOpen}
           autoHideDuration={3000}

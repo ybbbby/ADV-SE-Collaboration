@@ -59,6 +59,7 @@ def no_cache(view):
     return functools.update_wrapper(no_cache_impl, view)
 
 @app.route('/google/login', methods = ['GET'])
+@no_cache
 def login():
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
                             scope=AUTHORIZATION_SCOPE,
@@ -72,6 +73,7 @@ def login():
     return uri
 
 @app.route('/google/auth')
+@no_cache
 def google_auth_redirect():
     req_state = flask.request.args.get('state', default=None, type=None)
 
@@ -93,6 +95,7 @@ def google_auth_redirect():
     return flask.redirect(BASE_URI, code=302)
 
 @app.route('/google/logout')
+@no_cache
 def logout():
     flask.session.pop(AUTH_TOKEN_KEY, None)
     flask.session.pop(AUTH_STATE_KEY, None)

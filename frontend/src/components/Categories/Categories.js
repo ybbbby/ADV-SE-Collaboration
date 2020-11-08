@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   List,
@@ -10,16 +11,15 @@ import {
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import HistoryIcon from '@material-ui/icons/History'
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import { Link } from 'react-router-dom'
+import LoginModal from '../LoginModal/LoginModal'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    backgroundColor: theme.palette.background.paper,
     padding: 0,
-    marginTop: theme.spacing(3),
-    boxShadow:
-      '0px 0px 0px -1px rgba(0,0,0,0.2), -2px -1px 1px -1px rgba(0,0,0,0.14), 0px 1px 4px 1px rgba(0,0,0,0.12)',
+    marginTop: theme.spacing(1.5),
   },
   link: {
     textDecoration: 'none',
@@ -27,13 +27,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function Categories() {
+export default function Categories(props) {
   const classes = useStyles()
+  const { isLogin } = props
+  const [openLogin, setOpenLogin] = React.useState(false)
+
+  const handleClick = () => {
+    if (!isLogin) {
+      setOpenLogin(true)
+    }
+  }
+
+  const logout = () => {
+    fetch('/google/logout', {
+      method: 'GET',
+    })
+      .then((response) => (window.location.href = '/'))
+      .catch((error) => {
+        console.error(error)
+      })
+  }
 
   return (
     <List component="nav" className={classes.root}>
-      <Link to="/" className={classes.link}>
-        <ListItem button>
+      <Link to={isLogin ? '/' : '#'} className={classes.link}>
+        <ListItem button onClick={handleClick}>
           <ListItemIcon>
             <FavoriteIcon />
           </ListItemIcon>
@@ -41,8 +59,8 @@ export default function Categories() {
         </ListItem>
       </Link>
       <Divider />
-      <Link to="/eventsnearby/togo" className={classes.link}>
-        <ListItem button>
+      <Link to={isLogin ? '/eventsnearby/togo' : '#'} className={classes.link}>
+        <ListItem button onClick={handleClick}>
           <ListItemIcon>
             <FormatListNumberedIcon />
           </ListItemIcon>
@@ -50,14 +68,34 @@ export default function Categories() {
         </ListItem>
       </Link>
       <Divider />
-      <Link to="/eventsnearby/history" className={classes.link}>
-        <ListItem button>
+      <Link
+        to={isLogin ? '/eventsnearby/history' : '#'}
+        className={classes.link}
+      >
+        <ListItem button onClick={handleClick}>
           <ListItemIcon>
             <HistoryIcon />
           </ListItemIcon>
           <ListItemText primary="History" />
         </ListItem>
       </Link>
+      {isLogin ? (
+        <>
+          <Divider />
+          <ListItem button onClick={logout}>
+            <ListItemIcon>
+              <ExitToAppIcon />
+            </ListItemIcon>
+            <ListItemText primary="Logout" />
+          </ListItem>
+        </>
+      ) : (
+        <LoginModal handleClose={() => setOpenLogin(false)} open={openLogin} />
+      )}
     </List>
   )
+}
+
+Categories.propTypes = {
+  isLogin: PropTypes.bool.isRequired,
 }
