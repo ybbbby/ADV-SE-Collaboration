@@ -1,15 +1,10 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import { Typography, Card, CardContent, Avatar } from '@material-ui/core'
-import { withStyles } from '@material-ui/styles'
+import { Typography, Avatar, Button } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import LoginModal from '../LoginModal/LoginModal'
 
-const styles = (theme) => ({
-  root: {
-    textAlign: 'center',
-    borderRadius: 0,
-    boxShadow:
-      '0px 0px 0px -1px rgba(0,0,0,0.2), -2px -1px 1px -1px rgba(0,0,0,0.14), 0px 1px 4px 1px rgba(0,0,0,0.12);',
-  },
+const useStyles = makeStyles((theme) => ({
   avatar: {
     margin: '10px auto',
     width: theme.spacing(9),
@@ -20,57 +15,47 @@ const styles = (theme) => ({
   },
   email: {
     fontSize: 14,
+    marginBottom: theme.spacing(1.5),
   },
-})
+}))
 
-class UserCard extends Component {
-  constructor(props) {
-    super(props)
+function UserCard(props) {
+  const classes = useStyles()
+  const { isLogin, data } = props
+  const [openLogin, setOpenLogin] = React.useState(false)
 
-    this.state = {
-      fullname: '',
-      email: '',
-      avatar: '',
-    }
-  }
-
-  componentWillMount() {
-    fetch('/userinfo', {
-      method: 'GET',
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({
-          fullname: data['name'],
-          email: data['email'],
-          avatar: data['picture'],
-        })
-      })
-      .catch((error) => {
-        console.error(error)
-      })
-  }
-
-  render() {
-    const { classes } = this.props
-    return (
-      <Card className={classes.root}>
-        <CardContent>
-          <Avatar className={classes.avatar} src={this.state.avatar} />
-          <Typography className={classes.username}>
-            {this.state.fullname}
-          </Typography>
+  return (
+    <>
+      {isLogin ? (
+        <>
+          <Avatar className={classes.avatar} src={data['picture']} />
+          <Typography className={classes.username}>{data['name']}</Typography>
           <Typography className={classes.email} color="textSecondary">
-            {this.state.email}
+            {data['email']}
           </Typography>
-        </CardContent>
-      </Card>
-    )
-  }
+          <Button variant="outlined" color="primary">
+            Create event
+          </Button>
+        </>
+      ) : (
+        <>
+          <Avatar className={classes.avatar} />
+          <Button color="inherit" onClick={() => setOpenLogin(true)}>
+            Login
+          </Button>
+          <LoginModal
+            handleClose={() => setOpenLogin(false)}
+            open={openLogin}
+          />
+        </>
+      )}
+    </>
+  )
 }
 
 UserCard.propTypes = {
-  classes: PropTypes.object.isRequired,
+  isLogin: PropTypes.bool.isRequired,
+  data: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(UserCard)
+export default UserCard

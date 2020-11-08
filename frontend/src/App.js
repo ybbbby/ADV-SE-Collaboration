@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   AppBar,
-  Button,
   Container,
   Link,
   Box,
   Toolbar,
   Typography,
   Grid,
+  Card,
+  CardContent,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { BrowserRouter as Router } from 'react-router-dom'
@@ -27,6 +28,22 @@ const useStyles = makeStyles((theme) => ({
     gridTemplateColumns: 'repeat(12, 1fr)',
     gridGap: theme.spacing(3),
   },
+  appBar: {
+    textAlign: 'center',
+    boxShadow: 'inset 0px -1px 0px #f3f4f4',
+  },
+  toolBar: {
+    minHeight: theme.spacing(5.5),
+  },
+  body: {
+    paddingTop: theme.spacing(4),
+  },
+  card: {
+    textAlign: 'center',
+    borderRadius: '10px',
+    boxShadow:
+      '0px 0px 0px -1px rgba(0,0,0,0.2), -2px -1px 1px -1px rgba(0,0,0,0.14), 0px 1px 4px 1px rgba(0,0,0,0.12);',
+  },
 }))
 
 function Copyright() {
@@ -44,36 +61,49 @@ function Copyright() {
 
 export default function App() {
   const classes = useStyles()
+  const [userData, setUserData] = useState({ picture: '', name: '', email: '' })
+  const [isLogin, setLogin] = useState(false)
 
-  function login() {
-    fetch('/google/login', {
+  useEffect(() => {
+    fetch('/userinfo', {
       method: 'GET',
     })
-      .then((response) => response.text())
-      .then((data) => (window.location.href = data))
-  }
+      .then((response) => response.json())
+      .then((data) => {
+        setUserData(data)
+        setLogin(true)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }, [])
 
   return (
     <div>
       <Router>
-        <AppBar position="static">
-          <Toolbar>
+        <AppBar
+          position="static"
+          color={'transparent'}
+          className={classes.appBar}
+        >
+          <Toolbar className={classes.toolBar}>
             <Typography variant="h6" className={classes.title}>
               YesOK
             </Typography>
-            <Button color="inherit" onClick={login}>
-              Login
-            </Button>
           </Toolbar>
         </AppBar>
-        <Container>
-          <Box my={4}>
+        <Container className={classes.body}>
+          <Box>
             <Grid container spacing={3}>
-              <Grid item xs={4}>
-                <UserCard />
-                <Categories />
+              <Grid item xs={3}>
+                <Card className={classes.card}>
+                  <CardContent>
+                    <UserCard data={userData} isLogin={isLogin} />
+                    <Categories isLogin={isLogin} />
+                  </CardContent>
+                </Card>
               </Grid>
-              <Grid item xs={8}>
+              <Grid item xs={9}>
                 <Routes />
               </Grid>
             </Grid>
