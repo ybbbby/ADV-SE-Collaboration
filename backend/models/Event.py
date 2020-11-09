@@ -8,8 +8,9 @@ from models.Like import Like
 
 
 class Event:
-    def __init__(self, user: str, address: str, zipcode: str, time: datetime, longitude: float, latitude: float):
+    def __init__(self, user: str, name: str, address: str, zipcode: str, time: datetime, longitude: float, latitude: float):
         self.id = None
+        self.name = name
         self.user_email = user
         self.address = address
         self.longitude = longitude
@@ -27,10 +28,10 @@ class Event:
     def create_event(event: 'Event'):
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
-        sql = "INSERT INTO `event` (`id`, `host`, `address`, `longitude`, `latitude`, `zipcode`, `time`, `description`, `image`, `num_likes`) " \
-              "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
+        sql = "INSERT INTO `event` (`id`, `name`, `host`, `address`, `longitude`, `latitude`, `zipcode`, `time`, `description`, `image`, `num_likes`) " \
+              "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
         event_id = str(round(time.time() * 1000)) + str(random.randint(0, 1000))
-        event_data = (event_id, event.user_email, event.address, event.longitude, event.latitude,
+        event_data = (event_id, event.name, event.user_email, event.address, event.longitude, event.latitude,
                       event.zipcode, event.time.strftime('%Y-%m-%d %H:%M:%S'), event.description, event.image, event.num_likes)
         cursor.execute(sql, event_data)
         cnx.commit()
@@ -48,8 +49,8 @@ class Event:
         query = ("SELECT * FROM `event` WHERE host='" + email + "'")
         cursor.execute(query)
         events = []
-        for (event_id, host, address, longitude, latitude, zipcode, time, description, image, num_likes) in cursor:
-            newEvent = Event(user=host, address=address, longitude=longitude, latitude=latitude, zipcode=zipcode,
+        for (event_id, name, host, address, longitude, latitude, zipcode, time, description, image, num_likes) in cursor:
+            newEvent = Event(user=host, name=name, address=address, longitude=longitude, latitude=latitude, zipcode=zipcode,
                              time=datetime.datetime.strptime(str(time), "%Y-%m-%d %H:%M:%S"))
             newEvent.id = event_id
             newEvent.description = description
@@ -70,8 +71,8 @@ class Event:
         query = ("SELECT * FROM `event` WHERE id='" + event_id + "'")
         cursor.execute(query)
         newEvent = None
-        for (event_id, host, address, longitude, latitude, zipcode, time, description, image, num_likes) in cursor:
-            newEvent = Event(user=host, address=address, longitude=longitude, latitude=latitude, zipcode=zipcode,
+        for (event_id, name, host, address, longitude, latitude, zipcode, time, description, image, num_likes) in cursor:
+            newEvent = Event(user=host, name=name, address=address, longitude=longitude, latitude=latitude, zipcode=zipcode,
                              time=datetime.datetime.strptime(str(time), "%Y-%m-%d %H:%M:%S"))
             newEvent.id = event_id
             newEvent.description = description
