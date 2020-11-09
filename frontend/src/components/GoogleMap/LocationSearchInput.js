@@ -4,19 +4,20 @@ import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from 'react-places-autocomplete'
+import { TextField } from '@material-ui/core'
 
 class LocationSearchInput extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { address: '', gmapsLoaded: false }
+    this.state = { gmapsLoaded: false }
   }
 
   handleChange = (address) => {
-    this.setState({ address })
+    this.props.setAddress(address)
   }
 
   handleSelect = (selected) => {
-    this.setState({ address: selected })
+    this.props.setAddress(selected)
     console.log(selected)
     geocodeByAddress(selected)
       .then((results) => getLatLng(results[0]))
@@ -41,12 +42,13 @@ class LocationSearchInput extends React.Component {
       .querySelector(`body`)
       .insertAdjacentElement(`beforeend`, gmapScriptEl)
   }
+
   render() {
     return (
-      <div style={{ height: '100vh', width: '100%' }}>
+      <div style={{ height: '80px', width: '100%' }}>
         {this.state.gmapsLoaded && (
           <PlacesAutocomplete
-            value={this.state.address}
+            value={this.props.address}
             onChange={this.handleChange}
             onSelect={this.handleSelect}
           >
@@ -57,14 +59,25 @@ class LocationSearchInput extends React.Component {
               loading,
             }) => (
               <div>
-                <input
+                <TextField
                   id="Iamtheonlysearchbar"
+                  required
+                  margin="normal"
+                  label="Location"
+                  fullWidth
                   {...getInputProps({
                     placeholder: 'Search Places ...',
                     className: 'location-search-input',
                   })}
                 />
-                <div className="autocomplete-dropdown-container">
+                <div
+                  className="autocomplete-dropdown-container"
+                  style={{
+                    zIndex: 999,
+                    position: 'relative',
+                    backgroundColor: 'white',
+                  }}
+                >
                   {loading && <div>Loading...</div>}
                   {suggestions.map((suggestion, i) => {
                     const className = suggestion.active
@@ -77,6 +90,10 @@ class LocationSearchInput extends React.Component {
                     return (
                       <div
                         key={i}
+                        style={{
+                          zIndex: 999,
+                          backgroundColor: 'white',
+                        }}
                         {...getSuggestionItemProps(suggestion, {
                           className,
                           style,
