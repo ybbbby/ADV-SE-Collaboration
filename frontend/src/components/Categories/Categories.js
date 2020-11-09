@@ -59,7 +59,7 @@ export default function Categories(props) {
         </ListItem>
       </Link>
       <Divider />
-      <Link to={isLogin ? '/eventsnearby/togo' : '#'} className={classes.link}>
+      <Link to={isLogin ? '/events/togo' : '#'} className={classes.link}>
         <ListItem button onClick={handleClick}>
           <ListItemIcon>
             <FormatListNumberedIcon />
@@ -68,10 +68,7 @@ export default function Categories(props) {
         </ListItem>
       </Link>
       <Divider />
-      <Link
-        to={isLogin ? '/eventsnearby/history' : '#'}
-        className={classes.link}
-      >
+      <Link to={isLogin ? '/events/history' : '#'} className={classes.link}>
         <ListItem button onClick={handleClick}>
           <ListItemIcon>
             <HistoryIcon />

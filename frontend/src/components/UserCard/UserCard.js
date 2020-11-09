@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Typography, Avatar, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import LoginModal from '../LoginModal/LoginModal'
+import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -16,6 +17,9 @@ const useStyles = makeStyles((theme) => ({
   email: {
     fontSize: 14,
     marginBottom: theme.spacing(1.5),
+  },
+  link: {
+    textDecoration: 'none',
   },
 }))
 
@@ -33,9 +37,11 @@ function UserCard(props) {
           <Typography className={classes.email} color="textSecondary">
             {data['email']}
           </Typography>
-          <Button variant="outlined" color="primary">
-            Create event
-          </Button>
+          <Link to="/newevent" className={classes.link}>
+            <Button variant="outlined" color="primary">
+              Create event
+            </Button>
+          </Link>
         </>
       ) : (
         <>

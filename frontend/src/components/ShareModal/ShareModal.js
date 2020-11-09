@@ -91,8 +91,7 @@ function ShareModal(props) {
           <InputBase
             className={classes.input}
             placeholder={url}
-            disabled
-            inputProps={{ 'aria-label': 'event sharing link' }}
+            inputProps={{ 'aria-label': 'event sharing link', readOnly: true }}
           />
           <ClickAwayListener onClickAway={() => setCopied(false)}>
             <CopyToClipboard text={url} onCopy={() => setCopied(true)}>
