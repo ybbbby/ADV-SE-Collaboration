@@ -4,7 +4,9 @@ import random
 import time
 
 import utils.database_connector as db_connector
+from models.Comment import Comment
 from models.Like import Like
+from models.Join import Join
 
 
 class Event:
@@ -20,6 +22,7 @@ class Event:
         self.description = None
         self.image = None
         self.num_likes = 0
+        self.comments = None
         # unsure
         self.liked = False
         self.isAttend = False
@@ -62,10 +65,11 @@ class Event:
             events.append(newEvent)
         cursor.close()
         cnx.close()
-        return json.dumps([ob.__dict__ for ob in events], use_decimal=True, default=str)
+        # return json.dumps([ob.__dict__ for ob in events], use_decimal=True, default=str)
+        return events
 
     @staticmethod
-    def get_event_by_id(event_id: str):
+    def get_event_by_id(event_id: str, user=None):
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
         query = ("SELECT * FROM `event` WHERE id='" + event_id + "'")
@@ -79,12 +83,51 @@ class Event:
             newEvent.image = image
             newEvent.num_likes = num_likes
             newEvent.liked = Like.exist(host, event_id)
-            newEvent.isAttend = True
+            if user:
+                newEvent.isAttend = Join.user_is_attend(user=user, event=event_id)
+            else:
+                newEvent.isAttend = False
+            newEvent.comments = Comment.get_comment_by_event(event_id)
         cursor.close()
         cnx.close()
-        return json.dumps(newEvent.__dict__, use_decimal=True, default=str)
+        # return json.dumps(newEvent.__dict__, use_decimal=True, default=str)
+        return newEvent
 
+    @staticmethod
+    def delete_event_by_id(event_id: str):
+        cnx = db_connector.get_connection()
+        cursor = cnx.cursor()
+        sql = ("DELETE FROM `event` WHERE id='" + event_id + "'")
+        cursor.execute(sql)
+        cnx.commit()
+        cursor.close()
+        cnx.close()
 
+    @staticmethod
+    def update_event(event: 'Event'):
+        cnx = db_connector.get_connection()
+        cursor = cnx.cursor()
+        sql = ("""
+        UPDATE `event` SET `name`=%s, `address`=%s, `longitude`=%s, `latitude`=%s, `zipcode`=%s, 
+        `time`=%s, `description`=%s, `image` =%s WHERE (`id`=%s)
+        """)
+        event_data = (event.name, event.address, event.longitude, event.latitude, event.zipcode,
+                      event.time.strftime('%Y-%m-%d %H:%M:%S'), event.description, event.image, event.id)
+        cursor.execute(sql, event_data)
+        cnx.commit()
+        cursor.close()
+        cnx.close()
+
+    @staticmethod
+    def serialize_comment_in_event(obj):
+        if isinstance(obj, Comment):
+            return {"comment_id": obj.id,
+                    "comment_content": obj.content,
+                    "comment_time": obj.time,
+                    "comment_user": obj.user
+                    }
+        else:
+            return str(obj)
 
 
 
