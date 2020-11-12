@@ -16,6 +16,7 @@ TABLES['event'] = (
     '''
     CREATE TABLE IF NOT EXISTS `event` (
     `id` VARCHAR(25) NOT NULL,
+    `name` VARCHAR(50) NOT NULL,
     `host` VARCHAR(25) NOT NULL,
     `address` VARCHAR(50) NOT NULL,
     `longitude` DECIMAL(9,6) NOT NULL,
@@ -23,7 +24,7 @@ TABLES['event'] = (
     `zipcode` VARCHAR(10) NOT NULL,
     `time` DATETIME NOT NULL,
     `description` VARCHAR(200) NULL,
-    `image` BLOB NULL,
+    `image` VARCHAR(200) NULL,
     `num_likes` INT NOT NULL,
     PRIMARY KEY (`id`),
     INDEX `idx_zipcode` (`zipcode` ASC) VISIBLE,

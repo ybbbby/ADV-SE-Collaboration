@@ -45,3 +45,17 @@ class Join:
         cursor.close()
         cnx.close()
         return json.dumps([ob.__dict__ for ob in joins], use_decimal=True, default=str)
+
+    @staticmethod
+    def user_is_attend(user: str, event: str):
+        cnx = db_connector.get_connection()
+        cursor = cnx.cursor()
+        query = ("SELECT * FROM `join` WHERE event=%s AND user=%s")
+        params = (event, user)
+        cursor.execute(query, params)
+        find_result = False
+        for u,e in cursor:
+            find_result = True
+        cursor.close()
+        cnx.close()
+        return find_result
