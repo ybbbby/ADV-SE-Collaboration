@@ -12,7 +12,7 @@ import utils.create_all_tables as db_create_tables
 from models.Event import Event
 from models.User import User
 
-app = flask.Flask(__name__)
+app = Flask(__name__)
 
 app.secret_key = os.environ.get("FN_FLASK_SECRET_KEY", default=False)
 app.register_blueprint(google_auth.app)

@@ -1,4 +1,5 @@
 frontend/src/credential.js
+frontend/src/awsOptions.js
 backend/run.sh
 
 .DS_Store

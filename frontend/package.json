@@ -24,6 +24,7 @@
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.8.0",
     "react-images-upload": "^1.2.8",
+    "react-native-aws3": "^0.0.9",
     "react-places-autocomplete": "^7.3.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "latest"
