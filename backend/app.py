@@ -4,6 +4,7 @@ import os
 from flask import Flask, request
 from flask_api import status
 import traceback
+from flask_mail import Mail
 
 from authlib.client import OAuth2Session
 import google.oauth2.credentials
@@ -14,8 +15,16 @@ import utils.create_all_tables as db_create_tables
 from models.Event import Event
 from models.User import User
 from models.Comment import Comment
+import utils.send_email as mail_service
 
 app = Flask(__name__)
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'iriszhang2396@gmail.com'
+app.config['MAIL_PASSWORD'] = 'Cris408222773!'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 
 app.secret_key = os.environ.get("FN_FLASK_SECRET_KEY", default=False)
 app.register_blueprint(google_auth.app)
@@ -141,6 +150,10 @@ def create_new_comment(id):
     comment = Comment(user=name, content=content, time=datetime.strptime(time, '%Y-%m-%d %H:%M:%S'), event=id)
     try:
         Comment.create_comment(comment)
+        # send notification to the event host
+        # event = Event.get_event_by_id(id)
+        # email_content = name + " just commented your event " + event.name + "."
+        # mail_service.send(mail=mail, title="A user just comment your event", recipients=[event.user_email], content=email_content)
     except:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
@@ -152,3 +165,9 @@ def get_all_created_events():
     # TODO: get email from session?
     email = request.args.get('email')
     return Event.get_all_event_created_by_user(email)
+
+
+@app.route('/email', methods=['POST'])
+def send_email():
+    # mail_service.send(mail, title, recipients, content)
+    return ""
