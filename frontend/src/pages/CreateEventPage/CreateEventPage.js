@@ -13,13 +13,21 @@ import {
   Button,
   CircularProgress,
   Typography,
+  Snackbar,
 } from '@material-ui/core'
+import MuiAlert from '@material-ui/lab/Alert'
 import { green } from '@material-ui/core/colors'
 import { makeStyles } from '@material-ui/core/styles'
 import LocationSearchInput from '../../components/GoogleMap/LocationSearchInput'
 import { RNS3 } from 'react-native-aws3'
+import { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
 import options from '../../awsOptions'
 import './styles.css'
+import { format } from 'date-fns'
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,10 +58,16 @@ const useStyles = makeStyles((theme) => ({
 
 const CreateEventPage = (props) => {
   const classes = useStyles()
+  const [title, setTitle] = useState('Title')
   const [pictures, setPictures] = useState([])
-  const [selectedDate, setSelectedDate] = useState()
+  const [selectedDate, setSelectedDate] = useState(new Date())
+  const [description, setDescription] = useState(
+    'Tell us something about your event'
+  )
   const [address, setAddress] = useState(' ')
+  const [addressError, setAddressError] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [alertOpen, setAlertOpen] = useState(false)
 
   const handleDateChange = (date) => {
     setSelectedDate(date)
@@ -63,31 +77,64 @@ const CreateEventPage = (props) => {
     setPictures([...pictures, picture])
   }
 
+  const closeAlert = (event, reason) => {
+    if (reason === 'clickaway') return
+
+    setAlertOpen(false)
+  }
+
   const handleSubmit = () => {
-    // console.log(address)
-    // console.log(selectedDate)
     setLoading(true)
-    RNS3.put(pictures[0][0], options)
-      .then((response) => {
-        setLoading(false)
-        if (response.status !== 201) {
-          throw new Error('Failed to upload image to S3')
-        } else {
-          console.log(
-            'Successfully uploaded image to s3. s3 bucket url: ',
-            response.body.postResponse.location
-          )
-        }
+    geocodeByAddress(address)
+      .then((results) => getLatLng(results[0]))
+      .then((latLng) => {
+        setAddressError(false)
+        RNS3.put(pictures[0][0], options)
+          .then((response) => {
+            setLoading(false)
+            if (response.status !== 201) {
+              setAlertOpen(true)
+              throw new Error('Failed to upload image to S3')
+            } else {
+              const requestForm = new FormData()
+              requestForm.append('Event_name', title)
+              requestForm.append('Address', address)
+              requestForm.append('Longitude', latLng.lng)
+              requestForm.append('Latitude', latLng.lat)
+              requestForm.append(
+                'Time',
+                format(selectedDate, 'yyyy-MM-dd HH:mm:ss')
+              )
+              requestForm.append('Description', description)
+              requestForm.append('Image', response.body.postResponse.location)
+              fetch('/user/event/new', {
+                method: 'PUT',
+                body: requestForm,
+              })
+                .then((response) => response.text())
+                .then((data) => console.log(data))
+                .catch((error) => {
+                  setAlertOpen(true)
+                  console.error(error)
+                })
+            }
+          })
+          .catch((error) => {
+            setAlertOpen(true)
+            setLoading(false)
+            console.log(error)
+          })
       })
       .catch((error) => {
         setLoading(false)
-        console.log(error)
+        console.error('Error', error)
+        setAddressError(true)
       })
   }
 
   return (
     <>
-      <form className={classes.root} noValidate autoComplete="off">
+      <form className={classes.root} autoComplete="off">
         <Typography variant="h6">Create new event</Typography>
         <Grid container spacing={3}>
           <Grid item xs={9}>
@@ -96,7 +143,8 @@ const CreateEventPage = (props) => {
               margin="normal"
               id="standard-required"
               label="Name of event"
-              defaultValue="Title"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
               fullWidth
             />
           </Grid>
@@ -104,7 +152,12 @@ const CreateEventPage = (props) => {
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Grid container justify="space-around" spacing={3}>
             <Grid item xs={6}>
-              <LocationSearchInput address={address} setAddress={setAddress} />
+              <LocationSearchInput
+                address={address}
+                setAddress={setAddress}
+                error={addressError}
+                setError={setAddressError}
+              />
             </Grid>
             <Grid item xs={3}>
               <KeyboardDatePicker
@@ -146,7 +199,8 @@ const CreateEventPage = (props) => {
               rows={7}
               fullWidth
               margin="normal"
-              defaultValue="Tell us something about your event"
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
               className={classes.descripInput}
             />
           </Grid>
@@ -178,6 +232,11 @@ const CreateEventPage = (props) => {
           )}
         </Grid>
       </form>
+      <Snackbar open={alertOpen} autoHideDuration={4000} onClose={closeAlert}>
+        <Alert onClose={closeAlert} severity="error">
+          Failed to create the event!
+        </Alert>
+      </Snackbar>
     </>
   )
 }

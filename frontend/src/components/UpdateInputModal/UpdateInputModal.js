@@ -10,9 +10,6 @@ import {
   DialogTitle,
   IconButton,
   TextField,
-  Typography,
-  SvgIcon,
-  Grid,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import CloseIcon from '@material-ui/icons/Close'
@@ -22,6 +19,7 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers'
 import LocationSearchInput from '../GoogleMap/LocationSearchInput'
+
 const useStyles = makeStyles((theme) => ({
   closeButton: {
     position: 'absolute',
@@ -30,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.grey[500],
   },
   content: {
-    padding: theme.spacing(1.5),
+    padding: theme.spacing(3),
     textAlign: 'center',
   },
   confirmButton: {
@@ -59,16 +57,16 @@ function UpdateInputModal(props) {
     setNewDescription(description)
   }
   const handleCloseWithUpdate = () => {
-    if (type == 1) {
+    if (type === 1) {
       handleClose(selectedDate)
-    } else if (type == 2) {
+    } else if (type === 2) {
       handleClose(selectedDate)
-    } else if (type == 3) {
+    } else if (type === 3) {
       handleClose(newDescription)
     }
   }
   let selector
-  if (type == 1) {
+  if (type === 1) {
     selector = (
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <KeyboardDatePicker
@@ -86,7 +84,7 @@ function UpdateInputModal(props) {
         />
       </MuiPickersUtilsProvider>
     )
-  } else if (type == 2) {
+  } else if (type === 2) {
     selector = (
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <KeyboardTimePicker
@@ -103,7 +101,7 @@ function UpdateInputModal(props) {
         />
       </MuiPickersUtilsProvider>
     )
-  } else if (type == 3) {
+  } else if (type === 3) {
     selector = (
       <Box className={classes.textInput}>
         <TextField
@@ -121,6 +119,7 @@ function UpdateInputModal(props) {
     )
   } else {
   }
+
   return (
     <Dialog
       open={open}
