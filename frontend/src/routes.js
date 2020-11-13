@@ -6,11 +6,17 @@ import EventDetail from './pages/EventDetailPage/EventDetailPage'
 import SimpleMap from './components/GoogleMap/SimpleMap'
 import GetLocationInformation from './components/GoogleMap/GetLocationInformation'
 
-export default function Routes() {
+export default function Routes(props) {
+  const { user } = props
+
   return (
     <>
-      <Route exact path="/" component={Events} />
-      <Route exact path="/events/:user" component={Events} />
+      <Route exact path="/" render={() => <Events user={user} />} />
+      <Route
+        exact
+        path="/events/:category"
+        render={() => <Events user={user} />}
+      />
       <Route exact path="/event/:eventID" component={EventDetail} />
       <Route exact path="/newevent" component={CreateEvent} />
       <Route exact path="/map" component={SimpleMap} />

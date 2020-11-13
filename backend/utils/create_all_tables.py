@@ -23,7 +23,7 @@ TABLES['event'] = (
     `latitude` DECIMAL(9,6) NOT NULL,
     `zipcode` VARCHAR(10) NOT NULL,
     `time` DATETIME NOT NULL,
-    `description` VARCHAR(500) NULL,
+    `description` VARCHAR(600) NULL,
     `image` VARCHAR(200) NULL,
     `num_likes` INT NOT NULL,
     PRIMARY KEY (`id`),
@@ -43,7 +43,7 @@ TABLES['comment'] = (
 	`id` VARCHAR(25) NOT NULL,
     `user` VARCHAR(25) NOT NULL,
     `event` VARCHAR(25) NOT NULL,
-    `content` VARCHAR(200) NULL,
+    `content` VARCHAR(300) NULL,
     `time` DATETIME NOT NULL,
     PRIMARY KEY (`id`),
 	CONSTRAINT `comment_user` FOREIGN KEY (`user`) REFERENCES `YesOK`.`user` (`email`)

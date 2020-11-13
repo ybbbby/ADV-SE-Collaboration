@@ -9,3 +9,4 @@ def get_connection():
         user="root",
         password=config.DB_PASSWORD)
     return cnx
+

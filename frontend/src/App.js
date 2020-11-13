@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import {
   AppBar,
   Container,
-  Link,
   Box,
   Toolbar,
   Typography,
@@ -14,14 +13,16 @@ import { makeStyles } from '@material-ui/core/styles'
 import { BrowserRouter as Router } from 'react-router-dom'
 import UserCard from './components/UserCard/UserCard'
 import Categories from './components/Categories/Categories'
+import { Link } from 'react-router-dom'
 import Routes from './routes'
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
   },
-  title: {
+  logo: {
     flexGrow: 1,
+    marginTop: '5px',
   },
   container: {
     display: 'grid',
@@ -31,18 +32,22 @@ const useStyles = makeStyles((theme) => ({
   appBar: {
     textAlign: 'center',
     boxShadow: 'inset 0px -1px 0px #f3f4f4',
+    backgroundColor: 'white',
   },
   toolBar: {
-    minHeight: theme.spacing(5.5),
+    minHeight: theme.spacing(6),
   },
   body: {
     paddingTop: theme.spacing(4),
   },
   card: {
+    position: 'sticky',
+    top: '80px',
     textAlign: 'center',
-    borderRadius: '10px',
-    boxShadow:
-      '0px 0px 0px -1px rgba(0,0,0,0.2), -2px -1px 1px -1px rgba(0,0,0,0.14), 0px 1px 4px 1px rgba(0,0,0,0.12);',
+    // borderRadius: '10px',
+    // boxShadow: '0 16px 40px -12.125px rgba(0,0,0,0.3)',
+    boxShadow: 'rgba(0, 0, 0, 0.3) 0px 8px 40px -12px',
+    // transition: 'all 0.3s ease 0s',
   },
 }))
 
@@ -55,7 +60,7 @@ function Copyright() {
       style={{ padding: '10px' }}
     >
       {'Copyright © '}
-      <Link color="inherit" href="#">
+      <Link to="/" style={{ color: 'black' }}>
         YesOK
       </Link>{' '}
       {new Date().getFullYear()}
@@ -86,14 +91,16 @@ export default function App() {
   return (
     <div>
       <Router>
-        <AppBar
-          position="static"
-          color={'transparent'}
-          className={classes.appBar}
-        >
+        <AppBar position="sticky" className={classes.appBar}>
           <Toolbar className={classes.toolBar}>
-            <Typography variant="h6" className={classes.title}>
-              YesOK
+            <Typography variant="h6" className={classes.logo}>
+              <Link to="/">
+                <img
+                  src={`${process.env.PUBLIC_URL}/logo.png`}
+                  height="38"
+                  alt="logo"
+                />
+              </Link>
             </Typography>
           </Toolbar>
         </AppBar>
@@ -109,7 +116,7 @@ export default function App() {
                 </Card>
               </Grid>
               <Grid item xs={9}>
-                <Routes />
+                <Routes user={userData.email} />
               </Grid>
             </Grid>
             <Copyright />
