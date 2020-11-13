@@ -7,14 +7,12 @@ class SimpleMap extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      center: props.center
-        ? props.center
-        : {
-            lat: 59.95,
-            lng: 30.33,
-          },
+      center: {
+        lat: 59.95,
+        lng: 30.33,
+      },
       zoom: 11,
-      name: props.name ? props.name : 'Hero Deku',
+      name: 'Hero Deku',
     }
   }
 
@@ -24,13 +22,17 @@ class SimpleMap extends Component {
       <div style={{ height: '50vh', width: '100%' }}>
         <GoogleMapReact
           bootstrapURLKeys={{ key: Crendential.key }}
-          defaultCenter={this.state.center}
+          center={this.props.center ? this.props.center : this.state.center}
           defaultZoom={this.state.zoom}
         >
           <Marker
-            lat={this.state.center.lat}
-            lng={this.state.center.lng}
-            name={this.state.name}
+            lat={
+              this.props.center ? this.props.center.lat : this.state.center.lat
+            }
+            lng={
+              this.props.center ? this.props.center.lng : this.state.center.lng
+            }
+            name={this.props.name ? this.props.name : this.state.name}
           />
         </GoogleMapReact>
       </div>

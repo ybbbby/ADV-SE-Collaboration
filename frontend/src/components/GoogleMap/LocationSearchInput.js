@@ -25,8 +25,13 @@ class LocationSearchInput extends React.Component {
   }
 
   componentDidMount() {
+    if (document.getElementById('IamOneAndTheOnly')) {
+      this.initMap()
+      return
+    }
     window.initMap = this.initMap
     const gmapScriptEl = document.createElement(`script`)
+    gmapScriptEl.id = 'IamOneAndTheOnly'
     gmapScriptEl.src =
       `https://maps.googleapis.com/maps/api/js?key=` +
       Crendential.key +

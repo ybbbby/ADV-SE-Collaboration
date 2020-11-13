@@ -143,7 +143,7 @@ const CreateEventPage = (props) => {
               margin="normal"
               id="standard-required"
               label="Name of event"
-              value={title}
+              placeholder="Title"
               onChange={(event) => setTitle(event.target.value)}
               fullWidth
             />
@@ -199,7 +199,7 @@ const CreateEventPage = (props) => {
               rows={7}
               fullWidth
               margin="normal"
-              value={description}
+              placeholder="Tell us something about your event"
               onChange={(event) => setDescription(event.target.value)}
               className={classes.descripInput}
             />
