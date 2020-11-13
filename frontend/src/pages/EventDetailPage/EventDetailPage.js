@@ -12,11 +12,12 @@ import UpdateInputModal from '../../components/UpdateInputModal/UpdateInputModal
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-  },
-  paper: {
+    height: 'calc(100vh - 115px)',
+    overflow: 'scroll',
     padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
+    borderRadius: '10px',
+    boxShadow:
+      '0px 0px 0px -1px rgba(0,0,0,0.2), -2px -1px 1px -1px rgba(0,0,0,0.14), 0px 1px 4px 1px rgba(0,0,0,0.12);',
   },
   Typography: {
     color: theme.palette.text.primary,
@@ -28,11 +29,14 @@ const useStyles = makeStyles((theme) => ({
   blank: {
     height: '10px',
   },
+  eventImage: {
+    boxShadow: 'none',
+  },
 }))
 
 export default function EventDetail({ match }) {
   const classes = useStyles()
-  const isAuthor = match.params.eventID == '1' ? true : false
+  const isAuthor = match.params.eventID === '1' ? true : false
   const [description, setDescription] = useState(
     'asjhdflakjhsdlfkajhsdljhf lajh dsfljkhadsfjh aldsjfh lajsdh flajshdflajhds flajhds flahds lf jhasasjdfh a;kjds ;fkja;dsfk ja;sdkfj;akdsj f;al dsj;kflas;df a;lkfj ;aklsdj f;ajks df;ajs d;flajds;lfaj;dslfj aei hliuaherf liahfd vlkasdn flawker oaiudf;kjas;dkljfa;lkw3 jr;ioausdj;flkjajds;flkj a;sdlkfj ;awefh ;ioauf ;alksdj;fakjs df'
   )
@@ -50,11 +54,11 @@ export default function EventDetail({ match }) {
       return
     }
     console.log(value)
-    if (type == 1) {
+    if (type === 1) {
       setSelectedDate(value)
-    } else if (type == 2) {
+    } else if (type === 2) {
       setSelectedDate(value)
-    } else if (type == 3) {
+    } else if (type === 3) {
       setDescription(value)
     }
   }
@@ -62,7 +66,7 @@ export default function EventDetail({ match }) {
     <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Card>
+          <Card className={classes.eventImage}>
             <CardMedia
               image="https://cdn.vox-cdn.com/thumbor/lopA7fKDwAh9iqR0hqVsHWpnPfQ=/0x0:4133x3074/1820x1213/filters:focal(1737x1207:2397x1867):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/65573297/GettyImages_1019226434.0.jpg"
               component="img"
@@ -71,7 +75,7 @@ export default function EventDetail({ match }) {
           </Card>
         </Grid>
         <Grid item xs={8}>
-          <Typography gutterBottom variant="h3">
+          <Typography gutterBottom variant="h4">
             Party in Hells Kitchen
           </Typography>
         </Grid>

@@ -107,7 +107,7 @@ class EventCard extends Component {
             >
               <ShareIcon />
             </IconButton>
-            <Link to="/map" className={classes.expand}>
+            <Link to="/event/1" className={classes.expand}>
               <Button size="small" color="primary">
                 Learn More
               </Button>
@@ -122,7 +122,7 @@ class EventCard extends Component {
         <Snackbar
           open={this.state.alertOpen}
           autoHideDuration={3000}
-          onClose={this.handleClose}
+          onClose={this.closeAlert}
         >
           <Alert onClose={this.closeAlert} severity="success">
             Saved to your favourite events!

@@ -65,11 +65,12 @@ def userinfo():
 @app.route('/user/event/new', methods=['PUT'])
 def create_new_event():
     user_info = google_auth.get_user_info()
-    name = user_info["name"]
+    name = user_info["email"]
     # name = "123"
     event_name = request.form.get("Event_name")
     address = request.form.get("Address")
-    zipcode = address[-5:]
+    # zipcode = address[-5:]
+    zipcode = "10025"
     longitude = request.form.get("Longitude")
     latitude = request.form.get("Latitude")
     time = request.form.get("Time")
@@ -78,7 +79,7 @@ def create_new_event():
     e = Event(user=name, name=event_name, address=address, longitude=longitude, latitude=latitude, zipcode=zipcode,
               time=datetime.strptime(str(time), "%Y-%m-%d %H:%M:%S"))
     e.description = description
-    e.image_path = image_path
+    e.image = image_path
     try:
         event_id = Event.create_event(e)
     except:

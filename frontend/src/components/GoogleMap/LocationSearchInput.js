@@ -1,9 +1,6 @@
 import React from 'react'
 import Crendential from '../../credential'
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from 'react-places-autocomplete'
+import PlacesAutocomplete from 'react-places-autocomplete'
 import { TextField } from '@material-ui/core'
 
 class LocationSearchInput extends React.Component {
@@ -18,11 +15,7 @@ class LocationSearchInput extends React.Component {
 
   handleSelect = (selected) => {
     this.props.setAddress(selected)
-    console.log(selected)
-    geocodeByAddress(selected)
-      .then((results) => getLatLng(results[0]))
-      .then((latLng) => console.log('Success', latLng))
-      .catch((error) => console.error('Error', error))
+    this.props.setError(false)
   }
 
   initMap = () => {
@@ -65,6 +58,8 @@ class LocationSearchInput extends React.Component {
                   margin="normal"
                   label="Location"
                   fullWidth
+                  helperText={this.props.error ? 'Invalid address.' : ''}
+                  error={this.props.error}
                   {...getInputProps({
                     placeholder: 'Search Places ...',
                     className: 'location-search-input',
