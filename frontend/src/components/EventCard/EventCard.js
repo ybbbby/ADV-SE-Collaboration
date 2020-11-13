@@ -10,6 +10,8 @@ import {
   Button,
   IconButton,
   Snackbar,
+  Badge,
+  Box,
 } from '@material-ui/core'
 import MuiAlert from '@material-ui/lab/Alert'
 import FavoriteIcon from '@material-ui/icons/Favorite'
@@ -25,13 +27,29 @@ function Alert(props) {
 
 const styles = (theme) => ({
   root: {
-    borderRadius: '10px',
-    boxShadow:
-      '0px 0px 0px -1px rgba(0,0,0,0.2), -2px -1px 1px -1px rgba(0,0,0,0.14), 0px 1px 4px 1px rgba(0,0,0,0.12);',
+    boxShadow: '0 8px 24px 0 rgba(0,0,0,0.12)',
   },
   expand: {
     marginLeft: 'auto',
     textDecoration: 'none',
+  },
+  cardImage: {
+    width: '100%',
+    height: 0,
+    paddingBottom: '56.25%',
+    backgroundColor: 'rgba(0, 0, 0, 0.08)',
+  },
+  content: {
+    margin: '-24% 16px 0',
+    padding: '24px',
+    position: 'relative',
+    borderRadius: '4px',
+    backgroundColor: '#fff',
+    boxShadow:
+      '0 2px 4px -2px rgba(0,0,0,0.24), 0 4px 24px -2px rgba(0, 0, 0, 0.2)',
+  },
+  title: {
+    fontWeight: '800',
   },
 })
 
@@ -48,6 +66,10 @@ class EventCard extends Component {
   }
 
   clickLike() {
+    if (!this.props.user) {
+      this.props.openLogin(true)
+      return
+    }
     const currentStatus = this.state.like
     const color = currentStatus ? 'rgba(0, 0, 0, 0.54)' : red[500]
     this.setState({
@@ -73,60 +95,105 @@ class EventCard extends Component {
     })
   }
 
+  openLogin = () => {
+    if (!this.props.user) {
+      this.props.openLogin(true)
+    }
+  }
+
   render() {
-    const { classes } = this.props
+    const { classes, user, config } = this.props
+    const { shareModalOpen, alertOpen, likeButtonColor, like } = this.state
+
     return (
       <>
-        <Card className={classes.root}>
-          <CardActionArea>
-            <CardMedia
-              component="img"
-              height="180"
-              image="https://cdn.vox-cdn.com/thumbor/lopA7fKDwAh9iqR0hqVsHWpnPfQ=/0x0:4133x3074/1820x1213/filters:focal(1737x1207:2397x1867):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/65573297/GettyImages_1019226434.0.jpg"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                Party in Hells Kitchen
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                Sat, Nov 7, 2020 3:00 AM EST
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          <CardActions disableSpacing>
-            <IconButton aria-label="add to favorites" onClick={this.clickLike}>
-              <FavoriteIcon style={{ color: this.state.likeButtonColor }} />
-            </IconButton>
-            <IconButton
-              aria-label="share"
-              onClick={() =>
-                this.setState({
-                  shareModalOpen: true,
-                })
-              }
-            >
-              <ShareIcon />
-            </IconButton>
-            <Link to="/event/1" className={classes.expand}>
-              <Button size="small" color="primary">
-                Learn More
-              </Button>
-            </Link>
-          </CardActions>
-        </Card>
+        <Badge
+          badgeContent={'host'}
+          color="primary"
+          invisible={!user || config.host !== user}
+          style={{ display: 'block' }}
+        >
+          <Card className={classes.root}>
+            <CardActionArea>
+              <Link to={user ? '/event/1' : '#'} className={classes.expand}>
+                <Box minHeight={250} position={'relative'}>
+                  <CardMedia
+                    className={classes.cardImage}
+                    image="https://cdn.vox-cdn.com/thumbor/lopA7fKDwAh9iqR0hqVsHWpnPfQ=/0x0:4133x3074/1820x1213/filters:focal(1737x1207:2397x1867):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/65573297/GettyImages_1019226434.0.jpg"
+                  />
+                  <CardContent className={classes.content}>
+                    <Typography
+                      variant="caption"
+                      color="textSecondary"
+                      component="p"
+                    >
+                      10/06/2020
+                    </Typography>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="h2"
+                      color="textPrimary"
+                      className={classes.title}
+                    >
+                      Party in Hells Kitchen
+                    </Typography>
+
+                    <Typography
+                      variant="body1"
+                      color="textSecondary"
+                      component="p"
+                    >
+                      250 W 53rd Street, New York, NY
+                    </Typography>
+                  </CardContent>
+                </Box>
+              </Link>
+            </CardActionArea>
+            <CardActions disableSpacing>
+              <IconButton
+                aria-label="add to favorites"
+                onClick={this.clickLike}
+              >
+                <FavoriteIcon style={{ color: likeButtonColor }} />
+              </IconButton>
+              <IconButton
+                aria-label="share"
+                onClick={() =>
+                  this.setState({
+                    shareModalOpen: true,
+                  })
+                }
+              >
+                <ShareIcon />
+              </IconButton>
+              <Link to={user ? '/event/1' : '#'} className={classes.expand}>
+                <Button size="small" color="primary" onClick={this.openLogin}>
+                  Learn More
+                </Button>
+              </Link>
+            </CardActions>
+          </Card>
+        </Badge>
         <ShareModal
           url="https://www.google.com/"
           handleClose={this.closeShare}
-          open={this.state.shareModalOpen}
+          open={shareModalOpen}
         />
         <Snackbar
-          open={this.state.alertOpen}
+          open={alertOpen}
           autoHideDuration={3000}
           onClose={this.closeAlert}
         >
-          <Alert onClose={this.closeAlert} severity="success">
-            Saved to your favourite events!
-          </Alert>
+          {like ? (
+            <Alert onClose={this.closeAlert} severity="success">
+              Saved to your favourite events!
+            </Alert>
+          ) : (
+            <Alert onClose={this.closeAlert} severity="info">
+              Remove this event from your favourite events!
+            </Alert>
+          )}
         </Snackbar>
       </>
     )

@@ -6,3 +6,4 @@ def send(mail: 'Mail', title: str, recipients: List, content: str):
                   recipients=recipients, sender=("YesOKGroup", "iriszhang2396@gmail.com"))
     msg.body = content
     mail.send(msg)
+    

@@ -44,3 +44,4 @@ class Comment:
         cnx.close()
         # return json.dumps([ob.__dict__ for ob in comments], use_decimal=True, default=str)
         return comments
+

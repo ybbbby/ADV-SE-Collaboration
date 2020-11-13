@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Map from '../../components/GoogleMap/SimpleMap'
 import CardMedia from '@material-ui/core/CardMedia'
-import { Typography, Card, Box, Snackbar } from '@material-ui/core'
+import { Typography, Card, Box, Snackbar, IconButton } from '@material-ui/core'
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
 import AccessTimeIcon from '@material-ui/icons/AccessTime'
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined'
@@ -12,29 +12,35 @@ import UpdateInputModal from '../../components/UpdateInputModal/UpdateInputModal
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
 import { format } from 'date-fns'
 import MuiAlert from '@material-ui/lab/Alert'
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />
 }
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    padding: theme.spacing(2),
-    borderRadius: '10px',
-    boxShadow:
-      '0px 0px 0px -1px rgba(0,0,0,0.2), -2px -1px 1px -1px rgba(0,0,0,0.14), 0px 1px 4px 1px rgba(0,0,0,0.12);',
-  },
-  Typography: {
-    color: theme.palette.text.primary,
+    padding: theme.spacing(1.5),
   },
   register: {
     height: '80%',
     width: '100%',
   },
-  blank: {
-    height: '10px',
-  },
   eventImage: {
     boxShadow: 'none',
+  },
+  date: {
+    margin: '0 15px',
+  },
+  editButton: {
+    padding: '3px',
+  },
+  dateBox: {
+    display: 'flex',
+  },
+  titleBox: {
+    display: 'flex',
+    margin: '10px 0',
   },
 }))
 
@@ -124,7 +130,7 @@ export default function EventDetail({ match }) {
           UpdateInfo()
         })
         .catch((error) => {
-          setfailInfo('Fail to update due illegitimate address')
+          setfailInfo('Fail to update due to illegitimate address')
           setAlertOpen(true)
         })
     }
@@ -140,48 +146,46 @@ export default function EventDetail({ match }) {
             <CardMedia image={imageURL} component="img" height="300" />
           </Card>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={12}>
           <Typography gutterBottom variant="h4">
             {title}
           </Typography>
         </Grid>
-        <Grid item xs={4}></Grid>
       </Grid>
-      <Grid container spacing={1} justify="center">
-        <Grid item xs={1}>
-          <Box align="center">
-            <CalendarTodayIcon />
-          </Box>
-          <Box align="center">
-            <AccessTimeIcon />
-          </Box>
-        </Grid>
-        <Grid item xs={6}>
-          <Typography variant="subtitle1">
-            <Box textAlign="left" align="center">
+      <Grid container>
+        <Grid item xs={8}>
+          <Box textAlign="left" className={classes.dateBox}>
+            <CalendarTodayIcon fontSize="small" style={{ marginTop: '4px' }} />
+            <Typography variant="subtitle1" className={classes.date}>
               {selectedDate.toDateString()}
-            </Box>
-            <Box textAlign="left" align="justify">
+            </Typography>
+            {isAuthor ? (
+              <IconButton
+                onClick={() => handleClick(1)}
+                className={classes.editButton}
+              >
+                <EditOutlinedIcon color="primary" fontSize="small" />
+              </IconButton>
+            ) : (
+              <></>
+            )}
+          </Box>
+          <Box textAlign="left" className={classes.dateBox}>
+            <AccessTimeIcon fontSize="small" style={{ marginTop: '4px' }} />
+            <Typography variant="subtitle1" className={classes.date}>
               {selectedDate.toLocaleTimeString()}
-            </Box>
-          </Typography>
-        </Grid>
-
-        <Grid item xs={1}>
-          {isAuthor ? (
-            <Box style={{ cursor: 'pointer' }} onClick={() => handleClick(1)}>
-              <EditOutlinedIcon color="primary" />
-            </Box>
-          ) : (
-            <></>
-          )}
-          {isAuthor ? (
-            <Box style={{ cursor: 'pointer' }} onClick={() => handleClick(2)}>
-              <EditOutlinedIcon color="primary" />
-            </Box>
-          ) : (
-            <></>
-          )}
+            </Typography>
+            {isAuthor ? (
+              <IconButton
+                onClick={() => handleClick(2)}
+                className={classes.editButton}
+              >
+                <EditOutlinedIcon color="primary" fontSize="small" />
+              </IconButton>
+            ) : (
+              <></>
+            )}
+          </Box>
         </Grid>
         <Grid item xs={4}>
           {!isAuthor ? (
@@ -196,62 +200,47 @@ export default function EventDetail({ match }) {
             <></>
           )}
         </Grid>
-        <Grid item xs={12}>
-          <Box className={classes.blank}></Box>
-          <Box className={classes.blank}></Box>
-        </Grid>
-        <Grid item xs={2}>
-          <Typography variant="h5">
-            <Box textAlign="left" align="center">
-              Details
-            </Box>
-          </Typography>
-        </Grid>
-        <Grid item xs={10}>
-          {isAuthor ? (
-            <Box style={{ cursor: 'pointer' }} onClick={() => handleClick(3)}>
-              <EditOutlinedIcon color="primary" />
-            </Box>
-          ) : (
-            <></>
-          )}
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="body1" gutterBottom>
-            {description}
-          </Typography>
-        </Grid>
-        <Grid item xs={3}>
-          <Typography variant="h5">
-            <Box textAlign="left" align="center">
-              Event Location
-            </Box>
-          </Typography>
-        </Grid>
-        <Grid item xs={9}>
-          {isAuthor ? (
-            <Box style={{ cursor: 'pointer' }} onClick={() => handleClick(4)}>
-              <EditOutlinedIcon color="primary" />
-            </Box>
-          ) : (
-            <></>
-          )}
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="body1" gutterBottom>
-            {address}
-          </Typography>
-        </Grid>
-      </Grid>
-
-      <Grid container spacing={3} justify="center">
-        <Grid item xs={12}>
-          <Map height="100px" center={center} name={address} />
-        </Grid>
       </Grid>
       <Grid item xs={12}>
-        <Box className={classes.blank}></Box>
-        <Box className={classes.blank}></Box>
+        <Box className={classes.titleBox}>
+          <Typography variant="h5">Details</Typography>
+          {isAuthor ? (
+            <IconButton
+              onClick={() => handleClick(3)}
+              className={classes.editButton}
+            >
+              <EditOutlinedIcon color="primary" />
+            </IconButton>
+          ) : (
+            <></>
+          )}
+        </Box>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant="body1">{description}</Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <Box className={classes.titleBox}>
+          <Typography variant="h5">Event Location</Typography>
+          {isAuthor ? (
+            <IconButton
+              onClick={() => handleClick(4)}
+              className={classes.editButton}
+            >
+              <EditOutlinedIcon color="primary" />
+            </IconButton>
+          ) : (
+            <></>
+          )}
+        </Box>
+      </Grid>
+      <Grid item xs={12}>
+        <Typography variant="body1" gutterBottom>
+          {address}
+        </Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <Map height="100px" center={center} name={address} />
       </Grid>
       <UpdateInputModal
         handleClose={handleClose}
@@ -259,7 +248,7 @@ export default function EventDetail({ match }) {
         type={type}
         date={selectedDate}
         description={description}
-      ></UpdateInputModal>
+      />
       <Snackbar open={alertOpen} autoHideDuration={4000} onClose={closeAlert}>
         <Alert onClose={closeAlert} severity="error">
           {failInfo}

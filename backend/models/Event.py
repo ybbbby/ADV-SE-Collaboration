@@ -128,7 +128,3 @@ class Event:
                     }
         else:
             return str(obj)
-
-
-
-

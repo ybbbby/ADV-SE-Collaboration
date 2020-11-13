@@ -21,6 +21,12 @@ const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: 'none',
   },
+  createButton: {
+    padding: '8px 24px 8px 16px',
+    boxShadow:
+      'rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px',
+    borderRadius: theme.spacing(8),
+  },
 }))
 
 function UserCard(props) {
@@ -38,7 +44,7 @@ function UserCard(props) {
             {data['email']}
           </Typography>
           <Link to="/newevent" className={classes.link}>
-            <Button variant="outlined" color="primary">
+            <Button color="primary" className={classes.createButton}>
               Create event
             </Button>
           </Link>

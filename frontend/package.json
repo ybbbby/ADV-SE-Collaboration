@@ -3,7 +3,7 @@
   "version": "4.0.0",
   "private": true,
   "scripts": {
-    "start": "set PORT=2000 & react-scripts start",
+    "start": "PORT=2000 react-scripts start",
     "build": "react-scripts build",
     "test": "jest --config ./jest.config.json",
     "eject": "react-scripts eject"
@@ -27,7 +27,8 @@
     "react-native-aws3": "^0.0.9",
     "react-places-autocomplete": "^7.3.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "latest"
+    "react-scripts": "latest",
+    "use-react-router": "^1.0.7"
   },
   "browserslist": {
     "production": [

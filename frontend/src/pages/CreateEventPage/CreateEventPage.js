@@ -31,9 +31,8 @@ function Alert(props) {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(2),
-    boxShadow:
-      '0px 0px 0px -1px rgba(0,0,0,0.2), -2px -1px 1px -1px rgba(0,0,0,0.14), 0px 1px 4px 1px rgba(0,0,0,0.12);',
+    padding: theme.spacing(3),
+    boxShadow: '0 8px 24px 0 rgba(0,0,0,0.12)',
   },
   wrapper: {
     position: 'relative',
@@ -64,7 +63,7 @@ const CreateEventPage = (props) => {
   const [description, setDescription] = useState(
     'Tell us something about your event'
   )
-  const [address, setAddress] = useState(' ')
+  const [address, setAddress] = useState('')
   const [addressError, setAddressError] = useState(false)
   const [loading, setLoading] = useState(false)
   const [alertOpen, setAlertOpen] = useState(false)
