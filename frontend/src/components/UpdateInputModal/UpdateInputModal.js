@@ -38,6 +38,10 @@ const useStyles = makeStyles((theme) => ({
   textInput: {
     width: theme.spacing(50),
   },
+  addressInput: {
+    width: theme.spacing(50),
+    height: theme.spacing(20),
+  },
 }))
 
 function UpdateInputModal(props) {
@@ -45,6 +49,8 @@ function UpdateInputModal(props) {
   const { handleClose, open, type, date, description } = props
   const [selectedDate, setSelectedDate] = useState(date)
   const [newDescription, setNewDescription] = useState(description)
+  const [newAddress, setNewAddress] = useState('')
+  const [addressError, setAddressError] = useState(false)
   const handleDateChange = (date) => {
     setSelectedDate(date)
   }
@@ -55,6 +61,7 @@ function UpdateInputModal(props) {
     handleClose()
     setSelectedDate(date)
     setNewDescription(description)
+    setNewAddress('')
   }
   const handleCloseWithUpdate = () => {
     if (type === 1) {
@@ -63,6 +70,9 @@ function UpdateInputModal(props) {
       handleClose(selectedDate)
     } else if (type === 3) {
       handleClose(newDescription)
+    } else if (type === 4) {
+      handleClose(newAddress)
+      setNewAddress('')
     }
   }
   let selector
@@ -118,6 +128,16 @@ function UpdateInputModal(props) {
       </Box>
     )
   } else {
+    selector = (
+      <Box className={classes.addressInput}>
+        <LocationSearchInput
+          address={newAddress}
+          setAddress={setNewAddress}
+          error={addressError}
+          setError={setAddressError}
+        />
+      </Box>
+    )
   }
 
   return (
