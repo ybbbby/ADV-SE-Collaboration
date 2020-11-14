@@ -44,8 +44,8 @@ class Event:
 
     @staticmethod
     def get_all_event_created_by_user(email: str):
-        likes = json.loads(Like.get_like_by_user(email))
-        liked_events = set(like['event'] for like in likes)
+        likes = Like.get_like_by_user(email)
+        liked_events = set(like.event for like in likes)
 
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
@@ -54,6 +54,124 @@ class Event:
         events = []
         for (event_id, name, host, address, longitude, latitude, zipcode, time, description, image, num_likes) in cursor:
             newEvent = Event(user=host, name=name, address=address, longitude=longitude, latitude=latitude, zipcode=zipcode,
+                             time=datetime.datetime.strptime(str(time), "%Y-%m-%d %H:%M:%S"))
+            newEvent.id = event_id
+            newEvent.description = description
+            newEvent.image = image
+            newEvent.num_likes = num_likes
+            if event_id in liked_events:
+                newEvent.liked = True
+            newEvent.isAttend = True
+            events.append(newEvent)
+        cursor.close()
+        cnx.close()
+        # return json.dumps([ob.__dict__ for ob in events], use_decimal=True, default=str)
+        return events
+
+    @staticmethod
+    def get_all_event_joined_by_user(email: str):
+        likes = Like.get_like_by_user(email)
+        liked_events = set(like.event for like in likes)
+
+        cnx = db_connector.get_connection()
+        cursor = cnx.cursor()
+        query = ("SELECT * FROM `event` WHERE `id` IN (SELECT `event` FROM `join` WHERE `user` = '" + email + "');")
+        cursor.execute(query)
+        events = []
+        for (event_id, name, host, address, longitude, latitude, zipcode, time, description, image, num_likes) in cursor:
+            newEvent = Event(user=host, name=name, address=address, longitude=longitude, latitude=latitude,
+                             zipcode=zipcode,
+                             time=datetime.datetime.strptime(str(time), "%Y-%m-%d %H:%M:%S"))
+            newEvent.id = event_id
+            newEvent.description = description
+            newEvent.image = image
+            newEvent.num_likes = num_likes
+            if event_id in liked_events:
+                newEvent.liked = True
+            newEvent.isAttend = True
+            events.append(newEvent)
+        cursor.close()
+        cnx.close()
+        # return json.dumps([ob.__dict__ for ob in events], use_decimal=True, default=str)
+        return events
+
+    @staticmethod
+    def get_all_event_liked_by_user(email: str):
+        joins = Join.get_join_by_user()
+        joined_events = set(join.event for join in joins)
+
+        cnx = db_connector.get_connection()
+        cursor = cnx.cursor()
+        query = ("SELECT * FROM `event` WHERE `id` IN (SELECT `event` FROM `join` WHERE `user` = '" + email + "');")
+        cursor.execute(query)
+        events = []
+        for (
+        event_id, name, host, address, longitude, latitude, zipcode, time, description, image, num_likes) in cursor:
+            newEvent = Event(user=host, name=name, address=address, longitude=longitude, latitude=latitude,
+                             zipcode=zipcode,
+                             time=datetime.datetime.strptime(str(time), "%Y-%m-%d %H:%M:%S"))
+            newEvent.id = event_id
+            newEvent.description = description
+            newEvent.image = image
+            newEvent.num_likes = num_likes
+            newEvent.liked = True
+            if event_id in joined_events:
+                newEvent.isAttend = True
+            events.append(newEvent)
+        cursor.close()
+        cnx.close()
+        # return json.dumps([ob.__dict__ for ob in events], use_decimal=True, default=str)
+        return events
+
+    @staticmethod
+    def get_all_history_event_by_user(email: str):
+        likes = Like.get_like_by_user(email)
+        liked_events = set(like.event for like in likes)
+
+        cnx = db_connector.get_connection()
+        cursor = cnx.cursor()
+        query = (
+            "SELECT * FROM `event` "
+            "WHERE `id` IN (SELECT `event` FROM `join` WHERE `user` = '" + email + "')"
+            "and `time` < now();")
+        cursor.execute(query)
+        events = []
+        for (
+        event_id, name, host, address, longitude, latitude, zipcode, time, description, image, num_likes) in cursor:
+            newEvent = Event(user=host, name=name, address=address, longitude=longitude, latitude=latitude,
+                             zipcode=zipcode,
+                             time=datetime.datetime.strptime(str(time), "%Y-%m-%d %H:%M:%S"))
+            newEvent.id = event_id
+            newEvent.description = description
+            newEvent.image = image
+            newEvent.num_likes = num_likes
+            if event_id in liked_events:
+                newEvent.liked = True
+            newEvent.isAttend = True
+            events.append(newEvent)
+        cursor.close()
+        cnx.close()
+        # return json.dumps([ob.__dict__ for ob in events], use_decimal=True, default=str)
+        return events
+
+    @staticmethod
+    def get_all_ongoing_event_by_user(email: str):
+        likes = Like.get_like_by_user(email)
+        liked_events = set(like.event for like in likes)
+
+        cnx = db_connector.get_connection()
+        cursor = cnx.cursor()
+        query = (
+                "SELECT * FROM `event` "
+                "WHERE `id` IN (SELECT `event` FROM `join` WHERE `user` = '" + email + "')"
+                                                                                       "and `time` >= now();")
+        cursor.execute(query)
+        events = []
+        for (
+                event_id, name, host, address, longitude, latitude, zipcode, time, description, image,
+                num_likes) in cursor:
+            newEvent = Event(user=host, name=name, address=address, longitude=longitude, latitude=latitude,
+                             zipcode=zipcode,
                              time=datetime.datetime.strptime(str(time), "%Y-%m-%d %H:%M:%S"))
             newEvent.id = event_id
             newEvent.description = description
