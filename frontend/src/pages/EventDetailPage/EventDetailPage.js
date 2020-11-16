@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1.5),
   },
   register: {
-    height: '80%',
+    height: '90%',
     width: '100%',
   },
   eventImage: {
@@ -57,8 +57,11 @@ const useStyles = makeStyles((theme) => ({
   },
   shareButton: {
     padding: '3px',
+    paddingLeft: '0',
   },
   likeButton: {
+    marginLeft: '5px',
+    paddingRight: '0',
     padding: '3px',
   },
 }))
@@ -90,7 +93,8 @@ export default function EventDetail(props) {
   const [imageURL, setimageURL] = useState(
     'https://cdn.vox-cdn.com/thumbor/lopA7fKDwAh9iqR0hqVsHWpnPfQ=/0x0:4133x3074/1820x1213/filters:focal(1737x1207:2397x1867):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/65573297/GettyImages_1019226434.0.jpg'
   )
-  const title = 'Party in Hells Kitchen'
+  const [title, setTitle] = useState('Party in Hells Kitchen')
+  const [author, setAuthor] = useState('Deku')
 
   const handleClick = (num) => {
     setType(num)
@@ -103,6 +107,7 @@ export default function EventDetail(props) {
   }
   const [openInput, setOpenInput] = useState(false)
   const [failInfo, setfailInfo] = useState('')
+
   useEffect(() => {
     const url = '/event/' + router.match.params.eventID.toString()
     fetch(url, {
@@ -118,38 +123,41 @@ export default function EventDetail(props) {
       })
       .then((data) => {
         console.log(data)
-        setAddress(data.name)
+        console.log('askdhakshdjkashdk')
+        setAddress(data.address)
         setCenter({
-          lat: data.latitude,
-          lng: data.longitude,
+          lat: Number(data.latitude),
+          lng: Number(data.longitude),
         })
-        setLike(data.liked)
-        setAttend(data.usAttebd)
+        setLike(Boolean.parseBoolean(data.liked))
+        setAttend(Boolean.parseBoolean(data.isAttebd))
         setimageURL(data.image)
         setDescription(data.description)
-        setSelectedDate(data.time)
-
+        setSelectedDate(new Date(data.time))
         const color = like ? red[500] : 'rgba(0, 0, 0, 0.54)'
         setLikeButtonColor(color)
+        setTitle(data.name)
+        //setAuthor(data.author)
       })
       .catch((error) => {
         setfailInfo('Cannot get event detail')
         setServerity('error')
         setAlertOpen(true)
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const UpdateInfo = (t, oldValue) => {
     const requestForm = new FormData()
     requestForm.append('type', t)
-    if (t == 'time') {
+    if (t === 'time') {
       requestForm.append(
         'Time',
         format({ selectedDate }.selectedDate, 'yyyy-MM-dd HH:mm:ss')
       )
-    } else if (t == 'description') {
+    } else if (t === 'description') {
       requestForm.append('Description', { description }.description)
-    } else if (t == 'address') {
+    } else if (t === 'address') {
       requestForm.append('Address', { address }.address)
       requestForm.append('Longitude', { center }.center.lng)
       requestForm.append('Latitude', { center }.center.lat)
@@ -169,11 +177,11 @@ export default function EventDetail(props) {
       })
       .then((data) => console.log(data))
       .catch((error) => {
-        if (t == 'time') {
+        if (t === 'time') {
           setSelectedDate(oldValue)
-        } else if (t == 'description') {
+        } else if (t === 'description') {
           setDescription(oldValue)
-        } else if (t == 'address') {
+        } else if (t === 'address') {
           setAddress(oldValue.address)
           setCenter({
             lat: oldValue.lat,
@@ -206,7 +214,7 @@ export default function EventDetail(props) {
       console.log({ description }.description)
       UpdateInfo('description', oldValue)
     } else if (type === 4) {
-      const res = geocodeByAddress(value)
+      geocodeByAddress(value)
         .then((results) => getLatLng(results[0]))
         .then((latLng) => {
           oldValue = {
@@ -257,7 +265,9 @@ export default function EventDetail(props) {
             <CardMedia image={imageURL} component="img" height="300" />
           </Card>
         </Grid>
+      </Grid>
 
+      <Grid container spacing={3}>
         <Grid item xs={1}>
           <IconButton
             aria-label="add to favorites"
@@ -278,55 +288,19 @@ export default function EventDetail(props) {
             <ShareIcon />
           </IconButton>
         </Grid>
-
-        <Grid item xs={10}></Grid>
-        <Grid item xs={12}>
-          <Divider />
-        </Grid>
-
-        <Grid item xs={12}>
-          <Typography gutterBottom variant="h4">
-            {title}
-          </Typography>
-        </Grid>
-      </Grid>
-      <Grid container>
-        <Grid item xs={8}>
-          <Box textAlign="left" className={classes.dateBox}>
-            <CalendarTodayIcon fontSize="small" style={{ marginTop: '4px' }} />
-            <Typography variant="subtitle1" className={classes.date}>
-              {selectedDate.toDateString()}
-            </Typography>
-            {isAuthor ? (
-              <IconButton
-                onClick={() => handleClick(1)}
-                className={classes.editButton}
-              >
-                <EditOutlinedIcon color="primary" fontSize="small" />
-              </IconButton>
-            ) : (
-              <></>
-            )}
-          </Box>
-          <Box textAlign="left" className={classes.dateBox}>
-            <AccessTimeIcon fontSize="small" style={{ marginTop: '4px' }} />
-            <Typography variant="subtitle1" className={classes.date}>
-              {selectedDate.toLocaleTimeString()}
-            </Typography>
-            {isAuthor ? (
-              <IconButton
-                onClick={() => handleClick(2)}
-                className={classes.editButton}
-              >
-                <EditOutlinedIcon color="primary" fontSize="small" />
-              </IconButton>
-            ) : (
-              <></>
-            )}
-          </Box>
-        </Grid>
+        <Grid item xs={6}></Grid>
         <Grid item xs={4}>
-          {!isAuthor ? (
+          {isAuthor ? (
+            <></>
+          ) : attend ? (
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.register}
+            >
+              CANCEL
+            </Button>
+          ) : (
             <Button
               variant="contained"
               color="secondary"
@@ -334,51 +308,106 @@ export default function EventDetail(props) {
             >
               REGISTER NOW
             </Button>
-          ) : (
-            <></>
           )}
         </Grid>
+
+        <Grid item xs={12}>
+          <Divider />
+        </Grid>
       </Grid>
-      <Grid item xs={12}>
-        <Box className={classes.titleBox}>
-          <Typography variant="h5">Details</Typography>
-          {isAuthor ? (
-            <IconButton
-              onClick={() => handleClick(3)}
-              className={classes.editButton}
-            >
-              <EditOutlinedIcon color="primary" />
-            </IconButton>
-          ) : (
-            <></>
-          )}
-        </Box>
-      </Grid>
-      <Grid item xs={12}>
-        <Typography variant="body1">{description}</Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Box className={classes.titleBox}>
-          <Typography variant="h5">Event Location</Typography>
-          {isAuthor ? (
-            <IconButton
-              onClick={() => handleClick(4)}
-              className={classes.editButton}
-            >
-              <EditOutlinedIcon color="primary" />
-            </IconButton>
-          ) : (
-            <></>
-          )}
-        </Box>
-      </Grid>
-      <Grid item xs={12}>
-        <Typography variant="body1" gutterBottom>
-          {address}
-        </Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Map height="100px" center={center} name={address} />
+      <Grid container spacing={3}>
+        <Grid item xs={9}>
+          <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Typography variant="h4">{title}</Typography>
+
+              <Typography gutterBottom variant="subtitle1">
+                by {author}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid container>
+            <Grid item xs={8}>
+              <Box textAlign="left" className={classes.dateBox}>
+                <CalendarTodayIcon
+                  fontSize="small"
+                  style={{ marginTop: '4px' }}
+                />
+                <Typography variant="subtitle1" className={classes.date}>
+                  {selectedDate.toDateString()}
+                </Typography>
+                {isAuthor ? (
+                  <IconButton
+                    onClick={() => handleClick(1)}
+                    className={classes.editButton}
+                  >
+                    <EditOutlinedIcon color="primary" fontSize="small" />
+                  </IconButton>
+                ) : (
+                  <></>
+                )}
+              </Box>
+              <Box textAlign="left" className={classes.dateBox}>
+                <AccessTimeIcon fontSize="small" style={{ marginTop: '4px' }} />
+                <Typography variant="subtitle1" className={classes.date}>
+                  {selectedDate.toLocaleTimeString()}
+                </Typography>
+                {isAuthor ? (
+                  <IconButton
+                    onClick={() => handleClick(2)}
+                    className={classes.editButton}
+                  >
+                    <EditOutlinedIcon color="primary" fontSize="small" />
+                  </IconButton>
+                ) : (
+                  <></>
+                )}
+              </Box>
+            </Grid>
+            <Grid item xs={4}></Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Box className={classes.titleBox}>
+              <Typography variant="h5">Details</Typography>
+              {isAuthor ? (
+                <IconButton
+                  onClick={() => handleClick(3)}
+                  className={classes.editButton}
+                >
+                  <EditOutlinedIcon color="primary" />
+                </IconButton>
+              ) : (
+                <></>
+              )}
+            </Box>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="body1">{description}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Box className={classes.titleBox}>
+              <Typography variant="h5">Event Location</Typography>
+              {isAuthor ? (
+                <IconButton
+                  onClick={() => handleClick(4)}
+                  className={classes.editButton}
+                >
+                  <EditOutlinedIcon color="primary" />
+                </IconButton>
+              ) : (
+                <></>
+              )}
+            </Box>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="body1" gutterBottom>
+              {address}
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Map height="100px" center={center} name={address} />
+          </Grid>
+        </Grid>
       </Grid>
       <UpdateInputModal
         handleClose={handleClose}
