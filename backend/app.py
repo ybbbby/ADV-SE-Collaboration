@@ -64,7 +64,7 @@ def userinfo():
 
 
 # Tested - xyz
-@app.route('/user/event/new', methods=['PUT'])
+@app.route('/user/event/', methods=['POST'])
 def create_new_event():
     user_info = google_auth.get_user_info()
     email = user_info["email"]
@@ -90,8 +90,15 @@ def create_new_event():
     return event_id
 
 
-# Tested - xyz
-@app.route('/event/<id>/delete', methods=['POST'])
+@app.route('/event/<id>', methods=['POST', 'DELETE', 'GET'])
+def handle_event(id):
+    if request.method == 'DELETE':
+        return delete_event_by_id(id)
+    elif request.method == 'POST':
+        return update_event_by_id(id)
+    elif request.method == 'GET':
+        return get_event_by_id(id)
+
 def delete_event_by_id(id):
     try:
         Event.delete_event_by_id(id)
@@ -101,11 +108,9 @@ def delete_event_by_id(id):
     return "", status.HTTP_200_OK
 
 
-@app.route('/event/<id>/update', methods=['POST'])
 def update_event_by_id(id):
     type = request.form.get("Type")
     try:
-
         if type == "time":
             Event.update_event({"time": request.form.get("Time")}, id)
         elif type == "address":
@@ -120,10 +125,7 @@ def update_event_by_id(id):
     return "", status.HTTP_200_OK
 
 
-# Tested - xyz
-@app.route('/event/<id>', methods=['GET'])
 def get_event_by_id(id):
-    # user_name = "new@new.com"
     user_info = google_auth.get_user_info()
     email = user_info["email"]
     try:
@@ -135,13 +137,12 @@ def get_event_by_id(id):
 
 
 # Tested - xyz
-@app.route('/user/event/<id>/addcomment', methods=['POST'])
+@app.route('/user/event/<id>/comment', methods=['POST'])
 def create_new_comment(id):
     time = request.form.get("Time")
     content = request.form.get("Content")
     user_info = google_auth.get_user_info()
     email = user_info["email"]
-    # name = "34@34.com"
     comment = Comment(user=email, content=content, time=datetime.strptime(time, '%Y-%m-%d %H:%M:%S'), event=id)
     try:
         Comment.create_comment(comment)
@@ -172,6 +173,7 @@ def join_event(id):
         return "", status.HTTP_400_BAD_REQUEST
     return "", status.HTTP_200_OK
 
+
 @app.route('/user/event/{id}/like', methods=['POST'])
 def like_event(id):
     email = google_auth.get_user_info()["email"]
@@ -181,6 +183,7 @@ def like_event(id):
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return "", status.HTTP_200_OK
+
 
 @app.route('/user/event/liked', methods=['GET'])
 def get_all_event_liked_by_user():
@@ -192,6 +195,7 @@ def get_all_event_liked_by_user():
         return "", status.HTTP_400_BAD_REQUEST
     return json.dumps([ob.__dict__ for ob in events], use_decimal=True, default=str), status.HTTP_200_OK
 
+
 @app.route('/user/event/history', methods=['GET'])
 def get_all_history_event_by_user():
     email = google_auth.get_user_info()["email"]
@@ -202,6 +206,7 @@ def get_all_history_event_by_user():
         return "", status.HTTP_400_BAD_REQUEST
     return json.dumps([ob.__dict__ for ob in events], use_decimal=True, default=str), status.HTTP_200_OK
 
+
 @app.route('/user/event/ongoing', methods=['GET'])
 def get_all_ongoing_event_by_user():
     email = google_auth.get_user_info()["email"]
@@ -211,6 +216,7 @@ def get_all_ongoing_event_by_user():
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return json.dumps([ob.__dict__ for ob in events], use_decimal=True, default=str), status.HTTP_200_OK
+
 
 @app.route('/event/{id}/getattendees', methods=['GET'])
 def get_attendees_by_event(id):

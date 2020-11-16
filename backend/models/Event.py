@@ -7,6 +7,7 @@ import utils.database_connector as db_connector
 from models.Comment import Comment
 from models.Like import Like
 from models.Join import Join
+from models.User import User
 
 
 class Event:
@@ -14,6 +15,7 @@ class Event:
         self.id = None
         self.name = name
         self.user_email = user
+        self.author = User.get_user_by_email(user).username
         self.address = address
         self.longitude = longitude
         self.latitude = latitude
@@ -239,10 +241,10 @@ class Event:
     @staticmethod
     def serialize_comment_in_event(obj):
         if isinstance(obj, Comment):
-            return {"comment_id": obj.id,
-                    "comment_content": obj.content,
-                    "comment_time": obj.time,
-                    "comment_user": obj.user
+            return {"id": obj.id,
+                    "content": obj.content,
+                    "time": obj.time,
+                    "user": obj.user
                     }
         else:
             return str(obj)

@@ -7,6 +7,7 @@ import google.oauth2.credentials
 import googleapiclient.discovery
 
 import config
+from models.User import User
 
 
 ACCESS_TOKEN_URI = config.ACCESS_TOKEN_URI
@@ -93,6 +94,12 @@ def google_auth_redirect():
                         authorization_response=flask.request.url)
 
     flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
+
+    user_info = get_user_info()
+    email = user_info["email"]
+    username = user_info["name"]
+    newUser = User(email=email, username=username)
+    User.create_user(newUser)
 
     return flask.redirect(BASE_URI, code=302)
 
