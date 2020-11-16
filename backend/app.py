@@ -101,27 +101,19 @@ def delete_event_by_id(id):
     return "", status.HTTP_200_OK
 
 
-# Tested - xyz
 @app.route('/event/<id>/update', methods=['POST'])
 def update_event_by_id(id):
-    user_info = google_auth.get_user_info()
-    email = user_info["email"]
-    # name = "123"
-    event_name = request.form.get("Event_name")
-    address = request.form.get("Address")
-    zipcode = address[-5:]
-    longitude = request.form.get("Longitude")
-    latitude = request.form.get("Latitude")
-    time = request.form.get("Time")
-    description = request.form.get("Description")
-    image_path = request.form.get("Image")
-    e = Event(user=email, name=event_name, address=address, longitude=longitude, latitude=latitude, zipcode=zipcode,
-              time=datetime.datetime.strptime(str(time), "%Y-%m-%d %H:%M:%S"))
-    e.id = id
-    e.description = description
-    e.image_path = image_path
+    type = request.form.get("Type")
     try:
-        Event.update_event(e)
+
+        if type == "time":
+            Event.update_event({"time": request.form.get("Time")}, id)
+        elif type == "address":
+            Event.update_event({"address": request.form.get("Address"),
+                                "longitude": request.form.get("Longitude"),
+                                "latitude": request.form.get("Latitude")}, id)
+        elif type == "description":
+            Event.update_event({"description": request.form.get("Description")}, id)
     except:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
