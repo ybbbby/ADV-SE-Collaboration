@@ -11,8 +11,6 @@ import {
   IconButton,
   Divider,
 } from '@material-ui/core'
-import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
-import AccessTimeIcon from '@material-ui/icons/AccessTime'
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined'
 import Button from '@material-ui/core/Button'
 import UpdateInputModal from '../../components/UpdateInputModal/UpdateInputModal'
@@ -45,21 +43,15 @@ const useStyles = makeStyles((theme) => ({
   editButton: {
     padding: '3px',
   },
-  dateBox: {
-    display: 'flex',
-  },
   titleBox: {
     display: 'flex',
-    margin: '10px 0',
+    margin: '15px 0 10px',
   },
   shareButton: {
-    padding: '3px',
-    paddingLeft: '0',
+    margin: '0 10px',
   },
   likeButton: {
-    marginLeft: '5px',
-    paddingRight: '0',
-    padding: '3px',
+    margin: '0 10px',
   },
   Dvd: {
     paddingBottom: '10px',
@@ -123,7 +115,6 @@ export default function EventDetail(props) {
       })
       .then((data) => {
         console.log(data)
-        console.log('askdhakshdjkashdk')
         setAddress(data.address)
         setCenter({
           lat: Number(data.latitude),
@@ -138,7 +129,7 @@ export default function EventDetail(props) {
         setLikeButtonColor(color)
         setTitle(data.name)
         setAuthor(data.author)
-        if (user == data.user_email) {
+        if (user === data.user_email) {
           setIsAuthor(true)
         }
       })
@@ -258,21 +249,21 @@ export default function EventDetail(props) {
       </Grid>
 
       <Grid container spacing={4}>
-        <Grid item xs={1}>
+        <Grid item xs={2}>
           <IconButton
             aria-label="add to favorites"
             onClick={clickLike}
+            size="small"
             className={classes.likeButton}
           >
             <FavoriteIcon style={{ color: likeButtonColor }} />
           </IconButton>
-        </Grid>
-        <Grid item xs={1}>
           <IconButton
             aria-label="share"
             onClick={() => {
               setShareModalOpen(true)
             }}
+            size="small"
             className={classes.shareButton}
           >
             <ShareIcon />
@@ -342,44 +333,35 @@ export default function EventDetail(props) {
             <Box style={{ height: '20px' }}></Box>
           </Grid>
           <Grid item xs={12}>
-            <Box textAlign="left" className={classes.dateBox}>
-              <Typography variant="h5" className={classes.date}>
-                Date And Time&nbsp;&nbsp;
-              </Typography>
+            <Box textAlign="left" className={classes.titleBox}>
+              <Typography variant="h5">Date And Time&nbsp;&nbsp;</Typography>
               {isAuthor ? (
                 <IconButton
                   onClick={() => handleClick(2)}
                   className={classes.editButton}
                 >
-                  <EditOutlinedIcon color="primary" fontSize="small" />
+                  <EditOutlinedIcon color="primary" />
                 </IconButton>
               ) : (
                 <></>
               )}
             </Box>
           </Grid>
-
           <Grid item xs={12}>
-            <Box style={{ height: '10px' }}></Box>
-          </Grid>
-          <Grid item xs={12}>
-            <Box textAlign="left" className={classes.dateBox}>
-              <Typography variant="body1" className={classes.date}>
+            <Box textAlign="left">
+              <Typography variant="body2" color="textSecondary">
                 {selectedDate.toDateString()}
               </Typography>
             </Box>
-            <Box textAlign="left" className={classes.dateBox}>
-              <Typography variant="body1" className={classes.date}>
+            <Box textAlign="left">
+              <Typography variant="body2" color="textSecondary">
                 {selectedDate.toTimeString()}
               </Typography>
             </Box>
           </Grid>
 
           <Grid item xs={12}>
-            <Box style={{ height: '20px' }}></Box>
-          </Grid>
-          <Grid item xs={12}>
-            <Box className={classes.titleBox}>
+            <Box textAlign="left" className={classes.titleBox}>
               <Typography variant="h5">Event Location&nbsp;&nbsp;</Typography>
               {isAuthor ? (
                 <IconButton
@@ -394,7 +376,7 @@ export default function EventDetail(props) {
             </Box>
           </Grid>
           <Grid item xs={12}>
-            <Box style={{ marginLeft: '5px' }}>
+            <Box>
               <Typography variant="body2" gutterBottom color="textSecondary">
                 {address}
               </Typography>

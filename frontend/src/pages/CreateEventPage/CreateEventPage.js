@@ -111,7 +111,7 @@ const CreateEventPage = (props) => {
                 body: requestForm,
               })
                 .then((response) => response.text())
-                .then((data) => console.log(data))
+                .then((data) => (window.location.href = `/event/${data}`))
                 .catch((error) => {
                   setAlertOpen(true)
                   console.error(error)

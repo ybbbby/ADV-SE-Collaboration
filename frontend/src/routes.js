@@ -8,6 +8,7 @@ import GetLocationInformation from './components/GoogleMap/GetLocationInformatio
 
 export default function Routes(props) {
   const { user } = props
+  console.log('out>>', user)
 
   return (
     <>
@@ -20,8 +21,7 @@ export default function Routes(props) {
       <Route
         exact
         path="/event/:eventID"
-        component={EventDetail}
-        render={() => <Events user={user} />}
+        render={() => <EventDetail user={user} />}
       />
       <Route exact path="/newevent" component={CreateEvent} />
       <Route exact path="/map" component={SimpleMap} />
