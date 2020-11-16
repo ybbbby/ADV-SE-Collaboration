@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: '10px',
   },
 }))
-
+// more to do: register button evnet, show participants
 export default function EventDetail(props) {
   const router = useRouter()
   const { user } = props
