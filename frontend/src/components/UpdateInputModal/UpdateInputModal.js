@@ -17,6 +17,7 @@ import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
   KeyboardDatePicker,
+  KeyboardDateTimePicker,
 } from '@material-ui/pickers'
 import LocationSearchInput from '../GoogleMap/LocationSearchInput'
 
@@ -51,6 +52,7 @@ function UpdateInputModal(props) {
   const [newDescription, setNewDescription] = useState(description)
   const [newAddress, setNewAddress] = useState('')
   const [addressError, setAddressError] = useState(false)
+  const F = false
   const handleDateChange = (date) => {
     setSelectedDate(date)
   }
@@ -76,6 +78,7 @@ function UpdateInputModal(props) {
     }
   }
   let selector
+  /*
   if (type === 1) {
     selector = (
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -94,20 +97,16 @@ function UpdateInputModal(props) {
         />
       </MuiPickersUtilsProvider>
     )
-  } else if (type === 2) {
+  } else*/
+  if (type === 2) {
     selector = (
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <KeyboardTimePicker
-          disableToolbar
-          variant="inline"
-          margin="normal"
+        <KeyboardDateTimePicker
           id="time-picker"
           label="Change time"
+          ampm={F}
           value={selectedDate}
           onChange={handleDateChange}
-          KeyboardButtonProps={{
-            'aria-label': 'change time',
-          }}
         />
       </MuiPickersUtilsProvider>
     )

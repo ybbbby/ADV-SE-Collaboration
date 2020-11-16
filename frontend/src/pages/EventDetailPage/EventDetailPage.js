@@ -1,9 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Map from '../../components/GoogleMap/SimpleMap'
 import CardMedia from '@material-ui/core/CardMedia'
-import { Typography, Card, Box, Snackbar, IconButton } from '@material-ui/core'
+import {
+  Typography,
+  Card,
+  Box,
+  Snackbar,
+  IconButton,
+  Divider,
+} from '@material-ui/core'
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday'
 import AccessTimeIcon from '@material-ui/icons/AccessTime'
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined'
@@ -12,6 +19,12 @@ import UpdateInputModal from '../../components/UpdateInputModal/UpdateInputModal
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
 import { format } from 'date-fns'
 import MuiAlert from '@material-ui/lab/Alert'
+import FavoriteIcon from '@material-ui/icons/Favorite'
+import ShareIcon from '@material-ui/icons/Share'
+import useRouter from 'use-react-router'
+import LoginModal from '../../components/LoginModal/LoginModal'
+import { red } from '@material-ui/core/colors'
+import ShareModal from '../../components/ShareModal/ShareModal'
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -42,16 +55,27 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     margin: '10px 0',
   },
+  shareButton: {
+    padding: '3px',
+  },
+  likeButton: {
+    padding: '3px',
+  },
 }))
 
-export default function EventDetail({ match }) {
+export default function EventDetail(props) {
+  const router = useRouter()
+  const { user } = props
+  const [like, setLike] = useState(false)
+  const [attend, setAttend] = useState(false)
+  const [likeButtonColor, setLikeButtonColor] = useState('rgba(0, 0, 0, 0.54)')
   const classes = useStyles()
-  const isAuthor = match.params.eventID === '1' ? true : false
+  const isAuthor = router.match.params.eventID === '1' ? true : false
   const [description, setDescription] = useState(
     'asjhdflakjhsdlfkajhsdljhf lajh dsfljkhadsfjh aldsjfh lajsdh flajshdflajhds flajhds flahds lf jhasasjdfh a;kjds ;fkja;dsfk ja;sdkfj;akdsj f;al dsj;kflas;df a;lkfj ;aklsdj f;ajks df;ajs d;flajds;lfaj;dslfj aei hliuaherf liahfd vlkasdn flawker oaiudf;kjas;dkljfa;lkw3 jr;ioausdj;flkjajds;flkj a;sdlkfj ;awefh ;ioauf ;alksdj;fakjs df'
   )
   const [selectedDate, setSelectedDate] = useState(new Date())
-  const [type, setType] = useState(1)
+  const [type, setType] = useState(2)
   const [address, setAddress] = useState(
     'ASD Casting Co., Inc., West 47th Street, New York, NY, USA'
   )
@@ -60,31 +84,77 @@ export default function EventDetail({ match }) {
     lng: 30.33,
   })
   const [alertOpen, setAlertOpen] = useState(false)
-  const imageURL =
+  const [serverity, setServerity] = useState('error')
+  const [shareModalOpen, setShareModalOpen] = useState(false)
+  const [loginOpen, setLoginOpen] = useState(false)
+  const [imageURL, setimageURL] = useState(
     'https://cdn.vox-cdn.com/thumbor/lopA7fKDwAh9iqR0hqVsHWpnPfQ=/0x0:4133x3074/1820x1213/filters:focal(1737x1207:2397x1867):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/65573297/GettyImages_1019226434.0.jpg'
+  )
   const title = 'Party in Hells Kitchen'
 
   const handleClick = (num) => {
     setType(num)
-    setOpenLogin(true)
+    setOpenInput(true)
   }
   const closeAlert = (event, reason) => {
     if (reason === 'clickaway') return
 
     setAlertOpen(false)
   }
-  const [openLogin, setOpenLogin] = React.useState(false)
-  const [failInfo, setfailInfo] = React.useState('')
-  const UpdateInfo = () => {
+  const [openInput, setOpenInput] = useState(false)
+  const [failInfo, setfailInfo] = useState('')
+  useEffect(() => {
+    const url = '/event/' + router.match.params.eventID.toString()
+    fetch(url, {
+      method: 'GET',
+    })
+      .then((response) => {
+        console.log(response)
+        if (response.status < 200 || response.status > 299) {
+          throw Error(response.statusText)
+        } else {
+          return response.json()
+        }
+      })
+      .then((data) => {
+        console.log(data)
+        setAddress(data.name)
+        setCenter({
+          lat: data.latitude,
+          lng: data.longitude,
+        })
+        setLike(data.liked)
+        setAttend(data.usAttebd)
+        setimageURL(data.image)
+        setDescription(data.description)
+        setSelectedDate(data.time)
+
+        const color = like ? red[500] : 'rgba(0, 0, 0, 0.54)'
+        setLikeButtonColor(color)
+      })
+      .catch((error) => {
+        setfailInfo('Cannot get event detail')
+        setServerity('error')
+        setAlertOpen(true)
+      })
+  }, [])
+
+  const UpdateInfo = (t, oldValue) => {
     const requestForm = new FormData()
-    requestForm.append('Event_name', title)
-    requestForm.append('Address', address)
-    requestForm.append('Longitude', center.lng)
-    requestForm.append('Latitude', center.lat)
-    requestForm.append('Time', format(selectedDate, 'yyyy-MM-dd HH:mm:ss'))
-    requestForm.append('Description', description)
-    requestForm.append('Image', imageURL)
-    const url = '/user/event/' + match.params.eventID.toString() + '/update'
+    requestForm.append('type', t)
+    if (t == 'time') {
+      requestForm.append(
+        'Time',
+        format({ selectedDate }.selectedDate, 'yyyy-MM-dd HH:mm:ss')
+      )
+    } else if (t == 'description') {
+      requestForm.append('Description', { description }.description)
+    } else if (t == 'address') {
+      requestForm.append('Address', { address }.address)
+      requestForm.append('Longitude', { center }.center.lng)
+      requestForm.append('Latitude', { center }.center.lat)
+    }
+    const url = '/event/' + router.match.params.eventID.toString() + '/update'
     fetch(url, {
       method: 'POST',
       body: requestForm,
@@ -99,45 +169,86 @@ export default function EventDetail({ match }) {
       })
       .then((data) => console.log(data))
       .catch((error) => {
+        if (t == 'time') {
+          setSelectedDate(oldValue)
+        } else if (t == 'description') {
+          setDescription(oldValue)
+        } else if (t == 'address') {
+          setAddress(oldValue.address)
+          setCenter({
+            lat: oldValue.lat,
+            lng: oldValue.lng,
+          })
+        }
         setfailInfo('Fail to update due to connection error with server')
+        setServerity('error')
         setAlertOpen(true)
       })
   }
   const handleClose = (value) => {
-    setOpenLogin(false)
+    setOpenInput(false)
     if (!value) {
       return
     }
+    var oldValue
     console.log(value)
     if (type === 1) {
+      oldValue = selectedDate
       setSelectedDate(value)
-      UpdateInfo()
+      UpdateInfo('time', oldValue)
     } else if (type === 2) {
+      oldValue = selectedDate
       setSelectedDate(value)
-      UpdateInfo()
+      UpdateInfo('time', oldValue)
     } else if (type === 3) {
+      oldValue = description
       setDescription(value)
-      UpdateInfo()
+      console.log({ description }.description)
+      UpdateInfo('description', oldValue)
     } else if (type === 4) {
       const res = geocodeByAddress(value)
         .then((results) => getLatLng(results[0]))
         .then((latLng) => {
+          oldValue = {
+            address: address,
+            lat: center.lat,
+            lng: center.lng,
+          }
           setCenter({
             lat: latLng.lat,
             lng: latLng.lng,
           })
           setAddress(value)
-          UpdateInfo()
+          UpdateInfo('address', oldValue)
         })
         .catch((error) => {
           setfailInfo('Fail to update due to illegitimate address')
+          setServerity('error')
           setAlertOpen(true)
         })
     }
-
-    //fixme: add roll back after test!!!!
   }
-
+  const clickLike = () => {
+    if (!user) {
+      setLoginOpen(true)
+      return
+    }
+    const currentStatus = like
+    const color = currentStatus ? 'rgba(0, 0, 0, 0.54)' : red[500]
+    setLike(!currentStatus)
+    setLikeButtonColor(color)
+    if (!currentStatus) {
+      setfailInfo('Saved to your favourite events!')
+      setServerity('success')
+    } else {
+      setfailInfo('Remove this event from your favourite events!')
+      setServerity('info')
+    }
+    setAlertOpen(true)
+  }
+  const closeShare = () => {
+    setShareModalOpen(false)
+  }
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
@@ -146,6 +257,33 @@ export default function EventDetail({ match }) {
             <CardMedia image={imageURL} component="img" height="300" />
           </Card>
         </Grid>
+
+        <Grid item xs={1}>
+          <IconButton
+            aria-label="add to favorites"
+            onClick={clickLike}
+            className={classes.likeButton}
+          >
+            <FavoriteIcon style={{ color: likeButtonColor }} />
+          </IconButton>
+        </Grid>
+        <Grid item xs={1}>
+          <IconButton
+            aria-label="share"
+            onClick={() => {
+              setShareModalOpen(true)
+            }}
+            className={classes.shareButton}
+          >
+            <ShareIcon />
+          </IconButton>
+        </Grid>
+
+        <Grid item xs={10}></Grid>
+        <Grid item xs={12}>
+          <Divider />
+        </Grid>
+
         <Grid item xs={12}>
           <Typography gutterBottom variant="h4">
             {title}
@@ -244,16 +382,22 @@ export default function EventDetail({ match }) {
       </Grid>
       <UpdateInputModal
         handleClose={handleClose}
-        open={openLogin}
+        open={openInput}
         type={type}
         date={selectedDate}
         description={description}
       />
+      <ShareModal
+        url="https://www.google.com/"
+        handleClose={closeShare}
+        open={shareModalOpen}
+      />
       <Snackbar open={alertOpen} autoHideDuration={4000} onClose={closeAlert}>
-        <Alert onClose={closeAlert} severity="error">
+        <Alert onClose={closeAlert} severity={serverity}>
           {failInfo}
         </Alert>
       </Snackbar>
+      <LoginModal handleClose={() => setLoginOpen(false)} open={loginOpen} />
     </div>
   )
 }

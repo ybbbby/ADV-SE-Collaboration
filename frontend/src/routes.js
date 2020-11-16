@@ -17,7 +17,12 @@ export default function Routes(props) {
         path="/events/:category"
         render={() => <Events user={user} />}
       />
-      <Route exact path="/event/:eventID" component={EventDetail} />
+      <Route
+        exact
+        path="/event/:eventID"
+        component={EventDetail}
+        render={() => <Events user={user} />}
+      />
       <Route exact path="/newevent" component={CreateEvent} />
       <Route exact path="/map" component={SimpleMap} />
       <Route exact path="/getLocation" component={GetLocationInformation} />
