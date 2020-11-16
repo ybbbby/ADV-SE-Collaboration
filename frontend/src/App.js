@@ -44,10 +44,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'sticky',
     top: '80px',
     textAlign: 'center',
-    // borderRadius: '10px',
-    // boxShadow: '0 16px 40px -12.125px rgba(0,0,0,0.3)',
     boxShadow: 'rgba(0, 0, 0, 0.3) 0px 8px 40px -12px',
-    // transition: 'all 0.3s ease 0s',
   },
 }))
 
@@ -81,6 +78,7 @@ export default function App() {
       .then((response) => response.json())
       .then((data) => {
         setUserData(data)
+        localStorage.setItem('userEmail', data['email'])
         setLogin(true)
       })
       .catch((error) => {
@@ -116,7 +114,7 @@ export default function App() {
                 </Card>
               </Grid>
               <Grid item xs={9}>
-                <Routes user={userData.email} />
+                <Routes />
               </Grid>
             </Grid>
             <Copyright />

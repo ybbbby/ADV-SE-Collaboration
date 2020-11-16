@@ -21,7 +21,7 @@ export default function EventsNearby(props) {
   const classes = useStyles()
   const router = useRouter()
   const { category } = router.match.params
-  const { user } = props
+  const user = localStorage.getItem('userEmail')
   const eventList = [
     { config: { host: 'mg4115@columbia.edu' } },
     { config: { host: '' } },

@@ -11,6 +11,7 @@ import {
   IconButton,
   Divider,
 } from '@material-ui/core'
+import Skeleton from '@material-ui/lab/Skeleton'
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined'
 import Button from '@material-ui/core/Button'
 import UpdateInputModal from '../../components/UpdateInputModal/UpdateInputModal'
@@ -32,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     padding: theme.spacing(1.5),
+    // boxShadow: 'rgba(0, 0, 0, 0.3) 0px 8px 40px -12px',
   },
   register: {
     height: '90%',
@@ -60,15 +62,13 @@ const useStyles = makeStyles((theme) => ({
 // more to do: register button evnet, show participants
 export default function EventDetail(props) {
   const router = useRouter()
-  const { user } = props
+  const user = localStorage.getItem('userEmail')
   const [like, setLike] = useState(false)
   const [attend, setAttend] = useState(false)
   const [likeButtonColor, setLikeButtonColor] = useState('rgba(0, 0, 0, 0.54)')
   const classes = useStyles()
   const [isAuthor, setIsAuthor] = useState(false)
-  const [description, setDescription] = useState(
-    'asjhdflakjhsdlfkajhsdljhf lajh dsfljkhadsfjh aldsjfh lajsdh flajshdflajhds flajhds flahds lf jhasasjdfh a;kjds ;fkja;dsfk ja;sdkfj;akdsj f;al dsj;kflas;df a;lkfj ;aklsdj f;ajks df;ajs d;flajds;lfaj;dslfj aei hliuaherf liahfd vlkasdn flawker oaiudf;kjas;dkljfa;lkw3 jr;ioausdj;flkjajds;flkj a;sdlkfj ;awefh ;ioauf ;alksdj;fakjs df'
-  )
+  const [description, setDescription] = useState('')
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [type, setType] = useState(2)
   const [address, setAddress] = useState(
@@ -82,11 +82,9 @@ export default function EventDetail(props) {
   const [serverity, setServerity] = useState('error')
   const [shareModalOpen, setShareModalOpen] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
-  const [imageURL, setimageURL] = useState(
-    'https://cdn.vox-cdn.com/thumbor/lopA7fKDwAh9iqR0hqVsHWpnPfQ=/0x0:4133x3074/1820x1213/filters:focal(1737x1207:2397x1867):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/65573297/GettyImages_1019226434.0.jpg'
-  )
-  const [title, setTitle] = useState('Party in Hells Kitchen')
-  const [author, setAuthor] = useState('Deku')
+  const [imageURL, setimageURL] = useState('')
+  const [title, setTitle] = useState('Title')
+  const [author, setAuthor] = useState('host')
 
   const handleClick = (num) => {
     setType(num)
@@ -106,7 +104,6 @@ export default function EventDetail(props) {
       method: 'GET',
     })
       .then((response) => {
-        console.log(response)
         if (response.status < 200 || response.status > 299) {
           throw Error(response.statusText)
         } else {
@@ -154,13 +151,12 @@ export default function EventDetail(props) {
       requestForm.append('Longitude', newValue.lng)
       requestForm.append('Latitude', newValue.lat)
     }
-    const url = '/event/' + router.match.params.eventID.toString() + '/update'
+    const url = '/event/' + router.match.params.eventID.toString()
     fetch(url, {
-      method: 'PUT',
+      method: 'POST',
       body: requestForm,
     })
       .then((response) => {
-        console.log(response)
         if (response.status < 200 || response.status > 299) {
           throw Error(response.statusText)
         } else {
@@ -243,13 +239,17 @@ export default function EventDetail(props) {
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Card className={classes.eventImage}>
-            <CardMedia image={imageURL} component="img" height="300" />
+            {imageURL ? (
+              <CardMedia image={imageURL} component="img" height="300" />
+            ) : (
+              <Skeleton variant="rect" width="100%" height={300} />
+            )}
           </Card>
         </Grid>
       </Grid>
 
       <Grid container spacing={4}>
-        <Grid item xs={2}>
+        <Grid item xs={4}>
           <IconButton
             aria-label="add to favorites"
             onClick={clickLike}
@@ -269,7 +269,7 @@ export default function EventDetail(props) {
             <ShareIcon />
           </IconButton>
         </Grid>
-        <Grid item xs={6}></Grid>
+        <Grid item xs={4}></Grid>
         <Grid item xs={4}>
           {isAuthor ? (
             <></>
@@ -325,7 +325,16 @@ export default function EventDetail(props) {
             </Box>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="body1">{description}</Typography>
+            {description ? (
+              <Typography variant="body1">{description}</Typography>
+            ) : (
+              <Skeleton
+                variant="rect"
+                animation="wave"
+                height={150}
+                width={'90%'}
+              />
+            )}
           </Grid>
         </Grid>
         <Grid item xs={3}>
@@ -395,7 +404,7 @@ export default function EventDetail(props) {
         description={description}
       />
       <ShareModal
-        url="https://www.google.com/"
+        url={String(window.location)}
         handleClose={closeShare}
         open={shareModalOpen}
       />
