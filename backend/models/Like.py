@@ -31,7 +31,7 @@ class Like:
             likes.append(Like(user=user, event=event))
         cursor.close()
         cnx.close()
-        return json.dumps([ob.__dict__ for ob in likes], use_decimal=True, default=str)
+        return likes
 
     @staticmethod
     def get_like_by_event(event: str):
@@ -44,7 +44,7 @@ class Like:
             likes.append(Like(user=user, event=event))
         cursor.close()
         cnx.close()
-        return json.dumps([ob.__dict__ for ob in likes], use_decimal=True, default=str)
+        return likes
 
     @staticmethod
     def exist(user: str, event: str):

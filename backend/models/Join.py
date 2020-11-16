@@ -31,7 +31,7 @@ class Join:
             joins.append(Join(user=user, event=event))
         cursor.close()
         cnx.close()
-        return json.dumps([ob.__dict__ for ob in joins], use_decimal=True, default=str)
+        return joins
 
     @staticmethod
     def get_join_by_event(event: str):
@@ -44,7 +44,7 @@ class Join:
             joins.append(Join(user=user, event=event))
         cursor.close()
         cnx.close()
-        return json.dumps([ob.__dict__ for ob in joins], use_decimal=True, default=str)
+        return joins
 
     @staticmethod
     def user_is_attend(user: str, event: str):

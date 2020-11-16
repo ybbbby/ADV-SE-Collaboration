@@ -31,3 +31,18 @@ class User:
         cursor.close()
         cnx.close()
         return res
+
+    @staticmethod
+    def get_attendees_by_event(event: str):
+        cnx = db_connector.get_connection()
+        cursor = cnx.cursor()
+        query = (
+            "with `tmp` as (select `user` from `join` where `event` = '" + event + "')"
+            "select `user`.* from `user` join `tmp` on `user`.`email` = `tmp`.`user`;")
+        cursor.execute(query)
+        users = []
+        for (email, name) in cursor:
+            users.append(User(email=email, username=name))
+        cursor.close()
+        cnx.close()
+        return users
