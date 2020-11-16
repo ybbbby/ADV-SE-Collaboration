@@ -15,8 +15,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import CloseIcon from '@material-ui/icons/Close'
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
   KeyboardDateTimePicker,
 } from '@material-ui/pickers'
 import LocationSearchInput from '../GoogleMap/LocationSearchInput'
@@ -120,7 +118,7 @@ function UpdateInputModal(props) {
           rows={7}
           fullWidth
           margin="normal"
-          defaultValue={newDescription}
+          value={newDescription}
           onChange={handleDesChange}
           className={classes.descripInput}
         />

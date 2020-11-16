@@ -106,12 +106,12 @@ const CreateEventPage = (props) => {
               )
               requestForm.append('Description', description)
               requestForm.append('Image', response.body.postResponse.location)
-              fetch('/user/event/new', {
-                method: 'PUT',
+              fetch('/user/event/', {
+                method: 'POST',
                 body: requestForm,
               })
                 .then((response) => response.text())
-                .then((data) => console.log(data))
+                .then((data) => (window.location.href = `/event/${data}`))
                 .catch((error) => {
                   setAlertOpen(true)
                   console.error(error)

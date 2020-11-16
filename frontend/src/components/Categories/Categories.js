@@ -42,7 +42,10 @@ export default function Categories(props) {
     fetch('/google/logout', {
       method: 'GET',
     })
-      .then((response) => (window.location.href = '/'))
+      .then((response) => {
+        localStorage.clear()
+        window.location.href = '/'
+      })
       .catch((error) => {
         console.error(error)
       })
