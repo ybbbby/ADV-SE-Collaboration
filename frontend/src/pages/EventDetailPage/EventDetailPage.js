@@ -42,9 +42,6 @@ const useStyles = makeStyles((theme) => ({
   eventImage: {
     boxShadow: 'none',
   },
-  date: {
-    margin: '0 15px',
-  },
   editButton: {
     padding: '3px',
   },
@@ -64,6 +61,9 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: '0',
     padding: '3px',
   },
+  Dvd: {
+    paddingBottom: '10px',
+  },
 }))
 
 export default function EventDetail(props) {
@@ -73,7 +73,7 @@ export default function EventDetail(props) {
   const [attend, setAttend] = useState(false)
   const [likeButtonColor, setLikeButtonColor] = useState('rgba(0, 0, 0, 0.54)')
   const classes = useStyles()
-  const isAuthor = router.match.params.eventID === '1' ? true : false
+  const [isAuthor, setIsAuthor] = useState(false)
   const [description, setDescription] = useState(
     'asjhdflakjhsdlfkajhsdljhf lajh dsfljkhadsfjh aldsjfh lajsdh flajshdflajhds flajhds flahds lf jhasasjdfh a;kjds ;fkja;dsfk ja;sdkfj;akdsj f;al dsj;kflas;df a;lkfj ;aklsdj f;ajks df;ajs d;flajds;lfaj;dslfj aei hliuaherf liahfd vlkasdn flawker oaiudf;kjas;dkljfa;lkw3 jr;ioausdj;flkjajds;flkj a;sdlkfj ;awefh ;ioauf ;alksdj;fakjs df'
   )
@@ -129,15 +129,18 @@ export default function EventDetail(props) {
           lat: Number(data.latitude),
           lng: Number(data.longitude),
         })
-        setLike(Boolean.parseBoolean(data.liked))
-        setAttend(Boolean.parseBoolean(data.isAttebd))
+        setLike(data.liked)
+        setAttend(data.isAttend)
         setimageURL(data.image)
         setDescription(data.description)
         setSelectedDate(new Date(data.time))
         const color = like ? red[500] : 'rgba(0, 0, 0, 0.54)'
         setLikeButtonColor(color)
         setTitle(data.name)
-        //setAuthor(data.author)
+        setAuthor(data.author)
+        if (user == data.user_email) {
+          setIsAuthor(true)
+        }
       })
       .catch((error) => {
         setfailInfo('Cannot get event detail')
@@ -147,24 +150,22 @@ export default function EventDetail(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const UpdateInfo = (t, oldValue) => {
+  const UpdateInfo = (t, newValue) => {
     const requestForm = new FormData()
-    requestForm.append('type', t)
+    requestForm.append('Type', t)
     if (t === 'time') {
-      requestForm.append(
-        'Time',
-        format({ selectedDate }.selectedDate, 'yyyy-MM-dd HH:mm:ss')
-      )
+      requestForm.append('Time', format(newValue, 'yyyy-MM-dd HH:mm:ss'))
     } else if (t === 'description') {
-      requestForm.append('Description', { description }.description)
+      console.log(newValue)
+      requestForm.append('Description', newValue)
     } else if (t === 'address') {
-      requestForm.append('Address', { address }.address)
-      requestForm.append('Longitude', { center }.center.lng)
-      requestForm.append('Latitude', { center }.center.lat)
+      requestForm.append('Address', newValue.address)
+      requestForm.append('Longitude', newValue.lng)
+      requestForm.append('Latitude', newValue.lat)
     }
     const url = '/event/' + router.match.params.eventID.toString() + '/update'
     fetch(url, {
-      method: 'POST',
+      method: 'PUT',
       body: requestForm,
     })
       .then((response) => {
@@ -175,19 +176,21 @@ export default function EventDetail(props) {
           return response.text()
         }
       })
-      .then((data) => console.log(data))
-      .catch((error) => {
+      .then((data) => {
+        console.log(data)
         if (t === 'time') {
-          setSelectedDate(oldValue)
+          setSelectedDate(newValue)
         } else if (t === 'description') {
-          setDescription(oldValue)
+          setDescription(newValue)
         } else if (t === 'address') {
-          setAddress(oldValue.address)
+          setAddress(newValue.address)
           setCenter({
-            lat: oldValue.lat,
-            lng: oldValue.lng,
+            lat: newValue.lat,
+            lng: newValue.lng,
           })
         }
+      })
+      .catch((error) => {
         setfailInfo('Fail to update due to connection error with server')
         setServerity('error')
         setAlertOpen(true)
@@ -198,36 +201,23 @@ export default function EventDetail(props) {
     if (!value) {
       return
     }
-    var oldValue
     console.log(value)
     if (type === 1) {
-      oldValue = selectedDate
-      setSelectedDate(value)
-      UpdateInfo('time', oldValue)
+      UpdateInfo('time', value)
     } else if (type === 2) {
-      oldValue = selectedDate
-      setSelectedDate(value)
-      UpdateInfo('time', oldValue)
+      UpdateInfo('time', value)
     } else if (type === 3) {
-      oldValue = description
-      setDescription(value)
-      console.log({ description }.description)
-      UpdateInfo('description', oldValue)
+      UpdateInfo('description', value)
     } else if (type === 4) {
       geocodeByAddress(value)
         .then((results) => getLatLng(results[0]))
         .then((latLng) => {
-          oldValue = {
-            address: address,
-            lat: center.lat,
-            lng: center.lng,
-          }
-          setCenter({
+          const newValue = {
+            address: value,
             lat: latLng.lat,
             lng: latLng.lng,
-          })
-          setAddress(value)
-          UpdateInfo('address', oldValue)
+          }
+          UpdateInfo('address', newValue)
         })
         .catch((error) => {
           setfailInfo('Fail to update due to illegitimate address')
@@ -267,7 +257,7 @@ export default function EventDetail(props) {
         </Grid>
       </Grid>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={4}>
         <Grid item xs={1}>
           <IconButton
             aria-label="add to favorites"
@@ -310,12 +300,14 @@ export default function EventDetail(props) {
             </Button>
           )}
         </Grid>
+      </Grid>
 
+      <Grid container spacing={2} className={classes.Dvd}>
         <Grid item xs={12}>
           <Divider />
         </Grid>
       </Grid>
-      <Grid container spacing={3}>
+      <Grid container spacing={0}>
         <Grid item xs={9}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
@@ -326,49 +318,9 @@ export default function EventDetail(props) {
               </Typography>
             </Grid>
           </Grid>
-          <Grid container>
-            <Grid item xs={8}>
-              <Box textAlign="left" className={classes.dateBox}>
-                <CalendarTodayIcon
-                  fontSize="small"
-                  style={{ marginTop: '4px' }}
-                />
-                <Typography variant="subtitle1" className={classes.date}>
-                  {selectedDate.toDateString()}
-                </Typography>
-                {isAuthor ? (
-                  <IconButton
-                    onClick={() => handleClick(1)}
-                    className={classes.editButton}
-                  >
-                    <EditOutlinedIcon color="primary" fontSize="small" />
-                  </IconButton>
-                ) : (
-                  <></>
-                )}
-              </Box>
-              <Box textAlign="left" className={classes.dateBox}>
-                <AccessTimeIcon fontSize="small" style={{ marginTop: '4px' }} />
-                <Typography variant="subtitle1" className={classes.date}>
-                  {selectedDate.toLocaleTimeString()}
-                </Typography>
-                {isAuthor ? (
-                  <IconButton
-                    onClick={() => handleClick(2)}
-                    className={classes.editButton}
-                  >
-                    <EditOutlinedIcon color="primary" fontSize="small" />
-                  </IconButton>
-                ) : (
-                  <></>
-                )}
-              </Box>
-            </Grid>
-            <Grid item xs={4}></Grid>
-          </Grid>
           <Grid item xs={12}>
             <Box className={classes.titleBox}>
-              <Typography variant="h5">Details</Typography>
+              <Typography variant="h5">Details&nbsp;&nbsp;</Typography>
               {isAuthor ? (
                 <IconButton
                   onClick={() => handleClick(3)}
@@ -384,9 +336,51 @@ export default function EventDetail(props) {
           <Grid item xs={12}>
             <Typography variant="body1">{description}</Typography>
           </Grid>
+        </Grid>
+        <Grid item xs={3}>
+          <Grid item xs={12}>
+            <Box style={{ height: '20px' }}></Box>
+          </Grid>
+          <Grid item xs={12}>
+            <Box textAlign="left" className={classes.dateBox}>
+              <Typography variant="h5" className={classes.date}>
+                Date And Time&nbsp;&nbsp;
+              </Typography>
+              {isAuthor ? (
+                <IconButton
+                  onClick={() => handleClick(2)}
+                  className={classes.editButton}
+                >
+                  <EditOutlinedIcon color="primary" fontSize="small" />
+                </IconButton>
+              ) : (
+                <></>
+              )}
+            </Box>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Box style={{ height: '10px' }}></Box>
+          </Grid>
+          <Grid item xs={12}>
+            <Box textAlign="left" className={classes.dateBox}>
+              <Typography variant="body1" className={classes.date}>
+                {selectedDate.toDateString()}
+              </Typography>
+            </Box>
+            <Box textAlign="left" className={classes.dateBox}>
+              <Typography variant="body1" className={classes.date}>
+                {selectedDate.toTimeString()}
+              </Typography>
+            </Box>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Box style={{ height: '20px' }}></Box>
+          </Grid>
           <Grid item xs={12}>
             <Box className={classes.titleBox}>
-              <Typography variant="h5">Event Location</Typography>
+              <Typography variant="h5">Event Location&nbsp;&nbsp;</Typography>
               {isAuthor ? (
                 <IconButton
                   onClick={() => handleClick(4)}
@@ -400,12 +394,14 @@ export default function EventDetail(props) {
             </Box>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="body1" gutterBottom>
-              {address}
-            </Typography>
+            <Box style={{ marginLeft: '5px' }}>
+              <Typography variant="body2" gutterBottom color="textSecondary">
+                {address}
+              </Typography>
+            </Box>
           </Grid>
           <Grid item xs={12}>
-            <Map height="100px" center={center} name={address} />
+            <Map center={center} name={address} />
           </Grid>
         </Grid>
       </Grid>
