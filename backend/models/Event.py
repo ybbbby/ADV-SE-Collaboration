@@ -222,15 +222,15 @@ class Event:
         cnx.close()
 
     @staticmethod
-    def update_event(event: 'Event'):
+    def update_event(fields: dict, id: str):
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
-        sql = ("""
-        UPDATE `event` SET `name`=%s, `address`=%s, `longitude`=%s, `latitude`=%s, `zipcode`=%s, 
-        `time`=%s, `description`=%s, `image` =%s WHERE (`id`=%s)
-        """)
-        event_data = (event.name, event.address, event.longitude, event.latitude, event.zipcode,
-                      event.time.strftime('%Y-%m-%d %H:%M:%S'), event.description, event.image, event.id)
+        columns = ["`" + c + "`=%s" for c in list(fields.keys())]
+        column_str = ", ".join(columns)
+        values = list(fields.values())
+        values.append(id)
+        sql = ("UPDATE `event` SET " + column_str + "  WHERE (`id`=%s)")
+        event_data = tuple(values)
         cursor.execute(sql, event_data)
         cnx.commit()
         cursor.close()
