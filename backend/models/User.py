@@ -10,7 +10,7 @@ class User:
     def create_user(user: 'User'):
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
-        sql = "INSERT INTO `user` (`email`, `name`) " \
+        sql = "INSERT IGNORE INTO `user` (`email`, `name`) " \
               "VALUES (%s, %s)"
         user_data = (user.email, user.username)
         cursor.execute(sql, user_data)

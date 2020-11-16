@@ -18,7 +18,7 @@ TABLES['event'] = (
     `id` VARCHAR(25) NOT NULL,
     `name` VARCHAR(50) NOT NULL,
     `host` VARCHAR(25) NOT NULL,
-    `address` VARCHAR(100) NOT NULL,
+    `address` VARCHAR(200) NOT NULL,
     `longitude` DECIMAL(9,6) NOT NULL,
     `latitude` DECIMAL(9,6) NOT NULL,
     `zipcode` VARCHAR(10) NOT NULL,
