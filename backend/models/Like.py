@@ -58,3 +58,14 @@ class Like:
         cursor.close()
         cnx.close()
         return ret
+    
+    @staticmethod
+    def delete_like(like: 'Like'):
+        cnx = db_connector.get_connection()
+        cursor = cnx.cursor()
+        query = ("DELETE FROM `like` WHERE user='" + like.user + "' and event='" + like.event + "'")
+        cursor.execute(query)
+        cnx.commit()
+        cursor.close()
+        cnx.close()
+

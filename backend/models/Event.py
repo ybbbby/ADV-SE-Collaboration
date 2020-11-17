@@ -93,17 +93,16 @@ class Event:
             events.append(newEvent)
         cursor.close()
         cnx.close()
-        # return json.dumps([ob.__dict__ for ob in events], use_decimal=True, default=str)
         return events
 
     @staticmethod
     def get_all_event_liked_by_user(email: str):
-        joins = Join.get_join_by_user()
+        joins = Join.get_join_by_user(email)
         joined_events = set(join.event for join in joins)
 
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
-        query = ("SELECT * FROM `event` WHERE `id` IN (SELECT `event` FROM `join` WHERE `user` = '" + email + "');")
+        query = ("SELECT * FROM `event` WHERE `id` IN (SELECT `event` FROM `like` WHERE `user` = '" + email + "');")
         cursor.execute(query)
         events = []
         for (
@@ -121,7 +120,6 @@ class Event:
             events.append(newEvent)
         cursor.close()
         cnx.close()
-        # return json.dumps([ob.__dict__ for ob in events], use_decimal=True, default=str)
         return events
 
     @staticmethod

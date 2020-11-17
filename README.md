@@ -1,5 +1,9 @@
 ## YesOK
 
+### API Swagger doc
+
+https://thss15-gaomx.github.io/yesOK-swagger/
+
 ### Run the app locally
 
 #### Backend
