@@ -57,7 +57,7 @@ class Comment:
         comments = []
         for (comment_id, user, event_id, content, comment_time) in cursor:
             new_comment = Comment(user=user, event=event_id, content=content,
-                time=datetime.datetime.strptime(str(comment_time), "%Y-%m-%d %H:%M:%S"))
+                comment_time=datetime.datetime.strptime(str(comment_time), "%Y-%m-%d %H:%M:%S"))
             new_comment.id = comment_id
             comments.append(new_comment)
         cursor.close()
