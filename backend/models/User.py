@@ -49,6 +49,16 @@ class User:
         cursor.close()
         cnx.close()
         return res
+    
+    @staticmethod
+    def delete_user_by_email(email: str):
+        cnx = db_connector.get_connection()
+        cursor = cnx.cursor()
+        sql = ("DELETE FROM `user` WHERE email='" + email + "'")
+        cursor.execute(sql)
+        cnx.commit()
+        cursor.close()
+        cnx.close()
 
     @staticmethod
     def get_attendees_by_event(event: str):

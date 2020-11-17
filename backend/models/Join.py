@@ -84,3 +84,13 @@ class Join:
         cursor.close()
         cnx.close()
         return find_result
+    
+    @staticmethod
+    def delete_join(join: 'Join'):
+        cnx = db_connector.get_connection()
+        cursor = cnx.cursor()
+        query = ("DELETE FROM `join` WHERE user='" + join.user + "' and event='" + join.event + "'")
+        cursor.execute(query)
+        cnx.commit()
+        cursor.close()
+        cnx.close()

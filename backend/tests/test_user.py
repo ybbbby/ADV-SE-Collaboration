@@ -29,10 +29,17 @@ class TestUser(unittest.TestCase):
         self.assertIsNone(user)
 
     # if user exists
-    def test_get_user_by_email1(self):
+    def test_get_user_by_email2(self):
         email = "test@test.com"
         user = User.get_user_by_email(email)
         self.assertEqual(user.email, email)
+
+    def test_get_attendees_by_event(self):
+        user = "test@test.com"
+        id = "1605585527774605"
+        Join.create_join(Join(user, id))
+        users = User.get_attendees_by_event(id)
+        self.assertEqual(users[0].email, user)
 
 
 if __name__ == '__main__':

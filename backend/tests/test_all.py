@@ -1,7 +1,7 @@
 import unittest
 import os
 
-# refer: https://blog.csdn.net/weixin_40569991/article/details/81155145git
+# refer: https://blog.csdn.net/weixin_40569991/article/details/81155145
 def allTests():
     suite = unittest.TestLoader().discover(
         start_dir=os.path.dirname(__file__),

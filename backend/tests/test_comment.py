@@ -30,6 +30,12 @@ class TestComment(unittest.TestCase):
         comment_ids = [c.id for c in comments]
         self.assertIn(comment_id, comment_ids)
 
+    def test_get_comment_by_event(self):
+        id = "1605585527774605"
+        comments = Comment.get_comment_by_event(id)
+        self.assertEqual(comments[0].user, "test@test.com")
+        self.assertEqual(comments[0].event, id)
+        self.assertEqual(comments[0].content, "this is a comment")
 
 if __name__ == '__main__':
     unittest.main()
