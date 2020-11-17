@@ -36,14 +36,13 @@ export default function EventsNearby(props) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data)
         setEventList(data)
       })
       .catch((error) => {
         console.error(error)
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  })
+  }, [])
 
   return (
     <div>

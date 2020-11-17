@@ -56,10 +56,9 @@ const useStyles = makeStyles((theme) => ({
 function EventCard(props) {
   const classes = useStyles()
   const { user, config, openLogin } = props
-  console.log(user)
-  const [like, setLike] = React.useState(false)
+  const [like, setLike] = React.useState(config.liked)
   const [likeButtonColor, setLikeButtonColor] = React.useState(
-    'rgba(0, 0, 0, 0.54)'
+    like ? red[500] : 'rgba(0, 0, 0, 0.54)'
   )
   const [alertOpen, setAlertOpen] = React.useState(false)
   const [shareModalOpen, setShareModalOpen] = React.useState(false)
@@ -71,23 +70,28 @@ function EventCard(props) {
     }
     const currentStatus = like
     const color = currentStatus ? 'rgba(0, 0, 0, 0.54)' : red[500]
-    // const url = `/user/event/${this.props.config.id}/like`
-    // const requestForm = new FormData()
-    // requestForm.append('like', !currentStatus)
-    // fetch(url, {
-    //   method: 'POST',
-    //   body: requestForm,
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log(data)
-    //   })
-    //   .catch((error) => {
-    //     console.error(error)
-    //   })
-    setLike(!currentStatus)
-    setLikeButtonColor(color)
-    setAlertOpen(true)
+    const url = `/user/event/${config.id}/like`
+    const requestForm = new FormData()
+    requestForm.append('like', !currentStatus)
+    fetch(url, {
+      method: 'POST',
+      body: requestForm,
+    })
+      .then((response) => {
+        if (response.status !== 200) {
+          throw Error(response.statusText)
+        } else {
+          return response.text()
+        }
+      })
+      .then(() => {
+        setLike(!currentStatus)
+        setLikeButtonColor(color)
+        setAlertOpen(true)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
   }
 
   const closeAlert = (event, reason) => {
@@ -150,7 +154,10 @@ function EventCard(props) {
             </Link>
           </CardActionArea>
           <CardActions disableSpacing>
-            <IconButton aria-label="add to favorites" onClick={clickLike}>
+            <IconButton
+              aria-label="add to favorites"
+              onClick={() => clickLike()}
+            >
               <FavoriteIcon style={{ color: likeButtonColor }} />
             </IconButton>
             <IconButton
@@ -163,7 +170,11 @@ function EventCard(props) {
               to={user ? `/event/${config.id}` : '#'}
               className={classes.expand}
             >
-              <Button size="small" color="primary" onClick={setOpenLogin}>
+              <Button
+                size="small"
+                color="primary"
+                onClick={() => setOpenLogin()}
+              >
                 Learn More
               </Button>
             </Link>
@@ -172,16 +183,20 @@ function EventCard(props) {
       </Badge>
       <ShareModal
         url={`localhost:2000/event/${config.id}`}
-        handleClose={setShareModalOpen(false)}
+        handleClose={() => setShareModalOpen(false)}
         open={shareModalOpen}
       />
-      <Snackbar open={alertOpen} autoHideDuration={3000} onClose={closeAlert}>
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={3000}
+        onClose={() => closeAlert()}
+      >
         {like ? (
-          <Alert onClose={closeAlert} severity="success">
+          <Alert onClose={() => closeAlert()} severity="success">
             Saved to your favourite events!
           </Alert>
         ) : (
-          <Alert onClose={closeAlert} severity="info">
+          <Alert onClose={() => closeAlert()} severity="info">
             Remove this event from your favourite events!
           </Alert>
         )}

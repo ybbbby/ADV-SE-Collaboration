@@ -108,7 +108,7 @@ def get_event_by_id(id):
         return "", status.HTTP_400_BAD_REQUEST
     return json.dumps(event.__dict__, default=Event.serialize_comment_in_event), status.HTTP_200_OK
 
-@app.route('/event/{id}/attendees', methods=['GET'])
+@app.route('/event/<id>/attendees', methods=['GET'])
 def get_attendees_by_event(id):
     Join.get_join_by_event(id)
     try:
@@ -127,7 +127,7 @@ def userinfo():
     return "NOUSER"
 
 
-@app.route('/user/event/{id}/join', methods=['POST'])
+@app.route('/user/event/<id>/join', methods=['POST'])
 def join_event(id):
     email = google_auth.get_user_info()["email"]
     try:
@@ -138,11 +138,15 @@ def join_event(id):
     return "", status.HTTP_200_OK
 
 
-@app.route('/user/event/{id}/like', methods=['POST'])
+@app.route('/user/event/<id>/like', methods=['POST'])
 def like_event(id):
     email = google_auth.get_user_info()["email"]
     try:
-        Like.create_like(Like(email, id))
+        exists = Like.exist(email, id)
+        if not exists:
+            Like.create_like(Like(email, id))
+        else:
+            Like.delete_like(Like(email, id))
     except:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
