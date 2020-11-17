@@ -41,7 +41,6 @@ export default function EventsNearby(props) {
       .catch((error) => {
         console.error(error)
       })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category])
 
   return (

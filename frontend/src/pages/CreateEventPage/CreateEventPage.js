@@ -57,16 +57,16 @@ const useStyles = makeStyles((theme) => ({
 
 const CreateEventPage = (props) => {
   const classes = useStyles()
-  const [title, setTitle] = useState('Title')
+  const [title, setTitle] = useState('')
   const [pictures, setPictures] = useState([])
   const [selectedDate, setSelectedDate] = useState(new Date())
-  const [description, setDescription] = useState(
-    'Tell us something about your event'
-  )
+  const [description, setDescription] = useState('')
   const [address, setAddress] = useState('')
   const [addressError, setAddressError] = useState(false)
+  const [titleError, setTitleError] = useState(false)
   const [loading, setLoading] = useState(false)
   const [alertOpen, setAlertOpen] = useState(false)
+  const [alertText, setAlertText] = useState('Failed to create the event!')
 
   const handleDateChange = (date) => {
     setSelectedDate(date)
@@ -76,6 +76,13 @@ const CreateEventPage = (props) => {
     setPictures([...pictures, picture])
   }
 
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value)
+    if (title && titleError) {
+      setTitleError(false)
+    }
+  }
+
   const closeAlert = (event, reason) => {
     if (reason === 'clickaway') return
 
@@ -83,6 +90,15 @@ const CreateEventPage = (props) => {
   }
 
   const handleSubmit = () => {
+    if (!title) {
+      setTitleError(true)
+      return
+    }
+    if (!pictures[0]) {
+      setAlertText('Please upload the event picture.')
+      setAlertOpen(true)
+      return
+    }
     setLoading(true)
     geocodeByAddress(address)
       .then((results) => getLatLng(results[0]))
@@ -119,6 +135,7 @@ const CreateEventPage = (props) => {
             }
           })
           .catch((error) => {
+            setAlertText('Failed to create the event!')
             setAlertOpen(true)
             setLoading(false)
             console.log(error)
@@ -143,7 +160,9 @@ const CreateEventPage = (props) => {
               id="standard-required"
               label="Name of event"
               placeholder="Title"
-              onChange={(event) => setTitle(event.target.value)}
+              helperText={titleError ? 'Missing event title.' : ''}
+              error={titleError}
+              onChange={handleTitleChange}
               fullWidth
             />
           </Grid>
@@ -233,7 +252,7 @@ const CreateEventPage = (props) => {
       </form>
       <Snackbar open={alertOpen} autoHideDuration={4000} onClose={closeAlert}>
         <Alert onClose={closeAlert} severity="error">
-          Failed to create the event!
+          {alertText}
         </Alert>
       </Snackbar>
     </>
