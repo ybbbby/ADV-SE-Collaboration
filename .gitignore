@@ -7,3 +7,4 @@ backend/config.py
 **/.idea
 **/__pycache__
 **/.vscode
+**/.pytest_cache

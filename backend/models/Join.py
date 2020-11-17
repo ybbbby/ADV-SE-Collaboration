@@ -1,15 +1,24 @@
-import simplejson as json
-
 import utils.database_connector as db_connector
 
 
 class Join:
+    """
+    This is a class for Join. It shows a user attends an event.
+
+    Attributes:
+        user (string): Email of the user
+        event (string): The id of event user attends
+    """
     def __init__(self, user: str, event: str):
         self.user = user
         self.event = event
 
     @staticmethod
     def create_join(join: 'Join'):
+        """
+
+        :param join: join object
+        """
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
         sql = "INSERT INTO `join` (`user`, `event`) " \
@@ -22,40 +31,66 @@ class Join:
 
     @staticmethod
     def get_join_by_user(user: str):
+        """
+
+        :param user: Email of the user
+        :return: list of Joins which is related to user
+        """
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
         query = ("SELECT * FROM `join` WHERE user='" + user + "'")
         cursor.execute(query)
         joins = []
-        for (user, event) in cursor:
-            joins.append(Join(user=user, event=event))
+        for (join_user, join_event) in cursor:
+            joins.append(Join(user=join_user, event=join_event))
         cursor.close()
         cnx.close()
         return joins
 
     @staticmethod
     def get_join_by_event(event: str):
+        """
+        Get a list of joins belongs to the event.
+        :param event: event object
+        :return: list of joins belongs to the event.
+        """
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
         query = ("SELECT * FROM `join` WHERE event='" + event + "'")
         cursor.execute(query)
         joins = []
-        for (user, event) in cursor:
-            joins.append(Join(user=user, event=event))
+        for (join_user, join_event) in cursor:
+            joins.append(Join(user=join_user, event=join_event))
         cursor.close()
         cnx.close()
         return joins
 
     @staticmethod
     def user_is_attend(user: str, event: str):
+        """
+
+        :param user: user email
+        :param event: event id
+        :return: boolean variable indicates whether the given user attends the event
+        """
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
         query = ("SELECT * FROM `join` WHERE event=%s AND user=%s")
         params = (event, user)
         cursor.execute(query, params)
         find_result = False
-        for u,e in cursor:
+        for _, _ in cursor:
             find_result = True
         cursor.close()
         cnx.close()
         return find_result
+    
+    @staticmethod
+    def delete_join(join: 'Join'):
+        cnx = db_connector.get_connection()
+        cursor = cnx.cursor()
+        query = ("DELETE FROM `join` WHERE user='" + join.user + "' and event='" + join.event + "'")
+        cursor.execute(query)
+        cnx.commit()
+        cursor.close()
+        cnx.close()

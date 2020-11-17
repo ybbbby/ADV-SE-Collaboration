@@ -1,15 +1,26 @@
-import simplejson as json
-
 import utils.database_connector as db_connector
 
 
 class Like:
+    """
+    This is a class for Like. It shows a like connection
+
+    Attributes:
+
+        user (string): email of the user
+        event (string): id of the event
+
+    """
     def __init__(self, user: str, event: str):
         self.user = user
         self.event = event
 
     @staticmethod
     def create_like(like: 'Like'):
+        """
+        Insert a like into the database
+        :param like: like object
+        """
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
         sql = "INSERT INTO `like` (`user`, `event`) " \
@@ -22,6 +33,11 @@ class Like:
 
     @staticmethod
     def get_like_by_user(user: str):
+        """
+        Get a list of like objects from the user
+        :param user: email of the user
+        :return: a list of like objects related to the user
+        """
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
         query = ("SELECT * FROM `like` WHERE user='" + user + "'")
@@ -35,6 +51,11 @@ class Like:
 
     @staticmethod
     def get_like_by_event(event: str):
+        """
+        Get a list of events which are liked by user
+        :param event: event id
+        :return: a list of events which are liked by user
+        """
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
         query = ("SELECT * FROM `like` WHERE event='" + event + "'")
@@ -48,6 +69,12 @@ class Like:
 
     @staticmethod
     def exist(user: str, event: str):
+        """
+        Check whether the event is liked by the user
+        :param user: email of the user
+        :param event: event id
+        :return: boolean variable
+        """
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
         query = ("SELECT * FROM `like` WHERE user='" + user + "' and event='" + event + "'")
