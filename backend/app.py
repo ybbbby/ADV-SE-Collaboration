@@ -35,36 +35,8 @@ app.register_blueprint(google_auth.app)
 db_create_tables.create_tables()
 
 
-@app.route('/')
-def index():
-    if google_auth.is_logged_in():
-        user_info = google_auth.get_user_info()
-        return '<div>You are currently logged in as ' + user_info['given_name'] + \
-               '<div><pre>' + json.dumps(user_info, indent=4) + "</pre>"
-
-    return 'You are not currently logged in.'
-
-
-# Test create user method in User
-@app.route('/user/create', methods=['GET'])
-def create_user():
-    username = request.args.get('username')
-    email = request.args.get('email')
-    newUser = User(email=email, username=username)
-    User.create_user(newUser)
-    return "success"
-
-
-@app.route('/userinfo')
-def userinfo():
-    if google_auth.is_logged_in():
-        user_info = google_auth.get_user_info()
-        return json.dumps(user_info, indent=4)
-    return "NOUSER"
-
-
 # Tested - xyz
-@app.route('/user/event/', methods=['POST'])
+@app.route('/event', methods=['POST'])
 def create_new_event():
     user_info = google_auth.get_user_info()
     email = user_info["email"]
@@ -135,32 +107,23 @@ def get_event_by_id(id):
         return "", status.HTTP_400_BAD_REQUEST
     return json.dumps(event.__dict__, default=Event.serialize_comment_in_event), status.HTTP_200_OK
 
-
-# Tested - xyz
-@app.route('/user/event/<id>/comment', methods=['POST'])
-def create_new_comment(id):
-    time = request.form.get("Time")
-    content = request.form.get("Content")
-    user_info = google_auth.get_user_info()
-    email = user_info["email"]
-    comment = Comment(user=email, content=content, time=datetime.strptime(time, '%Y-%m-%d %H:%M:%S'), event=id)
+@app.route('/event/{id}/attendees', methods=['GET'])
+def get_attendees_by_event(id):
+    Join.get_join_by_event(id)
     try:
-        Comment.create_comment(comment)
-        # send notification to the event host
-        # event = Event.get_event_by_id(id)
-        # email_content = name + " just commented your event " + event.name + "."
-        # mail_service.send(mail=mail, title="A user just comment your event", recipients=[event.user_email], content=email_content)
+        users = User.get_attendees_by_event(id)
     except:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
-    return "", status.HTTP_200_OK
+    return json.dumps([ob.__dict__ for ob in users], use_decimal=True, default=str), status.HTTP_200_OK
 
 
-@app.route('/user/event/hosted', methods=['GET'])
-def get_all_created_events():
-    # TODO: get email from session?
-    email = request.args.get('email')
-    return Event.get_all_event_created_by_user(email)
+@app.route('/user/info', methods=['GET'])
+def userinfo():
+    if google_auth.is_logged_in():
+        user_info = google_auth.get_user_info()
+        return json.dumps(user_info, indent=4)
+    return "NOUSER"
 
 
 @app.route('/user/event/{id}/join', methods=['POST'])
@@ -179,6 +142,26 @@ def like_event(id):
     email = google_auth.get_user_info()["email"]
     try:
         Like.create_like(Like(email, id))
+    except:
+        traceback.print_exc()
+        return "", status.HTTP_400_BAD_REQUEST
+    return "", status.HTTP_200_OK
+
+
+# Tested - xyz
+@app.route('/user/event/<id>/comment', methods=['POST'])
+def create_new_comment(id):
+    time = request.form.get("Time")
+    content = request.form.get("Content")
+    user_info = google_auth.get_user_info()
+    email = user_info["email"]
+    comment = Comment(user=email, content=content, time=datetime.strptime(time, '%Y-%m-%d %H:%M:%S'), event=id)
+    try:
+        Comment.create_comment(comment)
+        # send notification to the event host
+        # event = Event.get_event_by_id(id)
+        # email_content = name + " just commented your event " + event.name + "."
+        # mail_service.send(mail=mail, title="A user just comment your event", recipients=[event.user_email], content=email_content)
     except:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
@@ -218,18 +201,26 @@ def get_all_ongoing_event_by_user():
     return json.dumps([ob.__dict__ for ob in events], use_decimal=True, default=str), status.HTTP_200_OK
 
 
-@app.route('/event/{id}/getattendees', methods=['GET'])
-def get_attendees_by_event(id):
-    Join.get_join_by_event(id)
-    try:
-        users = User.get_attendees_by_event(id)
-    except:
-        traceback.print_exc()
-        return "", status.HTTP_400_BAD_REQUEST
-    return json.dumps([ob.__dict__ for ob in users], use_decimal=True, default=str), status.HTTP_200_OK
+# @app.route('/user/event/hosted', methods=['GET'])
+# def get_all_created_events():
+#     email = google_auth.get_user_info()["email"]
+#     try:
+#         events = Event.get_all_event_created_by_user(email)
+#     except:
+#         traceback.print_exc()
+#         return "", status.HTTP_400_BAD_REQUEST
+#     return json.dumps([ob.__dict__ for ob in events], default=str), status.HTTP_200_OK
 
+# @app.route('/email', methods=['POST'])
+# def send_email():
+#     # mail_service.send(mail, title, recipients, content)
+#     return ""
 
-@app.route('/email', methods=['POST'])
-def send_email():
-    # mail_service.send(mail, title, recipients, content)
-    return ""
+# # Test create user method in User
+# @app.route('/user/create', methods=['GET'])
+# def create_user():
+#     username = request.args.get('username')
+#     email = request.args.get('email')
+#     newUser = User(email=email, username=username)
+#     User.create_user(newUser)
+#     return "success"
