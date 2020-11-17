@@ -53,7 +53,7 @@ export default function Categories(props) {
 
   return (
     <List component="nav" className={classes.root}>
-      <Link to={isLogin ? '/' : '#'} className={classes.link}>
+      <Link to={isLogin ? '/events/liked' : '#'} className={classes.link}>
         <ListItem button onClick={handleClick}>
           <ListItemIcon>
             <FavoriteIcon />
