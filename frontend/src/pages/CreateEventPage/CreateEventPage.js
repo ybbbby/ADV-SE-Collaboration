@@ -106,7 +106,7 @@ const CreateEventPage = (props) => {
               )
               requestForm.append('Description', description)
               requestForm.append('Image', response.body.postResponse.location)
-              fetch('/user/event/', {
+              fetch('/event', {
                 method: 'POST',
                 body: requestForm,
               })

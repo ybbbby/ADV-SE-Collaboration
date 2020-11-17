@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import {
   Typography,
@@ -17,7 +17,7 @@ import MuiAlert from '@material-ui/lab/Alert'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import ShareIcon from '@material-ui/icons/Share'
 import { red } from '@material-ui/core/colors'
-import { withStyles } from '@material-ui/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
 import ShareModal from '../ShareModal/ShareModal'
 
@@ -25,7 +25,7 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />
 }
 
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     boxShadow: '0 8px 24px 0 rgba(0,0,0,0.12)',
   },
@@ -51,163 +51,148 @@ const styles = (theme) => ({
   title: {
     fontWeight: '800',
   },
-})
+}))
 
-class EventCard extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      like: false,
-      likeButtonColor: 'rgba(0, 0, 0, 0.54)',
-      alertOpen: false,
-      shareModalOpen: false,
-    }
-    this.clickLike = this.clickLike.bind(this)
-  }
+function EventCard(props) {
+  const classes = useStyles()
+  const { user, config, openLogin } = props
+  console.log(user)
+  const [like, setLike] = React.useState(false)
+  const [likeButtonColor, setLikeButtonColor] = React.useState(
+    'rgba(0, 0, 0, 0.54)'
+  )
+  const [alertOpen, setAlertOpen] = React.useState(false)
+  const [shareModalOpen, setShareModalOpen] = React.useState(false)
 
-  clickLike() {
-    if (!this.props.user) {
-      this.props.openLogin(true)
+  const clickLike = () => {
+    if (!user) {
+      openLogin(true)
       return
     }
-    const currentStatus = this.state.like
+    const currentStatus = like
     const color = currentStatus ? 'rgba(0, 0, 0, 0.54)' : red[500]
-    this.setState({
-      like: !currentStatus,
-      likeButtonColor: color,
-      alertOpen: true,
-    })
+    // const url = `/user/event/${this.props.config.id}/like`
+    // const requestForm = new FormData()
+    // requestForm.append('like', !currentStatus)
+    // fetch(url, {
+    //   method: 'POST',
+    //   body: requestForm,
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     console.log(data)
+    //   })
+    //   .catch((error) => {
+    //     console.error(error)
+    //   })
+    setLike(!currentStatus)
+    setLikeButtonColor(color)
+    setAlertOpen(true)
   }
 
-  closeShare = () => {
-    this.setState({
-      shareModalOpen: false,
-    })
-  }
-
-  closeAlert = (event, reason) => {
+  const closeAlert = (event, reason) => {
     if (reason === 'clickaway') {
       return
     }
 
-    this.setState({
-      alertOpen: false,
-    })
+    setAlertOpen(false)
   }
 
-  openLogin = () => {
-    if (!this.props.user) {
-      this.props.openLogin(true)
+  const setOpenLogin = () => {
+    if (!user) {
+      openLogin(true)
     }
   }
 
-  render() {
-    const { classes, user, config } = this.props
-    const { shareModalOpen, alertOpen, likeButtonColor, like } = this.state
+  return (
+    <>
+      <Badge
+        badgeContent={'host'}
+        color="primary"
+        invisible={!user || config.user_email !== user}
+        style={{ display: 'block' }}
+      >
+        <Card className={classes.root}>
+          <CardActionArea>
+            <Link
+              to={user ? `/event/${config.id}` : '#'}
+              className={classes.expand}
+            >
+              <Box minHeight={250} position={'relative'}>
+                <CardMedia className={classes.cardImage} image={config.image} />
+                <CardContent className={classes.content}>
+                  <Typography
+                    variant="caption"
+                    color="textSecondary"
+                    component="p"
+                  >
+                    {config.time}
+                  </Typography>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="h2"
+                    color="textPrimary"
+                    className={classes.title}
+                  >
+                    {config.name}
+                  </Typography>
 
-    return (
-      <>
-        <Badge
-          badgeContent={'host'}
-          color="primary"
-          invisible={!user || config.host !== user}
-          style={{ display: 'block' }}
-        >
-          <Card className={classes.root}>
-            <CardActionArea>
-              <Link
-                to={user ? `/event/${config.id}` : '#'}
-                className={classes.expand}
-              >
-                <Box minHeight={250} position={'relative'}>
-                  <CardMedia
-                    className={classes.cardImage}
-                    image={config.image}
-                  />
-                  <CardContent className={classes.content}>
-                    <Typography
-                      variant="caption"
-                      color="textSecondary"
-                      component="p"
-                    >
-                      {config.time}
-                    </Typography>
-                    <Typography
-                      gutterBottom
-                      variant="h5"
-                      component="h2"
-                      color="textPrimary"
-                      className={classes.title}
-                    >
-                      {config.name}
-                    </Typography>
-
-                    <Typography
-                      variant="body1"
-                      color="textSecondary"
-                      component="p"
-                    >
-                      {config.address}
-                    </Typography>
-                  </CardContent>
-                </Box>
-              </Link>
-            </CardActionArea>
-            <CardActions disableSpacing>
-              <IconButton
-                aria-label="add to favorites"
-                onClick={this.clickLike}
-              >
-                <FavoriteIcon style={{ color: likeButtonColor }} />
-              </IconButton>
-              <IconButton
-                aria-label="share"
-                onClick={() =>
-                  this.setState({
-                    shareModalOpen: true,
-                  })
-                }
-              >
-                <ShareIcon />
-              </IconButton>
-              <Link
-                to={user ? `/event/${config.id}` : '#'}
-                className={classes.expand}
-              >
-                <Button size="small" color="primary" onClick={this.openLogin}>
-                  Learn More
-                </Button>
-              </Link>
-            </CardActions>
-          </Card>
-        </Badge>
-        <ShareModal
-          url={`localhost:2000/event/${config.id}`}
-          handleClose={this.closeShare}
-          open={shareModalOpen}
-        />
-        <Snackbar
-          open={alertOpen}
-          autoHideDuration={3000}
-          onClose={this.closeAlert}
-        >
-          {like ? (
-            <Alert onClose={this.closeAlert} severity="success">
-              Saved to your favourite events!
-            </Alert>
-          ) : (
-            <Alert onClose={this.closeAlert} severity="info">
-              Remove this event from your favourite events!
-            </Alert>
-          )}
-        </Snackbar>
-      </>
-    )
-  }
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
+                    component="p"
+                  >
+                    {config.address}
+                  </Typography>
+                </CardContent>
+              </Box>
+            </Link>
+          </CardActionArea>
+          <CardActions disableSpacing>
+            <IconButton aria-label="add to favorites" onClick={clickLike}>
+              <FavoriteIcon style={{ color: likeButtonColor }} />
+            </IconButton>
+            <IconButton
+              aria-label="share"
+              onClick={() => setShareModalOpen(true)}
+            >
+              <ShareIcon />
+            </IconButton>
+            <Link
+              to={user ? `/event/${config.id}` : '#'}
+              className={classes.expand}
+            >
+              <Button size="small" color="primary" onClick={setOpenLogin}>
+                Learn More
+              </Button>
+            </Link>
+          </CardActions>
+        </Card>
+      </Badge>
+      <ShareModal
+        url={`localhost:2000/event/${config.id}`}
+        handleClose={setShareModalOpen(false)}
+        open={shareModalOpen}
+      />
+      <Snackbar open={alertOpen} autoHideDuration={3000} onClose={closeAlert}>
+        {like ? (
+          <Alert onClose={closeAlert} severity="success">
+            Saved to your favourite events!
+          </Alert>
+        ) : (
+          <Alert onClose={closeAlert} severity="info">
+            Remove this event from your favourite events!
+          </Alert>
+        )}
+      </Snackbar>
+    </>
+  )
 }
 
 EventCard.propTypes = {
-  classes: PropTypes.object.isRequired,
+  user: PropTypes.string.isRequired,
+  config: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(EventCard)
+export default EventCard

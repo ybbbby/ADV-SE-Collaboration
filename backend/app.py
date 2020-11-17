@@ -56,6 +56,7 @@ def create_new_event():
     e.image = image_path
     try:
         event_id = Event.create_event(e)
+        Join.create_join(Join(email, event_id))
     except:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
@@ -168,7 +169,7 @@ def create_new_comment(id):
     return "", status.HTTP_200_OK
 
 
-@app.route('/user/event/liked', methods=['GET'])
+@app.route('/events/liked', methods=['GET'])
 def get_all_event_liked_by_user():
     email = google_auth.get_user_info()["email"]
     try:
@@ -176,10 +177,10 @@ def get_all_event_liked_by_user():
     except:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
-    return json.dumps([ob.__dict__ for ob in events], use_decimal=True, default=str), status.HTTP_200_OK
+    return json.dumps([ob.__dict__ for ob in events], default=str), status.HTTP_200_OK
 
 
-@app.route('/user/event/history', methods=['GET'])
+@app.route('/events/history', methods=['GET'])
 def get_all_history_event_by_user():
     email = google_auth.get_user_info()["email"]
     try:
@@ -187,10 +188,10 @@ def get_all_history_event_by_user():
     except:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
-    return json.dumps([ob.__dict__ for ob in events], use_decimal=True, default=str), status.HTTP_200_OK
+    return json.dumps([ob.__dict__ for ob in events], default=str), status.HTTP_200_OK
 
 
-@app.route('/user/event/ongoing', methods=['GET'])
+@app.route('/events/ongoing', methods=['GET'])
 def get_all_ongoing_event_by_user():
     email = google_auth.get_user_info()["email"]
     try:
@@ -198,7 +199,7 @@ def get_all_ongoing_event_by_user():
     except:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
-    return json.dumps([ob.__dict__ for ob in events], use_decimal=True, default=str), status.HTTP_200_OK
+    return json.dumps([ob.__dict__ for ob in events], default=str), status.HTTP_200_OK
 
 
 # @app.route('/user/event/hosted', methods=['GET'])

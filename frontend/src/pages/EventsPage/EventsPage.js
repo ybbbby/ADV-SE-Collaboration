@@ -22,20 +22,6 @@ export default function EventsNearby(props) {
   const router = useRouter()
   const { category } = router.match.params
   const user = localStorage.getItem('userEmail')
-  // const eventList = [
-  //   { config: { host: 'mg4115@columbia.edu' } },
-  //   { config: { host: '' } },
-  //   { config: { host: '' } },
-  //   { config: { host: 'mg4115@columbia.edu' } },
-  //   { config: { host: 'mg4115@columbia.edu' } },
-  //   { config: { host: '' } },
-  //   { config: { host: '' } },
-  //   { config: { host: '' } },
-  //   { config: { host: '' } },
-  //   { config: { host: 'test' } },
-  //   { config: { host: '' } },
-  //   { config: { host: '' } },
-  // ]
   const [eventList, setEventList] = React.useState([])
   const [page, setPage] = React.useState(1)
   const [loginOpen, setLoginOpen] = React.useState(false)
@@ -44,17 +30,20 @@ export default function EventsNearby(props) {
   }
 
   useEffect(() => {
-    fetch('/user/event/hosted', {
+    const url = `/events/${category}`
+    fetch(url, {
       method: 'GET',
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data)
         setEventList(data)
       })
       .catch((error) => {
         console.error(error)
       })
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  })
 
   return (
     <div>
