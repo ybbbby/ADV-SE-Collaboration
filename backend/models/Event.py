@@ -67,7 +67,6 @@ class Event:
             events.append(newEvent)
         cursor.close()
         cnx.close()
-        # return json.dumps([ob.__dict__ for ob in events], use_decimal=True, default=str)
         return events
 
     @staticmethod

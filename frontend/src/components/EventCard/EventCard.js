@@ -115,11 +115,14 @@ class EventCard extends Component {
         >
           <Card className={classes.root}>
             <CardActionArea>
-              <Link to={user ? '/event/1' : '#'} className={classes.expand}>
+              <Link
+                to={user ? `/event/${config.id}` : '#'}
+                className={classes.expand}
+              >
                 <Box minHeight={250} position={'relative'}>
                   <CardMedia
                     className={classes.cardImage}
-                    image="https://cdn.vox-cdn.com/thumbor/lopA7fKDwAh9iqR0hqVsHWpnPfQ=/0x0:4133x3074/1820x1213/filters:focal(1737x1207:2397x1867):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/65573297/GettyImages_1019226434.0.jpg"
+                    image={config.image}
                   />
                   <CardContent className={classes.content}>
                     <Typography
@@ -127,7 +130,7 @@ class EventCard extends Component {
                       color="textSecondary"
                       component="p"
                     >
-                      10/06/2020
+                      {config.time}
                     </Typography>
                     <Typography
                       gutterBottom
@@ -136,7 +139,7 @@ class EventCard extends Component {
                       color="textPrimary"
                       className={classes.title}
                     >
-                      Party in Hells Kitchen
+                      {config.name}
                     </Typography>
 
                     <Typography
@@ -144,7 +147,7 @@ class EventCard extends Component {
                       color="textSecondary"
                       component="p"
                     >
-                      250 W 53rd Street, New York, NY
+                      {config.address}
                     </Typography>
                   </CardContent>
                 </Box>
@@ -167,7 +170,10 @@ class EventCard extends Component {
               >
                 <ShareIcon />
               </IconButton>
-              <Link to={user ? '/event/1' : '#'} className={classes.expand}>
+              <Link
+                to={user ? `/event/${config.id}` : '#'}
+                className={classes.expand}
+              >
                 <Button size="small" color="primary" onClick={this.openLogin}>
                   Learn More
                 </Button>
@@ -176,7 +182,7 @@ class EventCard extends Component {
           </Card>
         </Badge>
         <ShareModal
-          url="https://www.google.com/"
+          url={`localhost:2000/event/${config.id}`}
           handleClose={this.closeShare}
           open={shareModalOpen}
         />

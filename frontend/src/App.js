@@ -72,7 +72,7 @@ export default function App() {
   const [isLogin, setLogin] = useState(false)
 
   useEffect(() => {
-    fetch('/userinfo', {
+    fetch('/user/info', {
       method: 'GET',
     })
       .then((response) => response.json())

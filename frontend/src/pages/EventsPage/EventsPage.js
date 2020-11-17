@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Typography, Container, Box, Grid } from '@material-ui/core'
 import Pagination from '@material-ui/lab/Pagination'
 import { makeStyles } from '@material-ui/core/styles'
@@ -22,25 +22,39 @@ export default function EventsNearby(props) {
   const router = useRouter()
   const { category } = router.match.params
   const user = localStorage.getItem('userEmail')
-  const eventList = [
-    { config: { host: 'mg4115@columbia.edu' } },
-    { config: { host: '' } },
-    { config: { host: '' } },
-    { config: { host: 'mg4115@columbia.edu' } },
-    { config: { host: 'mg4115@columbia.edu' } },
-    { config: { host: '' } },
-    { config: { host: '' } },
-    { config: { host: '' } },
-    { config: { host: '' } },
-    { config: { host: 'test' } },
-    { config: { host: '' } },
-    { config: { host: '' } },
-  ]
+  // const eventList = [
+  //   { config: { host: 'mg4115@columbia.edu' } },
+  //   { config: { host: '' } },
+  //   { config: { host: '' } },
+  //   { config: { host: 'mg4115@columbia.edu' } },
+  //   { config: { host: 'mg4115@columbia.edu' } },
+  //   { config: { host: '' } },
+  //   { config: { host: '' } },
+  //   { config: { host: '' } },
+  //   { config: { host: '' } },
+  //   { config: { host: 'test' } },
+  //   { config: { host: '' } },
+  //   { config: { host: '' } },
+  // ]
+  const [eventList, setEventList] = React.useState([])
   const [page, setPage] = React.useState(1)
   const [loginOpen, setLoginOpen] = React.useState(false)
   const handleChange = (event, value) => {
     setPage(value)
   }
+
+  useEffect(() => {
+    fetch('/user/event/hosted', {
+      method: 'GET',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setEventList(data)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }, [])
 
   return (
     <div>
@@ -59,11 +73,7 @@ export default function EventsNearby(props) {
             {eventList.map((x, key) => {
               return (
                 <Grid item xs={6} key={key}>
-                  <EventCard
-                    config={x.config}
-                    user={user}
-                    openLogin={setLoginOpen}
-                  />
+                  <EventCard config={x} user={user} openLogin={setLoginOpen} />
                 </Grid>
               )
             })}

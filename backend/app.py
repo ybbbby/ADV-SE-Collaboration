@@ -55,7 +55,7 @@ def create_user():
     return "success"
 
 
-@app.route('/userinfo')
+@app.route('/user/info')
 def userinfo():
     if google_auth.is_logged_in():
         user_info = google_auth.get_user_info()
@@ -155,14 +155,6 @@ def create_new_comment(id):
         return "", status.HTTP_400_BAD_REQUEST
     return "", status.HTTP_200_OK
 
-
-@app.route('/user/event/hosted', methods=['GET'])
-def get_all_created_events():
-    # TODO: get email from session?
-    email = request.args.get('email')
-    return Event.get_all_event_created_by_user(email)
-
-
 @app.route('/user/event/{id}/join', methods=['POST'])
 def join_event(id):
     email = google_auth.get_user_info()["email"]
@@ -183,6 +175,16 @@ def like_event(id):
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return "", status.HTTP_200_OK
+
+@app.route('/user/event/hosted', methods=['GET'])
+def get_all_created_events():
+    email = google_auth.get_user_info()["email"]
+    try:
+        events = Event.get_all_event_created_by_user(email)
+    except:
+        traceback.print_exc()
+        return "", status.HTTP_400_BAD_REQUEST
+    return json.dumps([ob.__dict__ for ob in events], default=str), status.HTTP_200_OK
 
 
 @app.route('/user/event/liked', methods=['GET'])
