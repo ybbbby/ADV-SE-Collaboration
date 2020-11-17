@@ -82,6 +82,7 @@ class Like:
         ret = False
         for _ in cursor:
             ret = True
+
         cursor.close()
         cnx.close()
         return ret
