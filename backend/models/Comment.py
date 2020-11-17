@@ -64,3 +64,13 @@ class Comment:
         cnx.close()
         # return json.dumps([ob.__dict__ for ob in comments], use_decimal=True, default=str)
         return comments
+
+    @staticmethod
+    def delete_comment(id: str):
+        cnx = db_connector.get_connection()
+        cursor = cnx.cursor()
+        sql = ("DELETE FROM `comment` WHERE id='" + id + "'")
+        cursor.execute(sql)
+        cnx.commit()
+        cursor.close()
+        cnx.close()

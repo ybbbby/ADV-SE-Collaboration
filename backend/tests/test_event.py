@@ -35,10 +35,16 @@ class TestEvent(unittest.TestCase):
         email = "test@test.com"
         user = User(email=email, username="testUser")
         User.create_user(user)
+        self.event = create_event()
+        self.event_id = Event.create_event(self.event)
+
+    def tearDown(self) -> None:
+        Event.delete_event_by_id(self.event_id)
+        User.delete_user_by_email("test@test.com")
 
     def test_create_event(self):
-        event = create_event()
-        event_id = Event.create_event(event)
+        event = self.event
+        event_id = self.event_id
         retEvent = Event.get_event_by_id(event_id, event.user_email)
         self.assertEqual(retEvent.id, event_id)
         self.assertEqual(retEvent.user_email, event.user_email)
@@ -49,8 +55,8 @@ class TestEvent(unittest.TestCase):
         self.assertAlmostEqual(retEvent.latitude, event.latitude)
 
     def test_delete_event(self):
-        event = create_event()
-        event_id = Event.create_event(event)
+        event = self.event
+        event_id = self.event_id
 
         Event.delete_event_by_id(event_id)
         event = Event.get_event_by_id(event_id, event.user_email)
@@ -58,8 +64,8 @@ class TestEvent(unittest.TestCase):
 
     # update description
     def test_update_event1(self):
-        event = create_event()
-        event_id = Event.create_event(event)
+        event = self.event
+        event_id = self.event_id
         description = "new desc"
         Event.update_event({"description": description}, event_id)
         ret = Event.get_event_by_id(event_id, event.user_email)
@@ -67,8 +73,8 @@ class TestEvent(unittest.TestCase):
 
     # update time
     def test_update_event2(self):
-        event = create_event()
-        event_id = Event.create_event(event)
+        event = self.event
+        event_id = self.event_id
         time = datetime.strptime("2022-12-12 12:12:12", "%Y-%m-%d %H:%M:%S")
         Event.update_event({"time": time}, event_id)
         ret = Event.get_event_by_id(event_id, event.user_email)
@@ -76,8 +82,8 @@ class TestEvent(unittest.TestCase):
 
     # update address, longitude, latitude
     def test_update_event3(self):
-        event = create_event()
-        event_id = Event.create_event(event)
+        event = self.event
+        event_id = self.event_id
         address = "412 E, 110th St, New york"
         longitude = Decimal(22.1111)
         latitude = Decimal(33.2222)
@@ -97,8 +103,8 @@ class TestEvent(unittest.TestCase):
 
     # get event exists
     def test_get_event_id2(self):
-        event = create_event()
-        event_id = Event.create_event(event)
+        event = self.event
+        event_id = self.event_id
         e = Event.get_event_by_id(event_id)
         self.assertEqual(e.id, event_id)
 
