@@ -2,12 +2,25 @@ import utils.database_connector as db_connector
 
 
 class User:
+    """
+    This is a class for User. It shows informaiton of a user
+
+    Attributes:
+
+        name (string): name of the user
+        email (string): email of the user
+
+    """
     def __init__(self, email: str, username: str):
         self.email = email
         self.username = username
 
     @staticmethod
     def create_user(user: 'User'):
+        """
+        Insert a user into the database
+        :param user: user Object
+        """
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
         sql = "INSERT IGNORE INTO `user` (`email`, `name`) " \
@@ -19,7 +32,12 @@ class User:
         cnx.close()
 
     @staticmethod
-    def get_user_by_email(email):
+    def get_user_by_email(email: str):
+        """
+        Get a user from the email
+        :param email: email
+        :return: A user object with the given email
+        """
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
         query = ("SELECT `name` FROM `user` WHERE `email`='" + email + "'")
@@ -34,6 +52,11 @@ class User:
 
     @staticmethod
     def get_attendees_by_event(event: str):
+        """
+        Get all attendees from the event
+        :param event: event id
+        :return: A list of user who attends the event
+        """
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
         query = (

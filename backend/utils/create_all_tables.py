@@ -32,7 +32,7 @@ TABLES['event'] = (
     CONSTRAINT `host_to_user`
       FOREIGN KEY (`host`)
     REFERENCES `user` (`email`)
-    ON DELETE NO ACTION 
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION);
     '''
 )
@@ -87,6 +87,9 @@ TABLES['like'] = (
 
 
 def create_tables():
+    """
+    Create all tables when the project starts
+    """
     cnx = db_connector.get_connection()
     cursor = cnx.cursor()
     for table_name in TABLES:

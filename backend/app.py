@@ -38,6 +38,10 @@ db_create_tables.create_tables()
 # Tested - xyz
 @app.route('/event', methods=['POST'])
 def create_new_event():
+    """
+    Create a new event
+    :return: event id
+    """
     user_info = google_auth.get_user_info()
     email = user_info["email"]
     # name = "123"
@@ -50,73 +54,102 @@ def create_new_event():
     time = request.form.get("Time")
     description = request.form.get("Description")
     image_path = request.form.get("Image")
-    e = Event(user=email, name=event_name, address=address, longitude=longitude, latitude=latitude, zipcode=zipcode,
-              time=datetime.strptime(str(time), "%Y-%m-%d %H:%M:%S"))
-    e.description = description
-    e.image = image_path
+    new_event = Event(user=email, name=event_name, address=address,
+                      longitude=longitude, latitude=latitude, zipcode=zipcode,
+                      event_time=datetime.strptime(str(time), "%Y-%m-%d %H:%M:%S"))
+    new_event.description = description
+    new_event.image = image_path
     try:
-        event_id = Event.create_event(e)
+        event_id = Event.create_event(new_event)
         Join.create_join(Join(email, event_id))
-    except:
+    except Exception:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return event_id
 
 
-@app.route('/event/<id>', methods=['POST', 'DELETE', 'GET'])
-def handle_event(id):
+@app.route('/event/<event_id>', methods=['POST', 'DELETE', 'GET'])
+def handle_event(event_id):
+    """
+    Handles http Post, Delete and Get request to update, delete and return an event
+    :param event_id: id of the event
+    :return: http status code
+    """
     if request.method == 'DELETE':
-        return delete_event_by_id(id)
+        return delete_event_by_id(event_id)
     elif request.method == 'POST':
-        return update_event_by_id(id)
+        return update_event_by_id(event_id)
     elif request.method == 'GET':
-        return get_event_by_id(id)
+        return get_event_by_id(event_id)
 
-def delete_event_by_id(id):
+
+def delete_event_by_id(event_id):
+    """
+    Helper function to delete the event
+    :param event_id: event id
+    :return: http status code
+    """
     try:
-        Event.delete_event_by_id(id)
-    except:
+        Event.delete_event_by_id(event_id)
+    except Exception:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return "", status.HTTP_200_OK
 
 
-def update_event_by_id(id):
+def update_event_by_id(event_id):
+    """
+    Helper function to update the event
+    :param event_id: id of the event
+    :return: http status code
+    """
     type = request.form.get("Type")
     try:
         if type == "time":
-            Event.update_event({"time": request.form.get("Time")}, id)
+            Event.update_event({"time": request.form.get("Time")}, event_id)
         elif type == "address":
             Event.update_event({"address": request.form.get("Address"),
                                 "longitude": request.form.get("Longitude"),
-                                "latitude": request.form.get("Latitude")}, id)
+                                "latitude": request.form.get("Latitude")}, event_id)
         elif type == "description":
-            Event.update_event({"description": request.form.get("Description")}, id)
-    except:
+            Event.update_event({"description": request.form.get("Description")}, event_id)
+    except Exception:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return "", status.HTTP_200_OK
 
 
-def get_event_by_id(id):
+def get_event_by_id(event_id):
+    """
+    Helper function to get an event by event id
+    :param event_id: event id
+    :return: json of the event
+    """
     user_info = google_auth.get_user_info()
     email = user_info["email"]
     try:
-        event = Event.get_event_by_id(id, email)
+        event = Event.get_event_by_id(event_id, email)
     except:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return json.dumps(event.__dict__, default=Event.serialize_comment_in_event), status.HTTP_200_OK
 
+
 @app.route('/event/<id>/attendees', methods=['GET'])
-def get_attendees_by_event(id):
+def get_attendees_by_event(event_id):
+    """
+    Get all attendees of the given event
+    :param id:
+    :return:
+    """
     Join.get_join_by_event(id)
     try:
         users = User.get_attendees_by_event(id)
     except:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
-    return json.dumps([ob.__dict__ for ob in users], use_decimal=True, default=str), status.HTTP_200_OK
+    return json.dumps([ob.__dict__ for ob in users],
+                      use_decimal=True, default=str), status.HTTP_200_OK
 
 
 @app.route('/user/info', methods=['GET'])
@@ -160,13 +193,15 @@ def create_new_comment(id):
     content = request.form.get("Content")
     user_info = google_auth.get_user_info()
     email = user_info["email"]
-    comment = Comment(user=email, content=content, time=datetime.strptime(time, '%Y-%m-%d %H:%M:%S'), event=id)
+    comment = Comment(user=email, content=content,
+                      comment_time=datetime.strptime(time, '%Y-%m-%d %H:%M:%S'), event=id)
     try:
         Comment.create_comment(comment)
         # send notification to the event host
         # event = Event.get_event_by_id(id)
         # email_content = name + " just commented your event " + event.name + "."
-        # mail_service.send(mail=mail, title="A user just comment your event", recipients=[event.user_email], content=email_content)
+        # mail_service.send(mail=mail, title="A user just comment your event",
+        # recipients=[event.user_email], content=email_content)
     except:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
@@ -181,7 +216,8 @@ def get_all_event_liked_by_user():
     except:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
-    return json.dumps([ob.__dict__ for ob in events], default=str), status.HTTP_200_OK
+    return json.dumps([ob.__dict__ for ob in events],
+                      use_decimal=True, default=str), status.HTTP_200_OK
 
 
 @app.route('/events/history', methods=['GET'])
@@ -192,7 +228,8 @@ def get_all_history_event_by_user():
     except:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
-    return json.dumps([ob.__dict__ for ob in events], default=str), status.HTTP_200_OK
+    return json.dumps([ob.__dict__ for ob in events],
+                      use_decimal=True, default=str), status.HTTP_200_OK
 
 
 @app.route('/events/ongoing', methods=['GET'])
@@ -203,8 +240,8 @@ def get_all_ongoing_event_by_user():
     except:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
-    return json.dumps([ob.__dict__ for ob in events], default=str), status.HTTP_200_OK
-
+    return json.dumps([ob.__dict__ for ob in events],
+                      use_decimal=True, default=str), status.HTTP_200_OK
 
 # @app.route('/user/event/hosted', methods=['GET'])
 # def get_all_created_events():
