@@ -10,12 +10,26 @@ class TestUser(unittest.TestCase):
         self.app = app
         self.app.config['TESTING'] = True
 
-    def test_add_user(self):
+    def test_create_user(self):
         email = "test@test.com"
         user = User(email=email, username="testUser")
         User.create_user(user)
         retUser = User.get_user_by_email(email)
         self.assertIsNotNone(retUser)
+
+    # if user not exists
+    def test_get_user_by_email1(self):
+        email = "fake@fake.com"
+        user = User.get_user_by_email(email)
+        self.assertIsNone(user)
+
+    # if user exists
+    def test_get_user_by_email1(self):
+        email = "test@test.com"
+        user = User.get_user_by_email(email)
+        self.assertEqual(user.email, email)
+
+
 
 
 if __name__ == '__main__':
