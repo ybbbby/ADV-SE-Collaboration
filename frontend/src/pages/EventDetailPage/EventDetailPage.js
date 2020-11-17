@@ -32,8 +32,8 @@ function Alert(props) {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    padding: theme.spacing(1.5),
-    // boxShadow: 'rgba(0, 0, 0, 0.3) 0px 8px 40px -12px',
+    padding: theme.spacing(2.5),
+    boxShadow: 'rgba(0, 0, 0, 0.3) 0px 8px 40px -12px',
   },
   register: {
     height: '90%',
@@ -49,12 +49,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     margin: '15px 0 10px',
   },
-  shareButton: {
-    margin: '0 10px',
-  },
-  likeButton: {
-    margin: '0 10px',
-  },
   Dvd: {
     paddingBottom: '10px',
   },
@@ -62,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
 // more to do: register button evnet, show participants
 export default function EventDetail(props) {
   const router = useRouter()
+  const { eventID } = router.match.params
   const user = localStorage.getItem('userEmail')
   const [like, setLike] = useState(false)
   const [attend, setAttend] = useState(false)
@@ -92,14 +87,13 @@ export default function EventDetail(props) {
   }
   const closeAlert = (event, reason) => {
     if (reason === 'clickaway') return
-
     setAlertOpen(false)
   }
   const [openInput, setOpenInput] = useState(false)
   const [failInfo, setfailInfo] = useState('')
 
   useEffect(() => {
-    const url = '/event/' + router.match.params.eventID.toString()
+    const url = `/event/${eventID}`
     fetch(url, {
       method: 'GET',
     })
@@ -120,7 +114,9 @@ export default function EventDetail(props) {
         setLike(data.liked)
         setAttend(data.isAttend)
         setimageURL(data.image)
-        setDescription(data.description)
+        data.description
+          ? setDescription(data.description)
+          : setDescription('This event does not have any detail posted yet.')
         setSelectedDate(new Date(data.time))
         const color = like ? red[500] : 'rgba(0, 0, 0, 0.54)'
         setLikeButtonColor(color)
@@ -151,7 +147,7 @@ export default function EventDetail(props) {
       requestForm.append('Longitude', newValue.lng)
       requestForm.append('Latitude', newValue.lat)
     }
-    const url = '/event/' + router.match.params.eventID.toString()
+    const url = `/event/${eventID}`
     fetch(url, {
       method: 'POST',
       body: requestForm,
@@ -183,6 +179,29 @@ export default function EventDetail(props) {
         setAlertOpen(true)
       })
   }
+
+  const deleteEvent = () => {
+    const url = `/event/${eventID}`
+    fetch(url, {
+      method: 'DELETE',
+    })
+      .then((response) => {
+        if (response.status !== 200) {
+          throw Error(response.statusText)
+        } else {
+          return response.text()
+        }
+      })
+      .then(() => {
+        window.location = '/events/ongoing'
+      })
+      .catch((error) => {
+        setfailInfo('Successfully deleted your event!')
+        setServerity('success')
+        setAlertOpen(true)
+      })
+  }
+
   const handleClose = (value) => {
     setOpenInput(false)
     if (!value) {
@@ -220,17 +239,37 @@ export default function EventDetail(props) {
     }
     const currentStatus = like
     const color = currentStatus ? 'rgba(0, 0, 0, 0.54)' : red[500]
-    setLike(!currentStatus)
-    setLikeButtonColor(color)
-    if (!currentStatus) {
-      setfailInfo('Saved to your favourite events!')
-      setServerity('success')
-    } else {
-      setfailInfo('Remove this event from your favourite events!')
-      setServerity('info')
-    }
-    setAlertOpen(true)
+    const url = `/user/event/${eventID}/like`
+    const requestForm = new FormData()
+    requestForm.append('like', !currentStatus)
+    fetch(url, {
+      method: 'POST',
+      body: requestForm,
+    })
+      .then((response) => {
+        if (response.status !== 200) {
+          throw Error(response.statusText)
+        } else {
+          return response.text()
+        }
+      })
+      .then(() => {
+        setLike(!currentStatus)
+        setLikeButtonColor(color)
+        if (!currentStatus) {
+          setfailInfo('Saved to your favourite events!')
+          setServerity('success')
+        } else {
+          setfailInfo('Remove this event from your favourite events!')
+          setServerity('info')
+        }
+        setAlertOpen(true)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
   }
+
   const closeShare = () => {
     setShareModalOpen(false)
   }
@@ -248,14 +287,9 @@ export default function EventDetail(props) {
         </Grid>
       </Grid>
 
-      <Grid container spacing={4}>
+      <Grid container spacing={2}>
         <Grid item xs={4}>
-          <IconButton
-            aria-label="add to favorites"
-            onClick={clickLike}
-            size="small"
-            className={classes.likeButton}
-          >
+          <IconButton aria-label="add to favorites" onClick={clickLike}>
             <FavoriteIcon style={{ color: likeButtonColor }} />
           </IconButton>
           <IconButton
@@ -263,8 +297,6 @@ export default function EventDetail(props) {
             onClick={() => {
               setShareModalOpen(true)
             }}
-            size="small"
-            className={classes.shareButton}
           >
             <ShareIcon />
           </IconButton>
@@ -272,7 +304,16 @@ export default function EventDetail(props) {
         <Grid item xs={4}></Grid>
         <Grid item xs={4}>
           {isAuthor ? (
-            <></>
+            <>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.register}
+                onClick={deleteEvent}
+              >
+                DELETE
+              </Button>
+            </>
           ) : attend ? (
             <Button
               variant="contained"
@@ -303,7 +344,6 @@ export default function EventDetail(props) {
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Typography variant="h4">{title}</Typography>
-
               <Typography gutterBottom variant="subtitle1">
                 by {author}
               </Typography>
