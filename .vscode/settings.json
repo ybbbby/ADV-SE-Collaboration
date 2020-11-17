@@ -4,5 +4,7 @@
     "editor.formatOnSave": true,
     "prettier.eslintIntegration": true,
     "prettier.tslintIntegration": true,
-    "prettier.stylelintIntegration": true
+    "prettier.stylelintIntegration": true,
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true
 }
