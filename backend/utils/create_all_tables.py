@@ -31,7 +31,7 @@ TABLES['event'] = (
     INDEX `host_to_user_idx` (`host` ASC) VISIBLE,
     CONSTRAINT `host_to_user`
       FOREIGN KEY (`host`)
-    REFERENCES `YesOK`.`user` (`email`)
+    REFERENCES `user` (`email`)
     ON DELETE NO ACTION 
     ON UPDATE NO ACTION);
     '''
@@ -46,9 +46,9 @@ TABLES['comment'] = (
     `content` VARCHAR(300) NULL,
     `time` DATETIME NOT NULL,
     PRIMARY KEY (`id`),
-	CONSTRAINT `comment_user` FOREIGN KEY (`user`) REFERENCES `YesOK`.`user` (`email`)
+	CONSTRAINT `comment_user` FOREIGN KEY (`user`) REFERENCES `user` (`email`)
     ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT `comment_event` FOREIGN KEY (`event`) REFERENCES `YesOK`.`event` (`id`)
+    CONSTRAINT `comment_event` FOREIGN KEY (`event`) REFERENCES `event` (`id`)
     ON DELETE CASCADE ON UPDATE CASCADE,
     INDEX `idx_event` (`event` ASC) VISIBLE);
     '''
@@ -60,9 +60,9 @@ TABLES['join'] = (
 	`user` VARCHAR(25) NOT NULL,
     `event` VARCHAR(25) NOT NULL,
     PRIMARY KEY (`user`, `event`),
-	CONSTRAINT `join_user` FOREIGN KEY (`user`) REFERENCES `YesOK`.`user` (`email`)
+	CONSTRAINT `join_user` FOREIGN KEY (`user`) REFERENCES `user` (`email`)
     ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT `join_event` FOREIGN KEY (`event`) REFERENCES `YesOK`.`event` (`id`)
+    CONSTRAINT `join_event` FOREIGN KEY (`event`) REFERENCES `event` (`id`)
     ON DELETE CASCADE ON UPDATE CASCADE,
     INDEX `idx_join_user` (`user` ASC) VISIBLE,
     INDEX `idx_join_event` (`event` ASC) VISIBLE);
@@ -75,9 +75,9 @@ TABLES['like'] = (
 	`user` VARCHAR(25) NOT NULL,
     `event` VARCHAR(25) NOT NULL,
     PRIMARY KEY (`user`, `event`),
-	CONSTRAINT `like_user` FOREIGN KEY (`user`) REFERENCES `YesOK`.`user` (`email`)
+	CONSTRAINT `like_user` FOREIGN KEY (`user`) REFERENCES `user` (`email`)
     ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT `like_event` FOREIGN KEY (`event`) REFERENCES `YesOK`.`event` (`id`)
+    CONSTRAINT `like_event` FOREIGN KEY (`event`) REFERENCES `event` (`id`)
     ON DELETE CASCADE ON UPDATE CASCADE,
     INDEX `idx_like_user` (`user` ASC) VISIBLE,
     INDEX `idx_like_event` (`event` ASC) VISIBLE
