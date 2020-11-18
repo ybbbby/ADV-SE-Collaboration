@@ -1,3 +1,6 @@
+"""
+Test methods in user file
+"""
 # import sys
 import unittest
 from datetime import datetime

@@ -1,3 +1,6 @@
+"""
+Test all cases
+"""
 import unittest
 import os
 
