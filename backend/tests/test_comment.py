@@ -42,7 +42,7 @@ class TestComment(unittest.TestCase):
         comment_id = Comment.create_comment(comment)
         comments = Comment.get_comment_by_event(event_id)
         self.assertEqual(len(comments), 1)
-        self.assertIn(comment_id, comments[0].id)
+        self.assertIn(comment_id, comments[0].comment_id)
         Comment.delete_comment(comment_id)
 
     def test_get_comment_by_event(self):
