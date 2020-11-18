@@ -62,7 +62,7 @@ def get_user_info():
     oauth2_client = googleapiclient.discovery.build(
         'oauth2', 'v2',
         credentials=credentials)
-
+    # pylint: disable=maybe-no-member
     return oauth2_client.userinfo().get().execute()
 
 
