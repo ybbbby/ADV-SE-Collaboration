@@ -13,3 +13,7 @@
 - Run `yarn test` to run all the tests
 - The coverage would be displayed
 - Jest settings are in jest.config.json
+
+## Auto bug finder
+
+-Run `yarn run eslint ./src -o lintResult.html -f html` to get a report
