@@ -80,6 +80,8 @@ export default function EventDetail(props) {
   const [imageURL, setimageURL] = useState('')
   const [title, setTitle] = useState('Title')
   const [author, setAuthor] = useState('host')
+  const [openInput, setOpenInput] = useState(false)
+  const [failInfo, setfailInfo] = useState('')
 
   const handleClick = (num) => {
     setType(num)
@@ -89,8 +91,6 @@ export default function EventDetail(props) {
     if (reason === 'clickaway') return
     setAlertOpen(false)
   }
-  const [openInput, setOpenInput] = useState(false)
-  const [failInfo, setfailInfo] = useState('')
 
   useEffect(() => {
     const url = `/event/${eventID}`
@@ -118,7 +118,7 @@ export default function EventDetail(props) {
           ? setDescription(data.description)
           : setDescription('This event does not have any detail posted yet.')
         setSelectedDate(new Date(data.time))
-        const color = like ? red[500] : 'rgba(0, 0, 0, 0.54)'
+        const color = data.liked ? red[500] : 'rgba(0, 0, 0, 0.54)'
         setLikeButtonColor(color)
         setTitle(data.name)
         setAuthor(data.author)
@@ -194,10 +194,44 @@ export default function EventDetail(props) {
       })
       .then(() => {
         window.location = '/events/ongoing'
-      })
-      .catch((error) => {
         setfailInfo('Successfully deleted your event!')
         setServerity('success')
+        setAlertOpen(true)
+      })
+      .catch((error) => {
+        setfailInfo('Fail to delete the event!')
+        setServerity('error')
+        setAlertOpen(true)
+      })
+  }
+
+  const registerEvent = () => {
+    const url = `/user/event/${eventID}/join`
+    const requestForm = new FormData()
+    requestForm.append('join', !attend)
+    fetch(url, {
+      method: 'POST',
+      body: requestForm,
+    })
+      .then((response) => {
+        if (response.status !== 200) {
+          throw Error(response.statusText)
+        } else {
+          return response.text()
+        }
+      })
+      .then(() => {
+        setAttend(!attend)
+        const alertText = attend
+          ? 'Successfully cancelled your registration.'
+          : 'You have reistered this event!'
+        setfailInfo(alertText)
+        setServerity('success')
+        setAlertOpen(true)
+      })
+      .catch((error) => {
+        setfailInfo('Fail to update due to connection error with server')
+        setServerity('error')
         setAlertOpen(true)
       })
   }
@@ -232,6 +266,7 @@ export default function EventDetail(props) {
         })
     }
   }
+
   const clickLike = () => {
     if (!user) {
       setLoginOpen(true)
@@ -270,9 +305,6 @@ export default function EventDetail(props) {
       })
   }
 
-  const closeShare = () => {
-    setShareModalOpen(false)
-  }
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
@@ -304,31 +336,31 @@ export default function EventDetail(props) {
         <Grid item xs={4}></Grid>
         <Grid item xs={4}>
           {isAuthor ? (
-            <>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.register}
-                onClick={deleteEvent}
-              >
-                DELETE
-              </Button>
-            </>
-          ) : attend ? (
             <Button
               variant="contained"
               color="primary"
               className={classes.register}
+              onClick={deleteEvent}
             >
-              CANCEL
+              DELETE
+            </Button>
+          ) : Date.now() < selectedDate.getTime() ? (
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.register}
+              onClick={registerEvent}
+            >
+              {attend ? 'CANCEL' : 'REGISTER NOW'}
             </Button>
           ) : (
             <Button
               variant="contained"
-              color="secondary"
+              color="primary"
               className={classes.register}
+              disabled
             >
-              REGISTER NOW
+              Event expired
             </Button>
           )}
         </Grid>
@@ -445,7 +477,7 @@ export default function EventDetail(props) {
       />
       <ShareModal
         url={String(window.location)}
-        handleClose={closeShare}
+        handleClose={() => setShareModalOpen(false)}
         open={shareModalOpen}
       />
       <Snackbar open={alertOpen} autoHideDuration={4000} onClose={closeAlert}>
