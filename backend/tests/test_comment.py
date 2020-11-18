@@ -6,9 +6,9 @@ import unittest
 from datetime import datetime
 
 # sys.path.append("..")
-from models.Event import Event
-from models.User import User
-from models.Comment import Comment
+from models.event import Event
+from models.user import User
+from models.comment import Comment
 from tests.test_event import create_event
 from app import app
 
@@ -42,7 +42,7 @@ class TestComment(unittest.TestCase):
         comment_id = Comment.create_comment(comment)
         comments = Comment.get_comment_by_event(event_id)
         self.assertEqual(len(comments), 1)
-        self.assertIn(comment_id, comments[0].id)
+        self.assertIn(comment_id, comments[0].comment_id)
         Comment.delete_comment(comment_id)
 
     def test_get_comment_by_event(self):

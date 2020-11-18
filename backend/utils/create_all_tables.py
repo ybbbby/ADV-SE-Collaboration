@@ -1,3 +1,8 @@
+"""
+create all tables in database
+"""
+
+
 import mysql.connector
 import utils.database_connector as db_connector
 

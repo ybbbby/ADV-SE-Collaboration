@@ -8,9 +8,9 @@ from decimal import Decimal
 
 # sys.path.append("..")
 
-from models.Join import Join
-from models.User import User
-from models.Event import Event
+from models.join import Join
+from models.user import User
+from models.event import Event
 from app import app
 
 

@@ -1,7 +1,10 @@
+"""
+Comment: Helper functions for Comment Database
+"""
+
 import time
 import random
 import datetime
-
 import utils.database_connector as db_connector
 
 
@@ -10,14 +13,14 @@ class Comment:
         This is a class for Comment.
 
         Attributes:
-            id (string): Id of comment.
+            comment_id (string): Id of comment.
             user (string): User email of the user who creates the comment.
             event (string): The id of event to which the comment belongs.
             content (string): The content of the comment.
             time (datetime): The time when comment is created
         """
     def __init__(self, user: str, event: str, content: str, comment_time: datetime):
-        self.id = None
+        self.comment_id = None
         self.user = user
         self.event = event
         self.content = content
@@ -58,7 +61,7 @@ class Comment:
         for (comment_id, user, event_id, content, comment_time) in cursor:
             new_comment = Comment(user=user, event=event_id, content=content,
                 comment_time=datetime.datetime.strptime(str(comment_time), "%Y-%m-%d %H:%M:%S"))
-            new_comment.id = comment_id
+            new_comment.comment_id = comment_id
             comments.append(new_comment)
         cursor.close()
         cnx.close()
@@ -66,10 +69,15 @@ class Comment:
         return comments
 
     @staticmethod
-    def delete_comment(id: str):
+    def delete_comment(comment_id: str):
+        """
+        Delete comment with given id.
+        :param comment_id: comment id
+        :return: None
+        """
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
-        sql = ("DELETE FROM `comment` WHERE id='" + id + "'")
+        sql = ("DELETE FROM `comment` WHERE id='" + comment_id + "'")
         cursor.execute(sql)
         cnx.commit()
         cursor.close()

@@ -1,0 +1,229 @@
+************* Module backend.google_auth
+C: 16, 0: Exactly one space required after assignment
+AUTHORIZATION_SCOPE ='openid email profile'
+                    ^ (bad-whitespace)
+C: 36, 0: Trailing whitespace (trailing-whitespace)
+C: 38, 0: Wrong hanging indentation (remove 8 spaces).
+                oauth2_tokens['access_token'],
+        |       ^ (bad-continuation)
+C: 39, 0: Wrong hanging indentation (remove 8 spaces).
+                refresh_token=oauth2_tokens['refresh_token'],
+        |       ^ (bad-continuation)
+C: 40, 0: Wrong hanging indentation (remove 8 spaces).
+                client_id=CLIENT_ID,
+        |       ^ (bad-continuation)
+C: 41, 0: Wrong hanging indentation (remove 8 spaces).
+                client_secret=CLIENT_SECRET,
+        |       ^ (bad-continuation)
+C: 42, 0: Wrong hanging indentation (remove 8 spaces).
+                token_uri=ACCESS_TOKEN_URI)
+        |       ^ (bad-continuation)
+C: 48, 0: Wrong hanging indentation (remove 16 spaces).
+                        'oauth2', 'v2',
+        |               ^ (bad-continuation)
+C: 49, 0: Wrong hanging indentation (remove 16 spaces).
+                        credentials=credentials)
+        |               ^ (bad-continuation)
+C: 64, 0: No space allowed around keyword argument assignment
+@app.route('/google/login', methods = ['GET'])
+                                    ^ (bad-whitespace)
+C: 70, 0: Trailing whitespace (trailing-whitespace)
+C: 86, 0: Trailing whitespace (trailing-whitespace)
+C: 93, 0: Wrong hanging indentation (remove 16 spaces).
+                        ACCESS_TOKEN_URI,            
+        |               ^ (bad-continuation)
+C: 93, 0: Trailing whitespace (trailing-whitespace)
+C: 94, 0: Wrong hanging indentation (remove 16 spaces).
+                        authorization_response=flask.request.url)
+        |               ^ (bad-continuation)
+C:113, 0: Trailing newlines (trailing-newlines)
+C:  1, 0: Missing module docstring (missing-docstring)
+C: 26, 0: Constant name "app" doesn't conform to UPPER_CASE naming style (invalid-name)
+C: 28, 0: Missing function docstring (missing-docstring)
+C: 31, 0: Missing function docstring (missing-docstring)
+C: 44, 0: Missing function docstring (missing-docstring)
+E: 51,11: Instance of 'Resource' has no 'userinfo' member (no-member)
+C: 53, 0: Missing function docstring (missing-docstring)
+C: 55, 4: Missing function docstring (missing-docstring)
+C: 66, 0: Missing function docstring (missing-docstring)
+C: 80, 0: Missing function docstring (missing-docstring)
+C:101, 4: Variable name "newUser" doesn't conform to snake_case naming style (invalid-name)
+C:108, 0: Missing function docstring (missing-docstring)
+************* Module backend.config
+C:  3, 0: Line too long (101/100) (line-too-long)
+C:  1, 0: Missing module docstring (missing-docstring)
+************* Module backend.test
+C: 12, 0: Line too long (110/100) (line-too-long)
+C: 13, 0: Line too long (102/100) (line-too-long)
+C:  1, 0: Missing module docstring (missing-docstring)
+W:  1, 0: Wildcard import utils.create_all_tables (wildcard-import)
+C: 12, 0: Constant name "event_id" doesn't conform to UPPER_CASE naming style (invalid-name)
+E: 12,30: No value for argument 'latitude' in constructor call (no-value-for-parameter)
+W:  1, 0: Unused import mysql from wildcard import (unused-wildcard-import)
+W:  1, 0: Unused import db_connector from wildcard import (unused-wildcard-import)
+W:  1, 0: Unused import TABLES from wildcard import (unused-wildcard-import)
+C:  7, 0: standard import "import datetime" should be placed before "from utils.create_all_tables import *" (wrong-import-order)
+************* Module backend.app
+C:  1, 0: Missing module docstring (missing-docstring)
+C: 22, 0: Constant name "app" doesn't conform to UPPER_CASE naming style (invalid-name)
+C: 29, 0: Constant name "mail" doesn't conform to UPPER_CASE naming style (invalid-name)
+W: 65,11: Catching too general exception Exception (broad-except)
+R: 72, 0: Either all return statements in a function should return an expression, or none of them should. (inconsistent-return-statements)
+W: 94,11: Catching too general exception Exception (broad-except)
+W:106, 4: Redefining built-in 'type' (redefined-builtin)
+W:116,11: Catching too general exception Exception (broad-except)
+W:132, 4: No exception type(s) specified (bare-except)
+W:148, 4: No exception type(s) specified (bare-except)
+W:139,27: Unused argument 'event_id' (unused-argument)
+C:156, 0: Missing function docstring (missing-docstring)
+W:164,15: Redefining built-in 'id' (redefined-builtin)
+C:164, 0: Argument name "id" doesn't conform to snake_case naming style (invalid-name)
+C:164, 0: Missing function docstring (missing-docstring)
+W:168, 4: No exception type(s) specified (bare-except)
+W:175,15: Redefining built-in 'id' (redefined-builtin)
+C:175, 0: Argument name "id" doesn't conform to snake_case naming style (invalid-name)
+C:175, 0: Missing function docstring (missing-docstring)
+W:183, 4: No exception type(s) specified (bare-except)
+W:191,23: Redefining built-in 'id' (redefined-builtin)
+C:191, 0: Argument name "id" doesn't conform to snake_case naming style (invalid-name)
+C:191, 0: Missing function docstring (missing-docstring)
+W:205, 4: No exception type(s) specified (bare-except)
+C:212, 0: Missing function docstring (missing-docstring)
+W:216, 4: No exception type(s) specified (bare-except)
+C:224, 0: Missing function docstring (missing-docstring)
+W:228, 4: No exception type(s) specified (bare-except)
+C:236, 0: Missing function docstring (missing-docstring)
+W:240, 4: No exception type(s) specified (bare-except)
+W:  9, 0: Unused OAuth2Session imported from authlib.client (unused-import)
+W: 10, 0: Unused import google.oauth2.credentials (unused-import)
+W: 11, 0: Unused import googleapiclient.discovery (unused-import)
+W: 20, 0: Unused utils.send_email imported as mail_service (unused-import)
+C:  6, 0: standard import "import traceback" should be placed before "from flask import Flask, request" (wrong-import-order)
+C: 20, 0: Imports from package utils are not grouped (ungrouped-imports)
+************* Module backend.utils.database_connector
+C:  1, 0: Missing module docstring (missing-docstring)
+************* Module backend.utils.create_all_tables
+C:  1, 0: Missing module docstring (missing-docstring)
+************* Module backend.utils.send_email
+C:  1, 0: Missing module docstring (missing-docstring)
+************* Module backend.models.User
+C: 52, 0: Trailing whitespace (trailing-whitespace)
+C:  1, 0: Module name "User" doesn't conform to snake_case naming style (invalid-name)
+C:  1, 0: Missing module docstring (missing-docstring)
+C: 54, 4: Missing method docstring (missing-docstring)
+************* Module backend.models.Event
+C: 90, 0: Wrong continued indentation (add 1 space).
+                             latitude=latitude, zipcode=zipcode,
+                             ^| (bad-continuation)
+C: 91, 0: Wrong continued indentation (add 1 space).
+                             event_time=datetime.datetime.strptime(str(event_time),
+                             ^| (bad-continuation)
+C:124, 0: Wrong continued indentation (add 1 space).
+                             longitude=longitude, latitude=latitude,
+                             ^| (bad-continuation)
+C:125, 0: Wrong continued indentation (add 1 space).
+                             zipcode=zipcode,
+                             ^| (bad-continuation)
+C:126, 0: Wrong continued indentation (add 1 space).
+                             event_time=datetime.datetime.strptime(str(event_time),
+                             ^| (bad-continuation)
+C:157, 0: Wrong continued indentation (add 1 space).
+            zipcode, event_time, description, image, num_likes) in cursor:
+            ^| (bad-continuation)
+C:159, 0: Wrong continued indentation (add 1 space).
+                             longitude=longitude, latitude=latitude,
+                             ^| (bad-continuation)
+C:160, 0: Wrong continued indentation (add 1 space).
+                             zipcode=zipcode,
+                             ^| (bad-continuation)
+C:161, 0: Wrong continued indentation (add 1 space).
+                             event_time=datetime.datetime.strptime(str(event_time),
+                             ^| (bad-continuation)
+C:194, 0: Wrong hanging indentation before block.
+        event_id, name, host, address, longitude, latitude,
+        ^   |   | (bad-continuation)
+C:195, 0: Wrong hanging indentation before block.
+        zipcode, event_time, description, image, num_likes) in cursor:
+        ^   |   | (bad-continuation)
+C:197, 0: Wrong continued indentation (add 1 space).
+                             longitude=longitude, latitude=latitude,
+                             ^| (bad-continuation)
+C:198, 0: Wrong continued indentation (add 1 space).
+                             zipcode=zipcode,
+                             ^| (bad-continuation)
+C:199, 0: Wrong continued indentation (add 1 space).
+                             event_time=datetime.datetime.strptime(str(event_time),
+                             ^| (bad-continuation)
+C:227, 0: Wrong hanging indentation (remove 4 spaces).
+                "SELECT * FROM `event` "
+            |   ^ (bad-continuation)
+C:237, 0: Wrong continued indentation (add 1 space).
+                             longitude=longitude, latitude=latitude,
+                             ^| (bad-continuation)
+C:238, 0: Wrong continued indentation (add 1 space).
+                             zipcode=zipcode,
+                             ^| (bad-continuation)
+C:239, 0: Wrong continued indentation (add 1 space).
+                             event_time=datetime.datetime.strptime(str(event_time),
+                             ^| (bad-continuation)
+C:271, 0: Wrong continued indentation (add 1 space).
+                             longitude=longitude, latitude=latitude, zipcode=zipcode,
+                             ^| (bad-continuation)
+C:272, 0: Wrong continued indentation (add 1 space).
+                             event_time=datetime.datetime.strptime(str(event_time),
+                             ^| (bad-continuation)
+C:335, 0: Wrong continued indentation (remove 1 space).
+                    }
+                   |^ (bad-continuation)
+C:  1, 0: Module name "Event" doesn't conform to snake_case naming style (invalid-name)
+C:  1, 0: Missing module docstring (missing-docstring)
+C: 32, 8: Attribute name "id" doesn't conform to snake_case naming style (invalid-name)
+C: 47, 8: Attribute name "isAttend" doesn't conform to snake_case naming style (invalid-name)
+R: 12, 0: Too many instance attributes (15/7) (too-many-instance-attributes)
+R: 30, 4: Too many arguments (8/5) (too-many-arguments)
+R: 73, 4: Too many local variables (20/15) (too-many-locals)
+R:106, 4: Too many local variables (20/15) (too-many-locals)
+R:141, 4: Too many local variables (20/15) (too-many-locals)
+E:147,16: No value for argument 'user' in staticmethod call (no-value-for-parameter)
+R:176, 4: Too many local variables (20/15) (too-many-locals)
+R:215, 4: Too many local variables (20/15) (too-many-locals)
+R:255, 4: Too many local variables (17/15) (too-many-locals)
+R:268,13: Redefining argument with the local name 'event_id' (redefined-argument-from-local)
+R:330, 8: Unnecessary "else" after "return" (no-else-return)
+************* Module backend.models.Comment
+C: 60, 0: Wrong continued indentation (add 18 spaces).
+                comment_time=datetime.datetime.strptime(str(comment_time), "%Y-%m-%d %H:%M:%S"))
+                ^                 | (bad-continuation)
+C: 76, 0: Final newline missing (missing-final-newline)
+C:  1, 0: Module name "Comment" doesn't conform to snake_case naming style (invalid-name)
+C:  1, 0: Missing module docstring (missing-docstring)
+C: 20, 8: Attribute name "id" doesn't conform to snake_case naming style (invalid-name)
+W: 69,23: Redefining built-in 'id' (redefined-builtin)
+C: 69, 4: Argument name "id" doesn't conform to snake_case naming style (invalid-name)
+C: 69, 4: Missing method docstring (missing-docstring)
+************* Module backend.models.Like
+C: 88, 0: Trailing whitespace (trailing-whitespace)
+C: 98, 0: Trailing newlines (trailing-newlines)
+C:  1, 0: Module name "Like" doesn't conform to snake_case naming style (invalid-name)
+C:  1, 0: Missing module docstring (missing-docstring)
+R: 46,13: Redefining argument with the local name 'user' (redefined-argument-from-local)
+R: 64,19: Redefining argument with the local name 'event' (redefined-argument-from-local)
+C: 90, 4: Missing method docstring (missing-docstring)
+************* Module backend.models.Join
+C: 87, 0: Trailing whitespace (trailing-whitespace)
+C:  1, 0: Module name "Join" doesn't conform to snake_case naming style (invalid-name)
+C:  1, 0: Missing module docstring (missing-docstring)
+C: 89, 4: Missing method docstring (missing-docstring)
+R:  1, 0: Similar lines in 2 files
+==backend.models.Event:297
+==backend.models.User:57
+        cursor.execute(sql)
+        cnx.commit()
+        cursor.close()
+        cnx.close()
+
+    @staticmethod (duplicate-code)
+
+------------------------------------------------------------------
+Your code has been rated at 7.67/10 (previous run: 7.67/10, +0.00)
+

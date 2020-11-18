@@ -1,3 +1,7 @@
+"""
+Like: Helper functions for Like Database
+"""
+
 import utils.database_connector as db_connector
 
 
@@ -43,8 +47,8 @@ class Like:
         query = ("SELECT * FROM `like` WHERE user='" + user + "'")
         cursor.execute(query)
         likes = []
-        for (user, event) in cursor:
-            likes.append(Like(user=user, event=event))
+        for (usr, event) in cursor:
+            likes.append(Like(user=usr, event=event))
         cursor.close()
         cnx.close()
         return likes
@@ -61,8 +65,8 @@ class Like:
         query = ("SELECT * FROM `like` WHERE event='" + event + "'")
         cursor.execute(query)
         likes = []
-        for (user, event) in cursor:
-            likes.append(Like(user=user, event=event))
+        for (user, cur_event) in cursor:
+            likes.append(Like(user=user, event=cur_event))
         cursor.close()
         cnx.close()
         return likes
@@ -86,9 +90,13 @@ class Like:
         cursor.close()
         cnx.close()
         return ret
-    
+
     @staticmethod
     def delete_like(like: 'Like'):
+        """
+        Delete a like in Database
+        :param like: like object
+        """
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
         query = ("DELETE FROM `like` WHERE user='" + like.user + "' and event='" + like.event + "'")
@@ -96,4 +104,3 @@ class Like:
         cnx.commit()
         cursor.close()
         cnx.close()
-

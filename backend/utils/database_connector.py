@@ -1,3 +1,8 @@
+"""
+get a connection to database
+"""
+
+
 import mysql.connector
 import config
 
