@@ -118,7 +118,7 @@ export default function EventDetail(props) {
           ? setDescription(data.description)
           : setDescription('This event does not have any detail posted yet.')
         setSelectedDate(new Date(data.time))
-        const color = like ? red[500] : 'rgba(0, 0, 0, 0.54)'
+        const color = data.liked ? red[500] : 'rgba(0, 0, 0, 0.54)'
         setLikeButtonColor(color)
         setTitle(data.name)
         setAuthor(data.author)
@@ -336,17 +336,15 @@ export default function EventDetail(props) {
         <Grid item xs={4}></Grid>
         <Grid item xs={4}>
           {isAuthor ? (
-            <>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.register}
-                onClick={deleteEvent}
-              >
-                DELETE
-              </Button>
-            </>
-          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.register}
+              onClick={deleteEvent}
+            >
+              DELETE
+            </Button>
+          ) : Date.now() < selectedDate.getTime() ? (
             <Button
               variant="contained"
               color="primary"
@@ -354,6 +352,15 @@ export default function EventDetail(props) {
               onClick={registerEvent}
             >
               {attend ? 'CANCEL' : 'REGISTER NOW'}
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.register}
+              disabled
+            >
+              Event expired
             </Button>
           )}
         </Grid>
