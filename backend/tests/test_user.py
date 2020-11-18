@@ -1,15 +1,23 @@
+"""
+Test methods in user file
+"""
+# import sys
 import unittest
-import sys
 from datetime import datetime
 from decimal import Decimal
-sys.path.append("..")
 
-from models.User import User
-from models.Event import Event
-from models.Join import Join
+# sys.path.append("..")
 from app import app
+from models.event import Event
+from models.user import User
+from models.join import Join
+
 
 def create_event():
+    """
+    Create event helper function
+    :return: An event object
+    """
     user = "test@test.com"
     name = "event1"
     address = "512 W, 110th St, New York"
@@ -25,7 +33,12 @@ def create_event():
                   latitude=latitude)
     return event
 
+
 class TestUser(unittest.TestCase):
+    """
+    This is a Test for methods in User file
+    """
+
     def setUp(self) -> None:
         self.app = app
         self.app.config['TESTING'] = True
@@ -35,8 +48,11 @@ class TestUser(unittest.TestCase):
 
     def tearDown(self) -> None:
         User.delete_user_by_email("test@test.com")
-        
+
     def test_create_user(self):
+        """
+        Test function create_user
+        """
         email = "test1@test.com"
         user = User(email=email, username="testUser")
         User.create_user(user)
@@ -48,32 +64,45 @@ class TestUser(unittest.TestCase):
 
     # if user not exists
     def test_get_user_by_email1(self):
+        """
+        Test function get_user_by_email
+        """
         email = "fake@fake.com"
         user = User.get_user_by_email(email)
         self.assertIsNone(user)
 
     # if user exists
     def test_get_user_by_email2(self):
+        """
+        Test function get_user_by_email
+        """
         email = "test@test.com"
         user = User.get_user_by_email(email)
         self.assertEqual(user.email, email)
 
     def test_get_attendees_by_event(self):
+        """
+        Test function get_attendees_by_event
+        """
         user = "test@test.com"
-        id = Event.create_event(create_event())
-        Join.create_join(Join(user, id))
-        users = User.get_attendees_by_event(id)
+        event_id = Event.create_event(create_event())
+        Join.create_join(Join(user, event_id))
+        users = User.get_attendees_by_event(event_id)
         self.assertEqual(users[0].email, user)
-        Join.delete_join(Join(user, id))
-        Event.delete_event_by_id(id)
+        Join.delete_join(Join(user, event_id))
+        Event.delete_event_by_id(event_id)
 
     def test_delete_user(self):
+        """
+        Test function delete_user
+        """
         email = "test@test.com"
         user = User.get_user_by_email(email)
         self.assertEqual(user.email, email)
         User.delete_user_by_email(email)
         user = User.get_user_by_email(email)
         self.assertIsNone(user)
+
 
 if __name__ == '__main__':
     unittest.main()

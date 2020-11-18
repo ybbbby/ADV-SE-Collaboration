@@ -1,16 +1,22 @@
+"""
+Test methods in comment file
+"""
 import unittest
-import sys
+# import sys
 from datetime import datetime
 
-sys.path.append("..")
-from models.Event import Event
-from models.User import User
-from models.Comment import Comment
+# sys.path.append("..")
+from models.event import Event
+from models.user import User
+from models.comment import Comment
 from tests.test_event import create_event
 from app import app
 
 
 class TestComment(unittest.TestCase):
+    """
+    Test Comment file
+    """
     def setUp(self) -> None:
         self.app = app
         self.app.config['TESTING'] = True
@@ -25,6 +31,9 @@ class TestComment(unittest.TestCase):
         User.delete_user_by_email("test@test.com")
 
     def test_add_comment(self):
+        """
+        Test create_comment
+        """
         user = "test@test.com"
         content = "this is a comment"
         event_id = self.event_id
@@ -37,6 +46,9 @@ class TestComment(unittest.TestCase):
         Comment.delete_comment(comment_id)
 
     def test_get_comment_by_event(self):
+        """
+        Test get_comment_by_event
+        """
         user = "test@test.com"
         event_id = self.event_id
         content = "this is a comment"
@@ -51,6 +63,9 @@ class TestComment(unittest.TestCase):
         Comment.delete_comment(comment_id)
 
     def test_delete_comment(self):
+        """
+        Test delete_comment
+        """
         user = "test@test.com"
         event_id = self.event_id
         content = "this is a comment"
@@ -62,6 +77,7 @@ class TestComment(unittest.TestCase):
         Comment.delete_comment(comment_id)
         comments = Comment.get_comment_by_event(event_id)
         self.assertEqual(len(comments), 0)
+
 
 if __name__ == '__main__':
     unittest.main()

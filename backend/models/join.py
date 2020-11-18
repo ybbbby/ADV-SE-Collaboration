@@ -1,3 +1,7 @@
+"""
+Join: Helper functions for Join Database
+"""
+
 import utils.database_connector as db_connector
 
 
@@ -84,9 +88,13 @@ class Join:
         cursor.close()
         cnx.close()
         return find_result
-    
+
     @staticmethod
     def delete_join(join: 'Join'):
+        """
+        Delete a join in database
+        :param join: join object
+        """
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
         query = ("DELETE FROM `join` WHERE user='" + join.user + "' and event='" + join.event + "'")

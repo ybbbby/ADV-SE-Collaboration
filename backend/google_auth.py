@@ -1,3 +1,8 @@
+"""
+Google OAuth blueprint
+"""
+
+
 import functools
 import os
 import flask
@@ -7,13 +12,12 @@ import google.oauth2.credentials
 import googleapiclient.discovery
 
 import config
-from models.User import User
-
+from models.user import User
 
 ACCESS_TOKEN_URI = config.ACCESS_TOKEN_URI
 AUTHORIZATION_URL = config.AUTHORIZATION_URL
 
-AUTHORIZATION_SCOPE ='openid email profile'
+AUTHORIZATION_SCOPE = 'openid email profile'
 
 AUTH_REDIRECT_URI = os.environ.get("FN_AUTH_REDIRECT_URI", default=False)
 BASE_URI = os.environ.get("FN_BASE_URI", default=False)
@@ -25,32 +29,54 @@ AUTH_STATE_KEY = 'auth_state'
 
 app = flask.Blueprint('google_auth', __name__)
 
+
 def is_logged_in():
-    return True if AUTH_TOKEN_KEY in flask.session else False
+    """
+    :return: boolean, indicates whether the user is logged in
+    """
+    if AUTH_TOKEN_KEY in flask.session:
+        return True
+    return False
+
 
 def build_credentials():
+    """
+    Create credentials
+    :return: Credential
+    """
     if not is_logged_in():
         raise Exception('User must be logged in')
 
     oauth2_tokens = flask.session[AUTH_TOKEN_KEY]
-    
+
     return google.oauth2.credentials.Credentials(
-                oauth2_tokens['access_token'],
-                refresh_token=oauth2_tokens['refresh_token'],
-                client_id=CLIENT_ID,
-                client_secret=CLIENT_SECRET,
-                token_uri=ACCESS_TOKEN_URI)
+        oauth2_tokens['access_token'],
+        refresh_token=oauth2_tokens['refresh_token'],
+        client_id=CLIENT_ID,
+        client_secret=CLIENT_SECRET,
+        token_uri=ACCESS_TOKEN_URI)
+
 
 def get_user_info():
+    """
+    Get the information of the current user
+    :return: dictionary of the current user info
+    """
     credentials = build_credentials()
 
     oauth2_client = googleapiclient.discovery.build(
-                        'oauth2', 'v2',
-                        credentials=credentials)
-
+        'oauth2', 'v2',
+        credentials=credentials)
+    # pylint: disable=maybe-no-member
     return oauth2_client.userinfo().get().execute()
 
+
 def no_cache(view):
+    """
+    Disable cache
+    :param view: view
+    :return: wrapper
+    """
     @functools.wraps(view)
     def no_cache_impl(*args, **kwargs):
         response = flask.make_response(view(*args, **kwargs))
@@ -61,13 +87,18 @@ def no_cache(view):
 
     return functools.update_wrapper(no_cache_impl, view)
 
-@app.route('/google/login', methods = ['GET'])
+
+@app.route('/google/login', methods=['GET'])
 @no_cache
 def login():
+    """
+    User log in
+    :return: uri
+    """
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
                             scope=AUTHORIZATION_SCOPE,
                             redirect_uri=AUTH_REDIRECT_URI)
-  
+
     uri, state = session.authorization_url(AUTHORIZATION_URL)
 
     flask.session[AUTH_STATE_KEY] = state
@@ -75,39 +106,48 @@ def login():
 
     return uri
 
+
 @app.route('/google/auth')
 @no_cache
 def google_auth_redirect():
+    """
+    Validate the user
+    :return: redirect the uri
+    """
     req_state = flask.request.args.get('state', default=None, type=None)
 
     if req_state != flask.session[AUTH_STATE_KEY]:
         response = flask.make_response('Invalid state parameter', 401)
         return response
-    
+
     session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
                             scope=AUTHORIZATION_SCOPE,
                             state=flask.session[AUTH_STATE_KEY],
                             redirect_uri=AUTH_REDIRECT_URI)
 
     oauth2_tokens = session.fetch_access_token(
-                        ACCESS_TOKEN_URI,            
-                        authorization_response=flask.request.url)
+        ACCESS_TOKEN_URI,
+        authorization_response=flask.request.url)
 
     flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
 
     user_info = get_user_info()
     email = user_info["email"]
     username = user_info["name"]
-    newUser = User(email=email, username=username)
-    User.create_user(newUser)
+    new_user = User(email=email, username=username)
+    User.create_user(new_user)
 
     return flask.redirect(BASE_URI, code=302)
+
 
 @app.route('/google/logout')
 @no_cache
 def logout():
+    """
+    User log out
+    :return: redirect uri
+    """
     flask.session.pop(AUTH_TOKEN_KEY, None)
     flask.session.pop(AUTH_STATE_KEY, None)
 
     return flask.redirect(BASE_URI, code=302)
-

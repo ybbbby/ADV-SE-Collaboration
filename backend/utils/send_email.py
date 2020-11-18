@@ -1,3 +1,8 @@
+"""
+Module for sending email
+"""
+
+
 from typing import List
 from flask_mail import Message
 

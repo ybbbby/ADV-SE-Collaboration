@@ -1,3 +1,7 @@
+"""
+User: Helper functions for User Database
+"""
+
 import utils.database_connector as db_connector
 
 
@@ -49,9 +53,13 @@ class User:
         cursor.close()
         cnx.close()
         return res
-    
+
     @staticmethod
     def delete_user_by_email(email: str):
+        """
+        delete a user from database
+        :param email: email
+        """
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
         sql = ("DELETE FROM `user` WHERE email='" + email + "'")

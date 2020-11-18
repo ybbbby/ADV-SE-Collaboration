@@ -1,17 +1,24 @@
+"""
+Test methods in event file
+"""
 import unittest
-import sys
+# import sys
 from datetime import datetime
 from decimal import Decimal
 
-from models.User import User
+from models.user import User
 
-sys.path.append("..")
+# sys.path.append("..")
 
-from models.Event import Event
+from models.event import Event
 from app import app
 
 
 def create_event():
+    """
+    Create event helper function
+    :return: An event object
+    """
     user = "test@test.com"
     name = "event1"
     address = "512 W, 110th St, New York"
@@ -29,6 +36,9 @@ def create_event():
 
 
 class TestEvent(unittest.TestCase):
+    """
+    Test Event file
+    """
     def setUp(self) -> None:
         self.app = app
         self.app.config['TESTING'] = True
@@ -43,18 +53,24 @@ class TestEvent(unittest.TestCase):
         User.delete_user_by_email("test@test.com")
 
     def test_create_event(self):
+        """
+        Test create_event
+        """
         event = self.event
         event_id = self.event_id
-        retEvent = Event.get_event_by_id(event_id, event.user_email)
-        self.assertEqual(retEvent.id, event_id)
-        self.assertEqual(retEvent.user_email, event.user_email)
-        self.assertEqual(retEvent.name, event.name)
-        self.assertEqual(retEvent.address,event.address)
-        self.assertEqual(retEvent.time, event.time)
-        self.assertAlmostEqual(retEvent.longitude, event.longitude)
-        self.assertAlmostEqual(retEvent.latitude, event.latitude)
+        ret_event = Event.get_event_by_id(event_id, event.user_email)
+        self.assertEqual(ret_event.event_id, event_id)
+        self.assertEqual(ret_event.user_email, event.user_email)
+        self.assertEqual(ret_event.name, event.name)
+        self.assertEqual(ret_event.address,event.address)
+        self.assertEqual(ret_event.time, event.time)
+        self.assertAlmostEqual(ret_event.longitude, event.longitude)
+        self.assertAlmostEqual(ret_event.latitude, event.latitude)
 
     def test_delete_event(self):
+        """
+        Test delete_event
+        """
         event = self.event
         event_id = self.event_id
 
@@ -64,6 +80,9 @@ class TestEvent(unittest.TestCase):
 
     # update description
     def test_update_event1(self):
+        """
+        Test update_event
+        """
         event = self.event
         event_id = self.event_id
         description = "new desc"
@@ -73,6 +92,9 @@ class TestEvent(unittest.TestCase):
 
     # update time
     def test_update_event2(self):
+        """
+        Test update_event
+        """
         event = self.event
         event_id = self.event_id
         time = datetime.strptime("2022-12-12 12:12:12", "%Y-%m-%d %H:%M:%S")
@@ -82,6 +104,9 @@ class TestEvent(unittest.TestCase):
 
     # update address, longitude, latitude
     def test_update_event3(self):
+        """
+        Test update_event
+        """
         event = self.event
         event_id = self.event_id
         address = "412 E, 110th St, New york"
@@ -97,16 +122,21 @@ class TestEvent(unittest.TestCase):
 
     # get event not exists
     def test_get_event_id1(self):
-        id = "0"
-        e = Event.get_event_by_id(id)
-        self.assertIsNone(e)
+        """
+        Test get_event_id
+        """
+        event_id = "0"
+        event = Event.get_event_by_id(event_id)
+        self.assertIsNone(event)
 
     # get event exists
     def test_get_event_id2(self):
-        event = self.event
+        """
+        Test get_event_id
+        """
         event_id = self.event_id
-        e = Event.get_event_by_id(event_id)
-        self.assertEqual(e.id, event_id)
+        event = Event.get_event_by_id(event_id)
+        self.assertEqual(event.event_id, event_id)
 
 
 if __name__ == '__main__':
