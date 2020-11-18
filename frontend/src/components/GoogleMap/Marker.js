@@ -1,5 +1,6 @@
 import React from 'react'
 import './Marker.css'
+import PropTypes from 'prop-types'
 
 const Marker = (props) => {
   const { color, name } = props
@@ -14,5 +15,8 @@ const Marker = (props) => {
     </div>
   )
 }
-
+Marker.propTypes = {
+  color: PropTypes.any,
+  name: PropTypes.string,
+}
 export default Marker

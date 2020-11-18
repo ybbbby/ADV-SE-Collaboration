@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function EventsNearby(props) {
+export default function EventsNearby() {
   const classes = useStyles()
   const router = useRouter()
   const { category } = router.match.params

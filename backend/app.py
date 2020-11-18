@@ -173,8 +173,12 @@ def join_event(event_id):
     """
     email = google_auth.get_user_info()["email"]
     try:
-        Join.create_join(Join(email, event_id))
-    except mysql.connector.Error:
+        exists = Join.user_is_attend(email, id)
+        if exists:
+            Join.delete_join(Join(email, id))
+        else:
+            Join.create_join(Join(email, id))
+    except:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return "", status.HTTP_200_OK
@@ -237,8 +241,7 @@ def get_all_event_liked_by_user():
     except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
-    return json.dumps([ob.__dict__ for ob in events],
-                      use_decimal=True, default=str), status.HTTP_200_OK
+    return json.dumps([ob.__dict__ for ob in events], default=str), status.HTTP_200_OK
 
 
 @app.route('/events/history', methods=['GET'])
@@ -253,8 +256,7 @@ def get_all_history_event_by_user():
     except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
-    return json.dumps([ob.__dict__ for ob in events],
-                      use_decimal=True, default=str), status.HTTP_200_OK
+    return json.dumps([ob.__dict__ for ob in events], default=str), status.HTTP_200_OK
 
 
 @app.route('/events/ongoing', methods=['GET'])
@@ -269,8 +271,7 @@ def get_all_ongoing_event_by_user():
     except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
-    return json.dumps([ob.__dict__ for ob in events],
-                      use_decimal=True, default=str), status.HTTP_200_OK
+    return json.dumps([ob.__dict__ for ob in events], default=str), status.HTTP_200_OK
 
 # @app.route('/user/event/hosted', methods=['GET'])
 # def get_all_created_events():

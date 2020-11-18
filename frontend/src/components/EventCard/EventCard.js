@@ -25,7 +25,7 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     boxShadow: '0 8px 24px 0 rgba(0,0,0,0.12)',
   },
@@ -208,6 +208,7 @@ function EventCard(props) {
 EventCard.propTypes = {
   user: PropTypes.string.isRequired,
   config: PropTypes.object.isRequired,
+  openLogin: PropTypes.bool,
 }
 
 export default EventCard

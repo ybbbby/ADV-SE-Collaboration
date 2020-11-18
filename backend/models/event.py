@@ -279,12 +279,13 @@ class Event:
             new_event.description = description
             new_event.image = image
             new_event.num_likes = num_likes
-            new_event.liked = Like.exist(host, eid)
             if user:
-                new_event.attended = Join.user_is_attend(user=user, event=eid)
+                new_event.liked = Like.exist(user, event_id)
+                new_event.isAttend = Join.user_is_attend(user=user, event=event_id)
             else:
-                new_event.attended = False
-            new_event.comments = Comment.get_comment_by_event(eid)
+                new_event.liked = False
+                new_event.isAttend = False
+            new_event.comments = Comment.get_comment_by_event(event_id)
         cursor.close()
         cnx.close()
         # return json.dumps(new_event.__dict__, use_decimal=True, default=str)

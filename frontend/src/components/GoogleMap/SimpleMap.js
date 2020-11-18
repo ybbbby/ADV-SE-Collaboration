@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import GoogleMapReact from 'google-map-react'
 import Crendential from '../../credential'
 import Marker from './Marker'
+import PropTypes from 'prop-types'
 
 class SimpleMap extends Component {
   constructor(props) {
@@ -39,5 +40,8 @@ class SimpleMap extends Component {
     )
   }
 }
-
+SimpleMap.propTypes = {
+  center: PropTypes.object,
+  name: PropTypes.string,
+}
 export default SimpleMap

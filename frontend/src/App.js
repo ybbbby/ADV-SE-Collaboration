@@ -94,6 +94,7 @@ export default function App() {
             <Typography variant="h6" className={classes.logo}>
               <Link to="/">
                 <img
+                  // eslint-disable-next-line no-undef
                   src={`${process.env.PUBLIC_URL}/logo.png`}
                   height="38"
                   alt="logo"
