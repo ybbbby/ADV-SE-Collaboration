@@ -169,6 +169,8 @@ UpdateInputModal.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   type: PropTypes.number.isRequired,
+  date: PropTypes.object,
+  description: PropTypes.string,
 }
 
 export default UpdateInputModal

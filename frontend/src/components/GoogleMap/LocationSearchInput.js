@@ -2,7 +2,7 @@ import React from 'react'
 import Crendential from '../../credential'
 import PlacesAutocomplete from 'react-places-autocomplete'
 import { TextField } from '@material-ui/core'
-
+import PropTypes from 'prop-types'
 class LocationSearchInput extends React.Component {
   constructor(props) {
     super(props)
@@ -112,4 +112,11 @@ class LocationSearchInput extends React.Component {
     )
   }
 }
+LocationSearchInput.propTypes = {
+  setAddress: PropTypes.func.isRequired,
+  setError: PropTypes.func.isRequired,
+  address: PropTypes.string,
+  error: PropTypes.bool,
+}
+
 export default LocationSearchInput

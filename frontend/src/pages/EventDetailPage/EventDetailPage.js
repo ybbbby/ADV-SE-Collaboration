@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 // more to do: register button evnet, show participants
-export default function EventDetail(props) {
+export default function EventDetail() {
   const router = useRouter()
   const { eventID } = router.match.params
   const user = localStorage.getItem('userEmail')
@@ -126,12 +126,12 @@ export default function EventDetail(props) {
           setIsAuthor(true)
         }
       })
-      .catch((error) => {
+      .catch(() => {
         setfailInfo('Cannot get event detail')
         setServerity('error')
         setAlertOpen(true)
       })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, [])
 
   const UpdateInfo = (t, newValue) => {
@@ -173,7 +173,7 @@ export default function EventDetail(props) {
           })
         }
       })
-      .catch((error) => {
+      .catch(() => {
         setfailInfo('Fail to update due to connection error with server')
         setServerity('error')
         setAlertOpen(true)
@@ -198,7 +198,7 @@ export default function EventDetail(props) {
         setServerity('success')
         setAlertOpen(true)
       })
-      .catch((error) => {
+      .catch(() => {
         setfailInfo('Fail to delete the event!')
         setServerity('error')
         setAlertOpen(true)
@@ -229,7 +229,7 @@ export default function EventDetail(props) {
         setServerity('success')
         setAlertOpen(true)
       })
-      .catch((error) => {
+      .catch(() => {
         setfailInfo('Fail to update due to connection error with server')
         setServerity('error')
         setAlertOpen(true)
@@ -259,7 +259,7 @@ export default function EventDetail(props) {
           }
           UpdateInfo('address', newValue)
         })
-        .catch((error) => {
+        .catch(() => {
           setfailInfo('Fail to update due to illegitimate address')
           setServerity('error')
           setAlertOpen(true)
