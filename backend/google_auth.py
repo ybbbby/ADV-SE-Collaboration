@@ -1,3 +1,8 @@
+"""
+Google OAuth blueprint
+"""
+
+
 import functools
 import os
 import flask
@@ -7,7 +12,7 @@ import google.oauth2.credentials
 import googleapiclient.discovery
 
 import config
-from models.User import User
+from models.user import User
 
 ACCESS_TOKEN_URI = config.ACCESS_TOKEN_URI
 AUTHORIZATION_URL = config.AUTHORIZATION_URL

@@ -6,11 +6,11 @@ import unittest
 from datetime import datetime
 from decimal import Decimal
 
-from models.User import User
+from models.user import User
 
 # sys.path.append("..")
 
-from models.Event import Event
+from models.event import Event
 from app import app
 
 
@@ -59,7 +59,7 @@ class TestEvent(unittest.TestCase):
         event = self.event
         event_id = self.event_id
         ret_event = Event.get_event_by_id(event_id, event.user_email)
-        self.assertEqual(ret_event.id, event_id)
+        self.assertEqual(ret_event.event_id, event_id)
         self.assertEqual(ret_event.user_email, event.user_email)
         self.assertEqual(ret_event.name, event.name)
         self.assertEqual(ret_event.address,event.address)
@@ -136,7 +136,7 @@ class TestEvent(unittest.TestCase):
         """
         event_id = self.event_id
         event = Event.get_event_by_id(event_id)
-        self.assertEqual(event.id, event_id)
+        self.assertEqual(event.event_id, event_id)
 
 
 if __name__ == '__main__':

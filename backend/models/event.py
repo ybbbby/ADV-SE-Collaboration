@@ -1,12 +1,16 @@
+"""
+Event: Helper functions for Event Database
+"""
+
 import datetime
 import random
 import time
 
 import utils.database_connector as db_connector
-from models.Comment import Comment
-from models.Like import Like
-from models.Join import Join
-from models.User import User
+from models.comment import Comment
+from models.like import Like
+from models.join import Join
+from models.user import User
 
 
 class Event:
@@ -14,7 +18,7 @@ class Event:
     This is a class for Event. It shows details of a event
 
     Attributes:
-        id (string): Id of the event
+        event_id (string): Id of the event
         name (string): email name of the author of the event
         author (string): name of the author of the event
         address (string): address of the event
@@ -29,7 +33,7 @@ class Event:
     """
     def __init__(self, user: str, name: str, address: str,
                  zipcode: str, event_time: datetime, longitude: float, latitude: float):
-        self.id = None
+        self.event_id = None
         self.name = name
         self.user_email = user
         self.author = User.get_user_by_email(user).username
@@ -44,7 +48,7 @@ class Event:
         self.comments = None
         # unsure
         self.liked = False
-        self.isAttend = False
+        self.attended = False
 
     @staticmethod
     def create_event(event: 'Event'):
@@ -90,13 +94,13 @@ class Event:
                              latitude=latitude, zipcode=zipcode,
                              event_time=datetime.datetime.strptime(str(event_time),
                                                                    "%Y-%m-%d %H:%M:%S"))
-            new_event.id = event_id
+            new_event.event_id = event_id
             new_event.description = description
             new_event.image = image
             new_event.num_likes = num_likes
             if event_id in liked_events:
                 new_event.liked = True
-            new_event.isAttend = True
+            new_event.attended = True
             events.append(new_event)
         cursor.close()
         cnx.close()
@@ -125,13 +129,13 @@ class Event:
                              zipcode=zipcode,
                              event_time=datetime.datetime.strptime(str(event_time),
                                                                    "%Y-%m-%d %H:%M:%S"))
-            new_event.id = event_id
+            new_event.event_id = event_id
             new_event.description = description
             new_event.image = image
             new_event.num_likes = num_likes
             if event_id in liked_events:
                 new_event.liked = True
-            new_event.isAttend = True
+            new_event.attended = True
             events.append(new_event)
         cursor.close()
         cnx.close()
@@ -144,7 +148,7 @@ class Event:
         :param email: Email of user
         :return: A list of events which is liked by user.
         """
-        joins = Join.get_join_by_user()
+        joins = Join.get_join_by_user(email)
         joined_events = set(join.event for join in joins)
 
         cnx = db_connector.get_connection()
@@ -160,13 +164,13 @@ class Event:
                              zipcode=zipcode,
                              event_time=datetime.datetime.strptime(str(event_time),
                                                                    "%Y-%m-%d %H:%M:%S"))
-            new_event.id = event_id
+            new_event.event_id = event_id
             new_event.description = description
             new_event.image = image
             new_event.num_likes = num_likes
             new_event.liked = True
             if event_id in joined_events:
-                new_event.isAttend = True
+                new_event.attended = True
             events.append(new_event)
         cursor.close()
         cnx.close()
@@ -198,13 +202,13 @@ class Event:
                              zipcode=zipcode,
                              event_time=datetime.datetime.strptime(str(event_time),
                                                                    "%Y-%m-%d %H:%M:%S"))
-            new_event.id = event_id
+            new_event.event_id = event_id
             new_event.description = description
             new_event.image = image
             new_event.num_likes = num_likes
             if event_id in liked_events:
                 new_event.liked = True
-            new_event.isAttend = True
+            new_event.attended = True
             events.append(new_event)
         cursor.close()
         cnx.close()
@@ -238,13 +242,13 @@ class Event:
                              zipcode=zipcode,
                              event_time=datetime.datetime.strptime(str(event_time),
                                                                    "%Y-%m-%d %H:%M:%S"))
-            new_event.id = event_id
+            new_event.event_id = event_id
             new_event.description = description
             new_event.image = image
             new_event.num_likes = num_likes
             if event_id in liked_events:
                 new_event.liked = True
-            new_event.isAttend = True
+            new_event.attended = True
             events.append(new_event)
         cursor.close()
         cnx.close()
@@ -265,22 +269,22 @@ class Event:
         query = ("SELECT * FROM `event` WHERE id='" + event_id + "'")
         cursor.execute(query)
         new_event = None
-        for (event_id, name, host, address,
+        for (eid, name, host, address,
              longitude, latitude, zipcode, event_time, description, image, num_likes) in cursor:
             new_event = Event(user=host, name=name, address=address,
                              longitude=longitude, latitude=latitude, zipcode=zipcode,
                              event_time=datetime.datetime.strptime(str(event_time),
                                                                    "%Y-%m-%d %H:%M:%S"))
-            new_event.id = event_id
+            new_event.event_id = eid
             new_event.description = description
             new_event.image = image
             new_event.num_likes = num_likes
-            new_event.liked = Like.exist(host, event_id)
+            new_event.liked = Like.exist(host, eid)
             if user:
-                new_event.isAttend = Join.user_is_attend(user=user, event=event_id)
+                new_event.attended = Join.user_is_attend(user=user, event=eid)
             else:
-                new_event.isAttend = False
-            new_event.comments = Comment.get_comment_by_event(event_id)
+                new_event.attended = False
+            new_event.comments = Comment.get_comment_by_event(eid)
         cursor.close()
         cnx.close()
         # return json.dumps(new_event.__dict__, use_decimal=True, default=str)
@@ -328,10 +332,9 @@ class Event:
         :return: A string of the comment
         """
         if isinstance(obj, Comment):
-            return {"id": obj.id,
+            return {"id": obj.comment_id,
                     "content": obj.content,
                     "time": obj.time,
                     "user": obj.user
                     }
-        else:
-            return str(obj)
+        return str(obj)

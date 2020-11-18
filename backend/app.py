@@ -1,23 +1,23 @@
+"""
+Flask backend apis of YesOK application
+"""
+
+
 from datetime import datetime
 import json
 import os
+import traceback
 from flask import Flask, request
 from flask_api import status
-import traceback
 from flask_mail import Mail
-
-from authlib.client import OAuth2Session
-import google.oauth2.credentials
-import googleapiclient.discovery
-
+import mysql.connector
 import google_auth
 import utils.create_all_tables as db_create_tables
-from models.Event import Event
-from models.User import User
-from models.Comment import Comment
-from models.Join import Join
-from models.Like import Like
-import utils.send_email as mail_service
+from models.event import Event
+from models.user import User
+from models.comment import Comment
+from models.join import Join
+from models.like import Like
 
 app = Flask(__name__)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -62,7 +62,7 @@ def create_new_event():
     try:
         event_id = Event.create_event(new_event)
         Join.create_join(Join(email, event_id))
-    except Exception:
+    except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return event_id
@@ -77,10 +77,11 @@ def handle_event(event_id):
     """
     if request.method == 'DELETE':
         return delete_event_by_id(event_id)
-    elif request.method == 'POST':
+    if request.method == 'POST':
         return update_event_by_id(event_id)
-    elif request.method == 'GET':
+    if request.method == 'GET':
         return get_event_by_id(event_id)
+    return "", status.HTTP_200_OK
 
 
 def delete_event_by_id(event_id):
@@ -91,7 +92,7 @@ def delete_event_by_id(event_id):
     """
     try:
         Event.delete_event_by_id(event_id)
-    except Exception:
+    except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return "", status.HTTP_200_OK
@@ -103,17 +104,17 @@ def update_event_by_id(event_id):
     :param event_id: id of the event
     :return: http status code
     """
-    type = request.form.get("Type")
+    event_type = request.form.get("Type")
     try:
-        if type == "time":
+        if event_type == "time":
             Event.update_event({"time": request.form.get("Time")}, event_id)
-        elif type == "address":
+        elif event_type == "address":
             Event.update_event({"address": request.form.get("Address"),
                                 "longitude": request.form.get("Longitude"),
                                 "latitude": request.form.get("Latitude")}, event_id)
-        elif type == "description":
+        elif event_type == "description":
             Event.update_event({"description": request.form.get("Description")}, event_id)
-    except Exception:
+    except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return "", status.HTTP_200_OK
@@ -129,23 +130,23 @@ def get_event_by_id(event_id):
     email = user_info["email"]
     try:
         event = Event.get_event_by_id(event_id, email)
-    except:
+    except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return json.dumps(event.__dict__, default=Event.serialize_comment_in_event), status.HTTP_200_OK
 
 
-@app.route('/event/<id>/attendees', methods=['GET'])
+@app.route('/event/<event_id>/attendees', methods=['GET'])
 def get_attendees_by_event(event_id):
     """
     Get all attendees of the given event
-    :param id:
+    :param event_id:
     :return:
     """
-    Join.get_join_by_event(id)
+    Join.get_join_by_event(event_id)
     try:
-        users = User.get_attendees_by_event(id)
-    except:
+        users = User.get_attendees_by_event(event_id)
+    except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return json.dumps([ob.__dict__ for ob in users],
@@ -154,47 +155,63 @@ def get_attendees_by_event(event_id):
 
 @app.route('/user/info', methods=['GET'])
 def userinfo():
+    """
+    Get cur user info
+    :return:
+    """
     if google_auth.is_logged_in():
         user_info = google_auth.get_user_info()
         return json.dumps(user_info, indent=4)
     return "NOUSER"
 
 
-@app.route('/user/event/<id>/join', methods=['POST'])
-def join_event(id):
+@app.route('/user/event/<event_id>/join', methods=['POST'])
+def join_event(event_id):
+    """
+    user join a event
+    :return:
+    """
     email = google_auth.get_user_info()["email"]
     try:
-        Join.create_join(Join(email, id))
-    except:
+        Join.create_join(Join(email, event_id))
+    except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return "", status.HTTP_200_OK
 
 
-@app.route('/user/event/<id>/like', methods=['POST'])
-def like_event(id):
+@app.route('/user/event/<event_id>/like', methods=['POST'])
+def like_event(event_id):
+    """
+    user like a event
+    :return:
+    """
     email = google_auth.get_user_info()["email"]
     try:
-        exists = Like.exist(email, id)
+        exists = Like.exist(email, event_id)
         if not exists:
-            Like.create_like(Like(email, id))
+            Like.create_like(Like(email, event_id))
         else:
-            Like.delete_like(Like(email, id))
-    except:
+            Like.delete_like(Like(email, event_id))
+    except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return "", status.HTTP_200_OK
 
 
 # Tested - xyz
-@app.route('/user/event/<id>/comment', methods=['POST'])
-def create_new_comment(id):
+@app.route('/user/event/<event_id>/comment', methods=['POST'])
+def create_new_comment(event_id):
+    """
+    user create a new comment on a event
+    :return:
+    """
     time = request.form.get("Time")
     content = request.form.get("Content")
     user_info = google_auth.get_user_info()
     email = user_info["email"]
     comment = Comment(user=email, content=content,
-                      comment_time=datetime.strptime(time, '%Y-%m-%d %H:%M:%S'), event=id)
+                      comment_time=datetime.strptime(time, '%Y-%m-%d %H:%M:%S'), event=event_id)
     try:
         Comment.create_comment(comment)
         # send notification to the event host
@@ -202,7 +219,7 @@ def create_new_comment(id):
         # email_content = name + " just commented your event " + event.name + "."
         # mail_service.send(mail=mail, title="A user just comment your event",
         # recipients=[event.user_email], content=email_content)
-    except:
+    except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return "", status.HTTP_200_OK
@@ -210,10 +227,14 @@ def create_new_comment(id):
 
 @app.route('/events/liked', methods=['GET'])
 def get_all_event_liked_by_user():
+    """
+    Get all event a user liked
+    :return:
+    """
     email = google_auth.get_user_info()["email"]
     try:
         events = Event.get_all_event_liked_by_user(email)
-    except:
+    except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return json.dumps([ob.__dict__ for ob in events],
@@ -222,10 +243,14 @@ def get_all_event_liked_by_user():
 
 @app.route('/events/history', methods=['GET'])
 def get_all_history_event_by_user():
+    """
+    Get all events a user joined and happened
+    :return:
+    """
     email = google_auth.get_user_info()["email"]
     try:
         events = Event.get_all_history_event_by_user(email)
-    except:
+    except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return json.dumps([ob.__dict__ for ob in events],
@@ -234,10 +259,14 @@ def get_all_history_event_by_user():
 
 @app.route('/events/ongoing', methods=['GET'])
 def get_all_ongoing_event_by_user():
+    """
+    Get all events a user joined and haven't happened
+    :return:
+    """
     email = google_auth.get_user_info()["email"]
     try:
         events = Event.get_all_ongoing_event_by_user(email)
-    except:
+    except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return json.dumps([ob.__dict__ for ob in events],

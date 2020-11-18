@@ -6,9 +6,9 @@ import unittest
 from datetime import datetime
 
 # sys.path.append("..")
-from models.Event import Event
-from models.User import User
-from models.Comment import Comment
+from models.event import Event
+from models.user import User
+from models.comment import Comment
 from tests.test_event import create_event
 from app import app
 
