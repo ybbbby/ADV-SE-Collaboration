@@ -15,6 +15,7 @@ import UserCard from './components/UserCard/UserCard'
 import Categories from './components/Categories/Categories'
 import { Link } from 'react-router-dom'
 import Routes from './routes'
+import getUserInfo from './api/getUserInfo'
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -72,18 +73,13 @@ export default function App() {
   const [isLogin, setLogin] = useState(false)
 
   useEffect(() => {
-    fetch('/user/info', {
-      method: 'GET',
-    })
-      .then((response) => response.json())
-      .then((data) => {
+    getUserInfo().then((data) => {
+      if (data) {
         setUserData(data)
         localStorage.setItem('userEmail', data['email'])
         setLogin(true)
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+      }
+    })
   }, [])
 
   return (

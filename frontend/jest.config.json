@@ -1,4 +1,0 @@
-{
-    "testRegex": "((\\.|/*.)(spec))\\.js?$",
-    "collectCoverage": true
-}
