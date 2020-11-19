@@ -208,7 +208,7 @@ function EventCard(props) {
 EventCard.propTypes = {
   user: PropTypes.string.isRequired,
   config: PropTypes.object.isRequired,
-  openLogin: PropTypes.bool,
+  openLogin: PropTypes.func,
 }
 
 export default EventCard
