@@ -13,6 +13,7 @@ class Join:
         user (string): Email of the user
         event (string): The id of event user attends
     """
+
     def __init__(self, user: str, event: str):
         self.user = user
         self.event = event
@@ -79,9 +80,9 @@ class Join:
         """
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
-        query = ("SELECT * FROM `join` WHERE event=%s AND user=%s")
-        params = (event, user)
-        cursor.execute(query, params)
+        query = ("SELECT * FROM `join` WHERE event='" +
+                 event + "' AND user='" + user + "'")
+        cursor.execute(query)
         find_result = False
         for _, _ in cursor:
             find_result = True
@@ -97,7 +98,8 @@ class Join:
         """
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
-        query = ("DELETE FROM `join` WHERE user='" + join.user + "' and event='" + join.event + "'")
+        query = ("DELETE FROM `join` WHERE user='" +
+                 join.user + "' and event='" + join.event + "'")
         cursor.execute(query)
         cnx.commit()
         cursor.close()

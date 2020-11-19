@@ -113,7 +113,8 @@ def update_event_by_id(event_id):
                                 "longitude": request.form.get("Longitude"),
                                 "latitude": request.form.get("Latitude")}, event_id)
         elif event_type == "description":
-            Event.update_event({"description": request.form.get("Description")}, event_id)
+            Event.update_event(
+                {"description": request.form.get("Description")}, event_id)
     except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
@@ -173,11 +174,11 @@ def join_event(event_id):
     """
     email = google_auth.get_user_info()["email"]
     try:
-        exists = Join.user_is_attend(email, id)
+        exists = Join.user_is_attend(email, event_id)
         if exists:
-            Join.delete_join(Join(email, id))
+            Join.delete_join(Join(email, event_id))
         else:
-            Join.create_join(Join(email, id))
+            Join.create_join(Join(email, event_id))
     except:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
