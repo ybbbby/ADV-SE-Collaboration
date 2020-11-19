@@ -112,7 +112,7 @@ export default function EventDetail() {
           lng: Number(data.longitude),
         })
         setLike(data.liked)
-        setAttend(data.isAttend)
+        setAttend(data.attended)
         setimageURL(data.image)
         data.description
           ? setDescription(data.description)

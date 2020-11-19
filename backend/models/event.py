@@ -31,6 +31,7 @@ class Event:
         num_likes (string): number of likes the event has
         comments (list): a list of comments the event has
     """
+
     def __init__(self, user: str, name: str, address: str,
                  zipcode: str, event_time: datetime, longitude: float, latitude: float):
         self.event_id = None
@@ -62,7 +63,8 @@ class Event:
         sql = "INSERT INTO `event` (`id`, `name`, `host`, `address`, `longitude`, `latitude`," \
               " `zipcode`, `time`, `description`, `image`, `num_likes`) " \
               "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
-        event_id = str(round(time.time() * 1000)) + str(random.randint(0, 1000))
+        event_id = str(round(time.time() * 1000)) + \
+            str(random.randint(0, 1000))
         event_data = (event_id, event.name, event.user_email, event.address,
                       event.longitude, event.latitude,
                       event.zipcode, event.time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -91,9 +93,9 @@ class Event:
         for (event_id, name, host, address, longitude, latitude,
              zipcode, event_time, description, image, num_likes) in cursor:
             new_event = Event(user=host, name=name, address=address, longitude=longitude,
-                             latitude=latitude, zipcode=zipcode,
-                             event_time=datetime.datetime.strptime(str(event_time),
-                                                                   "%Y-%m-%d %H:%M:%S"))
+                              latitude=latitude, zipcode=zipcode,
+                              event_time=datetime.datetime.strptime(str(event_time),
+                                                                    "%Y-%m-%d %H:%M:%S"))
             new_event.event_id = event_id
             new_event.description = description
             new_event.image = image
@@ -125,10 +127,10 @@ class Event:
         for (event_id, name, host, address, longitude, latitude,
              zipcode, event_time, description, image, num_likes) in cursor:
             new_event = Event(user=host, name=name, address=address,
-                             longitude=longitude, latitude=latitude,
-                             zipcode=zipcode,
-                             event_time=datetime.datetime.strptime(str(event_time),
-                                                                   "%Y-%m-%d %H:%M:%S"))
+                              longitude=longitude, latitude=latitude,
+                              zipcode=zipcode,
+                              event_time=datetime.datetime.strptime(str(event_time),
+                                                                    "%Y-%m-%d %H:%M:%S"))
             new_event.event_id = event_id
             new_event.description = description
             new_event.image = image
@@ -158,12 +160,12 @@ class Event:
         cursor.execute(query)
         events = []
         for (event_id, name, host, address, longitude, latitude,
-            zipcode, event_time, description, image, num_likes) in cursor:
+             zipcode, event_time, description, image, num_likes) in cursor:
             new_event = Event(user=host, name=name, address=address,
-                             longitude=longitude, latitude=latitude,
-                             zipcode=zipcode,
-                             event_time=datetime.datetime.strptime(str(event_time),
-                                                                   "%Y-%m-%d %H:%M:%S"))
+                              longitude=longitude, latitude=latitude,
+                              zipcode=zipcode,
+                              event_time=datetime.datetime.strptime(str(event_time),
+                                                                    "%Y-%m-%d %H:%M:%S"))
             new_event.event_id = event_id
             new_event.description = description
             new_event.image = image
@@ -195,13 +197,13 @@ class Event:
         cursor.execute(query)
         events = []
         for (
-        event_id, name, host, address, longitude, latitude,
-        zipcode, event_time, description, image, num_likes) in cursor:
+                event_id, name, host, address, longitude, latitude,
+                zipcode, event_time, description, image, num_likes) in cursor:
             new_event = Event(user=host, name=name, address=address,
-                             longitude=longitude, latitude=latitude,
-                             zipcode=zipcode,
-                             event_time=datetime.datetime.strptime(str(event_time),
-                                                                   "%Y-%m-%d %H:%M:%S"))
+                              longitude=longitude, latitude=latitude,
+                              zipcode=zipcode,
+                              event_time=datetime.datetime.strptime(str(event_time),
+                                                                    "%Y-%m-%d %H:%M:%S"))
             new_event.event_id = event_id
             new_event.description = description
             new_event.image = image
@@ -228,9 +230,9 @@ class Event:
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
         query = (
-                "SELECT * FROM `event` "
-                "WHERE `id` IN "
-                "(SELECT `event` FROM `join` WHERE `user` = '" + email + "') and `time` >= now();")
+            "SELECT * FROM `event` "
+            "WHERE `id` IN "
+            "(SELECT `event` FROM `join` WHERE `user` = '" + email + "') and `time` >= now();")
         cursor.execute(query)
         events = []
         for (
@@ -238,10 +240,10 @@ class Event:
                 longitude, latitude, zipcode, event_time, description, image,
                 num_likes) in cursor:
             new_event = Event(user=host, name=name, address=address,
-                             longitude=longitude, latitude=latitude,
-                             zipcode=zipcode,
-                             event_time=datetime.datetime.strptime(str(event_time),
-                                                                   "%Y-%m-%d %H:%M:%S"))
+                              longitude=longitude, latitude=latitude,
+                              zipcode=zipcode,
+                              event_time=datetime.datetime.strptime(str(event_time),
+                                                                    "%Y-%m-%d %H:%M:%S"))
             new_event.event_id = event_id
             new_event.description = description
             new_event.image = image
@@ -272,19 +274,20 @@ class Event:
         for (eid, name, host, address,
              longitude, latitude, zipcode, event_time, description, image, num_likes) in cursor:
             new_event = Event(user=host, name=name, address=address,
-                             longitude=longitude, latitude=latitude, zipcode=zipcode,
-                             event_time=datetime.datetime.strptime(str(event_time),
-                                                                   "%Y-%m-%d %H:%M:%S"))
+                              longitude=longitude, latitude=latitude, zipcode=zipcode,
+                              event_time=datetime.datetime.strptime(str(event_time),
+                                                                    "%Y-%m-%d %H:%M:%S"))
             new_event.event_id = eid
             new_event.description = description
             new_event.image = image
             new_event.num_likes = num_likes
             if user:
                 new_event.liked = Like.exist(user, event_id)
-                new_event.isAttend = Join.user_is_attend(user=user, event=event_id)
+                new_event.attended = Join.user_is_attend(
+                    user=user, event=event_id)
             else:
                 new_event.liked = False
-                new_event.isAttend = False
+                new_event.attended = False
             new_event.comments = Comment.get_comment_by_event(event_id)
         cursor.close()
         cnx.close()

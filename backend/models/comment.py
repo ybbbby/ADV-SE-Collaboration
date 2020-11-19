@@ -19,6 +19,7 @@ class Comment:
             content (string): The content of the comment.
             time (datetime): The time when comment is created
         """
+
     def __init__(self, user: str, event: str, content: str, comment_time: datetime):
         self.comment_id = None
         self.user = user
@@ -37,7 +38,8 @@ class Comment:
         cursor = cnx.cursor()
         sql = "INSERT INTO `comment` (`id`, `user`, `event`, `content`, `time`) " \
               "VALUES (%s, %s, %s, %s, %s);"
-        comment_id = str(round(time.time() * 1000)) + str(random.randint(0, 1000))
+        comment_id = str(round(time.time() * 1000)) + \
+            str(random.randint(0, 1000))
         comment_data = (comment_id, comment.user, comment.event, comment.content,
                         comment.time.strftime('%Y-%m-%d %H:%M:%S'))
         cursor.execute(sql, comment_data)
@@ -60,7 +62,8 @@ class Comment:
         comments = []
         for (comment_id, user, event_id, content, comment_time) in cursor:
             new_comment = Comment(user=user, event=event_id, content=content,
-                comment_time=datetime.datetime.strptime(str(comment_time), "%Y-%m-%d %H:%M:%S"))
+                                  comment_time=datetime.datetime.strptime(str(comment_time),
+                                                                          "%Y-%m-%d %H:%M:%S"))
             new_comment.comment_id = comment_id
             comments.append(new_comment)
         cursor.close()
