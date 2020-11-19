@@ -179,7 +179,7 @@ def join_event(event_id):
             Join.delete_join(Join(email, event_id))
         else:
             Join.create_join(Join(email, event_id))
-    except:
+    except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return "", status.HTTP_200_OK
