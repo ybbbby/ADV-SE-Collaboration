@@ -13,3 +13,6 @@ https://thss15-gaomx.github.io/yesOK-swagger/
 #### Frontend
 
 - ask the members for awsOptions and google api credential file
+- `cd frontend`
+- `yarn install`
+- `yarn start`
