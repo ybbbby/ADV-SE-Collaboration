@@ -11,7 +11,7 @@
 
 - All test files should name with the pattern xx.spec.js
 - Run `yarn test` to run all the tests
-- The coverage would be displayed
+- Run `yarn test --covergae` to see the coverage
 - Jest settings are in jest.config.json
 
 ## Auto bug finder

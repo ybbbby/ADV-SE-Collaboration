@@ -7,7 +7,7 @@ beforeEach(() => {
 })
 
 describe('test getEvents api', () => {
-  it('should load user data', () => {
+  it('should load events data', () => {
     fetch.mockResponseOnce(JSON.stringify(mockEvents))
     getEvents('history').then((data) => {
       expect(data).toBeDefined()
