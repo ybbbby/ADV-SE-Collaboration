@@ -31,7 +31,7 @@ export default function EventsNearby() {
   }
 
   useEffect(() => {
-    getEvents(category).then((data) => {
+    getEvents(category ? category : 'nearby').then((data) => {
       if (data) {
         setEventList(data)
       }
