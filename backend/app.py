@@ -274,6 +274,23 @@ def get_all_ongoing_event_by_user():
         return "", status.HTTP_400_BAD_REQUEST
     return json.dumps([ob.__dict__ for ob in events], default=str), status.HTTP_200_OK
 
+
+@app.route('/events/nearby', methods=['GET'])
+def get_nearby_events():
+    """
+    Get all events nearby a user
+    :return:
+    """
+    email = None
+    if google_auth.is_logged_in():
+        email = google_auth.get_user_info()["email"]
+    try:
+        events = Event.get_nearby_events(email)
+    except mysql.connector.Error:
+        traceback.print_exc()
+        return "", status.HTTP_400_BAD_REQUEST
+    return json.dumps([ob.__dict__ for ob in events], default=str), status.HTTP_200_OK
+
 # @app.route('/user/event/hosted', methods=['GET'])
 # def get_all_created_events():
 #     email = google_auth.get_user_info()["email"]

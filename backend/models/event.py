@@ -291,7 +291,6 @@ class Event:
             new_event.comments = Comment.get_comment_by_event(event_id)
         cursor.close()
         cnx.close()
-        # return json.dumps(new_event.__dict__, use_decimal=True, default=str)
         return new_event
 
     @staticmethod
@@ -327,6 +326,40 @@ class Event:
         cnx.commit()
         cursor.close()
         cnx.close()
+
+    @staticmethod
+    def get_nearby_events(user: str):
+        """
+
+        :return: A nearby event list
+        """
+        cnx = db_connector.get_connection()
+        cursor = cnx.cursor()
+        query = ("SELECT * FROM `event`")
+        cursor.execute(query)
+        events = []
+        for (eid, name, host, address,
+             longitude, latitude, zipcode, event_time, description, image, num_likes) in cursor:
+            new_event = Event(user=host, name=name, address=address,
+                              longitude=longitude, latitude=latitude, zipcode=zipcode,
+                              event_time=datetime.datetime.strptime(str(event_time),
+                                                                    "%Y-%m-%d %H:%M:%S"))
+            new_event.event_id = eid
+            new_event.description = description
+            new_event.image = image
+            new_event.num_likes = num_likes
+            if user:
+                new_event.liked = Like.exist(user, eid)
+                new_event.attended = Join.user_is_attend(
+                    user=user, event=eid)
+            else:
+                new_event.liked = False
+                new_event.attended = False
+            new_event.comments = Comment.get_comment_by_event(eid)
+            events.append(new_event)
+        cursor.close()
+        cnx.close()
+        return events
 
     @staticmethod
     def serialize_comment_in_event(obj):
