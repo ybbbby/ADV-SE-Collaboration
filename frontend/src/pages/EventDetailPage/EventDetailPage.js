@@ -24,6 +24,7 @@ import useRouter from 'use-react-router'
 import LoginModal from '../../components/LoginModal/LoginModal'
 import { red } from '@material-ui/core/colors'
 import ShareModal from '../../components/ShareModal/ShareModal'
+import getEvent from '../../api/getEvent'
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -93,44 +94,31 @@ export default function EventDetail() {
   }
 
   useEffect(() => {
-    const url = `/event/${eventID}`
-    fetch(url, {
-      method: 'GET',
+    getEvent(eventID).then((data) => {
+      if (data) {
+        return
+      }
+      console.log(data)
+      setAddress(data.address)
+      setCenter({
+        lat: Number(data.latitude),
+        lng: Number(data.longitude),
+      })
+      setLike(data.liked)
+      setAttend(data.attended)
+      setimageURL(data.image)
+      data.description
+        ? setDescription(data.description)
+        : setDescription('This event does not have any detail posted yet.')
+      setSelectedDate(new Date(data.time))
+      const color = data.liked ? red[500] : 'rgba(0, 0, 0, 0.54)'
+      setLikeButtonColor(color)
+      setTitle(data.name)
+      setAuthor(data.author)
+      if (user === data.user_email) {
+        setIsAuthor(true)
+      }
     })
-      .then((response) => {
-        if (response.status < 200 || response.status > 299) {
-          throw Error(response.statusText)
-        } else {
-          return response.json()
-        }
-      })
-      .then((data) => {
-        console.log(data)
-        setAddress(data.address)
-        setCenter({
-          lat: Number(data.latitude),
-          lng: Number(data.longitude),
-        })
-        setLike(data.liked)
-        setAttend(data.attended)
-        setimageURL(data.image)
-        data.description
-          ? setDescription(data.description)
-          : setDescription('This event does not have any detail posted yet.')
-        setSelectedDate(new Date(data.time))
-        const color = data.liked ? red[500] : 'rgba(0, 0, 0, 0.54)'
-        setLikeButtonColor(color)
-        setTitle(data.name)
-        setAuthor(data.author)
-        if (user === data.user_email) {
-          setIsAuthor(true)
-        }
-      })
-      .catch(() => {
-        setfailInfo('Cannot get event detail')
-        setServerity('error')
-        setAlertOpen(true)
-      })
     // eslint-disable-next-line
   }, [])
 
