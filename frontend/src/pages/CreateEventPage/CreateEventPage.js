@@ -187,6 +187,7 @@ const CreateEventPage = (props) => {
                 label="Date picker inline"
                 value={selectedDate}
                 onChange={handleDateChange}
+                disablePast
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}

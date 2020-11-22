@@ -181,7 +181,7 @@ export default function EventDetail() {
         }
       })
       .then(() => {
-        window.location = '/events/ongoing'
+        window.location = '/'
         setfailInfo('Successfully deleted your event!')
         setServerity('success')
         setAlertOpen(true)
