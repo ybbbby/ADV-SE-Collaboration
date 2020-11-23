@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import useRouter from 'use-react-router'
 import EventCard from '../../components/EventCard/EventCard'
 import LoginModal from '../../components/LoginModal/LoginModal'
+import getEvents from '../../api/getEvents'
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -30,17 +31,11 @@ export default function EventsNearby() {
   }
 
   useEffect(() => {
-    const url = `/events/${category}`
-    fetch(url, {
-      method: 'GET',
-    })
-      .then((response) => response.json())
-      .then((data) => {
+    getEvents(category ? category : 'nearby').then((data) => {
+      if (data) {
         setEventList(data)
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+      }
+    })
   }, [category])
 
   return (

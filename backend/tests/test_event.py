@@ -39,6 +39,7 @@ class TestEvent(unittest.TestCase):
     """
     Test Event file
     """
+
     def setUp(self) -> None:
         self.app = app
         self.app.config['TESTING'] = True
@@ -62,7 +63,7 @@ class TestEvent(unittest.TestCase):
         self.assertEqual(ret_event.event_id, event_id)
         self.assertEqual(ret_event.user_email, event.user_email)
         self.assertEqual(ret_event.name, event.name)
-        self.assertEqual(ret_event.address,event.address)
+        self.assertEqual(ret_event.address, event.address)
         self.assertEqual(ret_event.time, event.time)
         self.assertAlmostEqual(ret_event.longitude, event.longitude)
         self.assertAlmostEqual(ret_event.latitude, event.latitude)

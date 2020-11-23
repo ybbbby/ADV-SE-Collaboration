@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import {
   Typography,
@@ -58,10 +58,16 @@ function EventCard(props) {
   const { user, config, openLogin } = props
   const [like, setLike] = React.useState(config.liked)
   const [likeButtonColor, setLikeButtonColor] = React.useState(
-    like ? red[500] : 'rgba(0, 0, 0, 0.54)'
+    config.liked ? red[500] : 'rgba(0, 0, 0, 0.54)'
   )
   const [alertOpen, setAlertOpen] = React.useState(false)
   const [shareModalOpen, setShareModalOpen] = React.useState(false)
+
+  useEffect(() => {
+    const color = config.liked ? red[500] : 'rgba(0, 0, 0, 0.54)'
+    setLikeButtonColor(color)
+    setLike(config.liked)
+  }, [config.liked])
 
   const clickLike = () => {
     if (!user) {
@@ -70,7 +76,7 @@ function EventCard(props) {
     }
     const currentStatus = like
     const color = currentStatus ? 'rgba(0, 0, 0, 0.54)' : red[500]
-    const url = `/user/event/${config.id}/like`
+    const url = `/user/event/${config.event_id}/like`
     const requestForm = new FormData()
     requestForm.append('like', !currentStatus)
     fetch(url, {
@@ -119,7 +125,7 @@ function EventCard(props) {
         <Card className={classes.root}>
           <CardActionArea>
             <Link
-              to={user ? `/event/${config.id}` : '#'}
+              to={user ? `/event/${config.event_id}` : '#'}
               className={classes.expand}
             >
               <Box minHeight={250} position={'relative'}>
@@ -167,7 +173,7 @@ function EventCard(props) {
               <ShareIcon />
             </IconButton>
             <Link
-              to={user ? `/event/${config.id}` : '#'}
+              to={user ? `/event/${config.event_id}` : '#'}
               className={classes.expand}
             >
               <Button
@@ -182,7 +188,7 @@ function EventCard(props) {
         </Card>
       </Badge>
       <ShareModal
-        url={`localhost:2000/event/${config.id}`}
+        url={`localhost:2000/event/${config.event_id}`}
         handleClose={() => setShareModalOpen(false)}
         open={shareModalOpen}
       />
@@ -208,7 +214,7 @@ function EventCard(props) {
 EventCard.propTypes = {
   user: PropTypes.string.isRequired,
   config: PropTypes.object.isRequired,
-  openLogin: PropTypes.bool,
+  openLogin: PropTypes.func,
 }
 
 export default EventCard
