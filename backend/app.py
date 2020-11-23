@@ -54,11 +54,13 @@ def create_new_event():
     time = request.form.get("Time")
     description = request.form.get("Description")
     image_path = request.form.get("Image")
+    category = request.form.get("Category")
     new_event = Event(user=email, name=event_name, address=address,
                       longitude=longitude, latitude=latitude, zipcode=zipcode,
                       event_time=datetime.strptime(str(time), "%Y-%m-%d %H:%M:%S"))
     new_event.description = description
     new_event.image = image_path
+    new_event.category = category
     try:
         event_id = Event.create_event(new_event)
         Join.create_join(Join(email, event_id))
@@ -142,7 +144,7 @@ def get_attendees_by_event(event_id):
     """
     Get all attendees of the given event
     :param event_id:
-    :return:
+    :return: json of the users
     """
     Join.get_join_by_event(event_id)
     try:
@@ -158,7 +160,7 @@ def get_attendees_by_event(event_id):
 def userinfo():
     """
     Get cur user info
-    :return:
+    :return: json of the user info
     """
     if google_auth.is_logged_in():
         user_info = google_auth.get_user_info()
@@ -170,7 +172,7 @@ def userinfo():
 def join_event(event_id):
     """
     user join a event
-    :return:
+    :return: http status code
     """
     email = google_auth.get_user_info()["email"]
     try:
@@ -189,7 +191,7 @@ def join_event(event_id):
 def like_event(event_id):
     """
     user like a event
-    :return:
+    :return: http status code
     """
     email = google_auth.get_user_info()["email"]
     try:
@@ -209,7 +211,7 @@ def like_event(event_id):
 def create_new_comment(event_id):
     """
     user create a new comment on a event
-    :return:
+    :return: http status code
     """
     time = request.form.get("Time")
     content = request.form.get("Content")
@@ -234,7 +236,7 @@ def create_new_comment(event_id):
 def get_all_event_liked_by_user():
     """
     Get all event a user liked
-    :return:
+    :return: json of events
     """
     email = google_auth.get_user_info()["email"]
     try:
@@ -249,7 +251,7 @@ def get_all_event_liked_by_user():
 def get_all_history_event_by_user():
     """
     Get all events a user joined and happened
-    :return:
+    :return: json of events
     """
     email = google_auth.get_user_info()["email"]
     try:
@@ -264,7 +266,7 @@ def get_all_history_event_by_user():
 def get_all_ongoing_event_by_user():
     """
     Get all events a user joined and haven't happened
-    :return:
+    :return: json of events
     """
     email = google_auth.get_user_info()["email"]
     try:
@@ -279,7 +281,7 @@ def get_all_ongoing_event_by_user():
 def get_nearby_events():
     """
     Get all events nearby a user
-    :return:
+    :return: json of events
     """
     email = None
     if google_auth.is_logged_in():

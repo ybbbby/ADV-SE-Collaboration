@@ -32,8 +32,8 @@ TABLES['event'] = (
     `image` VARCHAR(200) NULL,
     `num_likes` INT NOT NULL,
     PRIMARY KEY (`id`),
-    INDEX `idx_zipcode` (`zipcode` ASC) VISIBLE,
-    INDEX `host_to_user_idx` (`host` ASC) VISIBLE,
+    INDEX `idx_zipcode` (`zipcode` ASC),
+    INDEX `host_to_user_idx` (`host` ASC),
     CONSTRAINT `host_to_user`
       FOREIGN KEY (`host`)
     REFERENCES `user` (`email`)
@@ -55,7 +55,7 @@ TABLES['comment'] = (
     ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT `comment_event` FOREIGN KEY (`event`) REFERENCES `event` (`id`)
     ON DELETE CASCADE ON UPDATE CASCADE,
-    INDEX `idx_event` (`event` ASC) VISIBLE);
+    INDEX `idx_event` (`event` ASC));
     '''
 )
 
@@ -69,8 +69,8 @@ TABLES['join'] = (
     ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT `join_event` FOREIGN KEY (`event`) REFERENCES `event` (`id`)
     ON DELETE CASCADE ON UPDATE CASCADE,
-    INDEX `idx_join_user` (`user` ASC) VISIBLE,
-    INDEX `idx_join_event` (`event` ASC) VISIBLE);
+    INDEX `idx_join_user` (`user` ASC),
+    INDEX `idx_join_event` (`event` ASC));
     '''
 )
 
@@ -84,8 +84,8 @@ TABLES['like'] = (
     ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT `like_event` FOREIGN KEY (`event`) REFERENCES `event` (`id`)
     ON DELETE CASCADE ON UPDATE CASCADE,
-    INDEX `idx_like_user` (`user` ASC) VISIBLE,
-    INDEX `idx_like_event` (`event` ASC) VISIBLE
+    INDEX `idx_like_user` (`user` ASC),
+    INDEX `idx_like_event` (`event` ASC)
 );
     '''
 )
