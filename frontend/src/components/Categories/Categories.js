@@ -14,6 +14,7 @@ import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import { Link } from 'react-router-dom'
 import LoginModal from '../LoginModal/LoginModal'
+import logout from '../../api/logout'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,17 +39,13 @@ export default function Categories(props) {
     }
   }
 
-  const logout = () => {
-    fetch('/google/logout', {
-      method: 'GET',
-    })
-      .then(() => {
+  const clickLogout = () => {
+    logout().then((data) => {
+      if (data) {
         localStorage.clear()
         window.location.href = '/'
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+      }
+    })
   }
 
   return (
@@ -82,7 +79,7 @@ export default function Categories(props) {
       {isLogin ? (
         <>
           <Divider />
-          <ListItem button onClick={logout}>
+          <ListItem button onClick={clickLogout}>
             <ListItemIcon>
               <ExitToAppIcon />
             </ListItemIcon>

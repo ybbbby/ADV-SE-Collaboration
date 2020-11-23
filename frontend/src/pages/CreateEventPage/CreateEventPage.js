@@ -28,6 +28,7 @@ import { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
 import options from '../../awsOptions'
 import './styles.css'
 import { format } from 'date-fns'
+import postEvent from '../../api/postEvent'
 
 const EVENT_CATEGORY = [
   { name: 'Music', value: 'music' },
@@ -151,16 +152,13 @@ const CreateEventPage = (props) => {
               )
               requestForm.append('Description', description)
               requestForm.append('Image', response.body.postResponse.location)
-              fetch('/event', {
-                method: 'POST',
-                body: requestForm,
-              })
-                .then((response) => response.text())
-                .then((data) => (window.location.href = `/event/${data}`))
-                .catch((error) => {
+              postEvent(requestForm).then((data) => {
+                if (data) {
+                  window.location.href = `/event/${data}`
+                } else {
                   setAlertOpen(true)
-                  console.error(error)
-                })
+                }
+              })
             }
           })
           .catch((error) => {

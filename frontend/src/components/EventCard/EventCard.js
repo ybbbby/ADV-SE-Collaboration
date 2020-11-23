@@ -20,6 +20,7 @@ import { red } from '@material-ui/core/colors'
 import { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
 import ShareModal from '../ShareModal/ShareModal'
+import postLike from '../../api/postLike'
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -76,28 +77,13 @@ function EventCard(props) {
     }
     const currentStatus = like
     const color = currentStatus ? 'rgba(0, 0, 0, 0.54)' : red[500]
-    const url = `/user/event/${config.event_id}/like`
-    const requestForm = new FormData()
-    requestForm.append('like', !currentStatus)
-    fetch(url, {
-      method: 'POST',
-      body: requestForm,
-    })
-      .then((response) => {
-        if (response.status !== 200) {
-          throw Error(response.statusText)
-        } else {
-          return response.text()
-        }
-      })
-      .then(() => {
+    postLike(config.event_id, !currentStatus).then((data) => {
+      if (data) {
         setLike(!currentStatus)
         setLikeButtonColor(color)
         setAlertOpen(true)
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+      }
+    })
   }
 
   const closeAlert = (event, reason) => {
