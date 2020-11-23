@@ -95,7 +95,7 @@ export default function EventDetail() {
 
   useEffect(() => {
     getEvent(eventID).then((data) => {
-      if (data) {
+      if (!data) {
         return
       }
       console.log(data)
@@ -119,8 +119,7 @@ export default function EventDetail() {
         setIsAuthor(true)
       }
     })
-    // eslint-disable-next-line
-  }, [])
+  }, [eventID])
 
   const UpdateInfo = (t, newValue) => {
     const requestForm = new FormData()
@@ -181,7 +180,7 @@ export default function EventDetail() {
         }
       })
       .then(() => {
-        window.location = '/events/ongoing'
+        window.location = '/'
         setfailInfo('Successfully deleted your event!')
         setServerity('success')
         setAlertOpen(true)

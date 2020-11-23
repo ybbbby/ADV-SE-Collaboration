@@ -14,6 +14,10 @@ import {
   CircularProgress,
   Typography,
   Snackbar,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@material-ui/core'
 import MuiAlert from '@material-ui/lab/Alert'
 import { green } from '@material-ui/core/colors'
@@ -24,6 +28,22 @@ import { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
 import options from '../../awsOptions'
 import './styles.css'
 import { format } from 'date-fns'
+import postEvent from '../../api/postEvent'
+
+const EVENT_CATEGORY = [
+  { name: 'Music', value: 'music' },
+  { name: 'Visual Arts', value: 'visual-arts' },
+  { name: 'Performing Arts', value: 'performing-arts' },
+  { name: 'Film', value: 'film' },
+  { name: 'Lectures & Books', value: 'lectures-books' },
+  { name: 'Fashion', value: 'fashion' },
+  { name: 'Food & Drink', value: 'food-and-drink' },
+  { name: 'Festivals & Fairs', value: 'festivals-fairs' },
+  { name: 'Charities', value: 'charities' },
+  { name: 'Sports & Active Life', value: 'sports-active-life' },
+  { name: 'Nightlife', value: 'nightlife' },
+  { name: 'Kids & Family', value: 'kids-family' },
+]
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -53,11 +73,16 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -12,
   },
+  formControl: {
+    marginTop: theme.spacing(2),
+    width: '100%',
+  },
 }))
 
 const CreateEventPage = (props) => {
   const classes = useStyles()
   const [title, setTitle] = useState('')
+  const [eventCategory, setEventCategory] = useState('')
   const [pictures, setPictures] = useState([])
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [description, setDescription] = useState('')
@@ -81,6 +106,10 @@ const CreateEventPage = (props) => {
     if (title && titleError) {
       setTitleError(false)
     }
+  }
+
+  const handleChangeCategory = (event) => {
+    setEventCategory(event.target.value)
   }
 
   const closeAlert = (event, reason) => {
@@ -113,6 +142,7 @@ const CreateEventPage = (props) => {
             } else {
               const requestForm = new FormData()
               requestForm.append('Event_name', title)
+              requestForm.append('Category', eventCategory)
               requestForm.append('Address', address)
               requestForm.append('Longitude', latLng.lng)
               requestForm.append('Latitude', latLng.lat)
@@ -122,16 +152,13 @@ const CreateEventPage = (props) => {
               )
               requestForm.append('Description', description)
               requestForm.append('Image', response.body.postResponse.location)
-              fetch('/event', {
-                method: 'POST',
-                body: requestForm,
-              })
-                .then((response) => response.text())
-                .then((data) => (window.location.href = `/event/${data}`))
-                .catch((error) => {
+              postEvent(requestForm).then((data) => {
+                if (data) {
+                  window.location.href = `/event/${data}`
+                } else {
                   setAlertOpen(true)
-                  console.error(error)
-                })
+                }
+              })
             }
           })
           .catch((error) => {
@@ -166,6 +193,23 @@ const CreateEventPage = (props) => {
               fullWidth
             />
           </Grid>
+          <Grid item xs={3}>
+            <FormControl className={classes.formControl}>
+              <InputLabel shrink>Category</InputLabel>
+              <Select value={eventCategory} onChange={handleChangeCategory}>
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {EVENT_CATEGORY.map((x, key) => {
+                  return (
+                    <MenuItem value={x.value} key={key}>
+                      {x.name}
+                    </MenuItem>
+                  )
+                })}
+              </Select>
+            </FormControl>
+          </Grid>
         </Grid>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <Grid container justify="space-around" spacing={3}>
@@ -187,6 +231,7 @@ const CreateEventPage = (props) => {
                 label="Date picker inline"
                 value={selectedDate}
                 onChange={handleDateChange}
+                disablePast
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}

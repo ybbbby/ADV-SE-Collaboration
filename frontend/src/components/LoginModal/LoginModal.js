@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import CloseIcon from '@material-ui/icons/Close'
+import login from '../../api/login'
 
 const useStyles = makeStyles((theme) => ({
   closeButton: {
@@ -45,12 +46,8 @@ function LoginModal(props) {
   const classes = useStyles()
   const { handleClose, open } = props
 
-  function login() {
-    fetch('/google/login', {
-      method: 'GET',
-    })
-      .then((response) => response.text())
-      .then((data) => (window.location.href = data))
+  function clickLogin() {
+    login().then((data) => (window.location.href = data))
   }
 
   return (
@@ -80,7 +77,7 @@ function LoginModal(props) {
         <Button
           variant="outlined"
           className={classes.loginButton}
-          onClick={login}
+          onClick={clickLogin}
         >
           <GoogleIcon className={classes.google} />
           Sign in with Google
