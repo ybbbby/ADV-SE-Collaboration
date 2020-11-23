@@ -212,7 +212,7 @@ function EventCard(props) {
 }
 
 EventCard.propTypes = {
-  user: PropTypes.string.isRequired,
+  user: PropTypes.string,
   config: PropTypes.object.isRequired,
   openLogin: PropTypes.func,
 }

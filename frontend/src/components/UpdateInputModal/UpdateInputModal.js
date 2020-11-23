@@ -104,6 +104,7 @@ function UpdateInputModal(props) {
           label="Change time"
           ampm={F}
           value={selectedDate}
+          disablePast
           onChange={handleDateChange}
         />
       </MuiPickersUtilsProvider>

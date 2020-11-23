@@ -80,6 +80,14 @@ export default function App() {
         setLogin(true)
       }
     })
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        localStorage.setItem(
+          'pos',
+          `${position.coords.latitude},${position.coords.longitude}`
+        )
+      })
+    }
   }, [])
 
   return (
