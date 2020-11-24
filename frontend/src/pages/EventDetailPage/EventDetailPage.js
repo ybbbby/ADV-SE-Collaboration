@@ -463,7 +463,7 @@ export default function EventDetail() {
         description={description}
       />
       <ShareModal
-        url={String(window.location)}
+        url={`http://yes-ok.herokuapp.com/#/event/${eventID}`}
         handleClose={() => setShareModalOpen(false)}
         open={shareModalOpen}
       />

@@ -154,7 +154,7 @@ const CreateEventPage = (props) => {
               requestForm.append('Image', response.body.postResponse.location)
               postEvent(requestForm).then((data) => {
                 if (data) {
-                  window.location.href = `/event/${data}`
+                  window.location.href = `/#/event/${data}`
                 } else {
                   setAlertOpen(true)
                 }
