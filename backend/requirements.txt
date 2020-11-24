@@ -1,4 +1,4 @@
-astroid @ file:///opt/concourse/worker/volumes/live/b22b518b-f584-4586-5ee9-55bfa4fca96e/volume/astroid_1592495912194/work
+astroid
 attrs==20.3.0
 Authlib==0.11
 awscli==1.17.9
@@ -25,7 +25,7 @@ httplib2==0.18.1
 idna==2.10
 importlib-metadata==2.0.0
 iniconfig==1.1.1
-isort @ file:///tmp/build/80754af9/isort_1602603989581/work
+isort
 itsdangerous==1.1.0
 Jinja2==2.11.2
 jmespath==0.9.4
@@ -40,7 +40,7 @@ py==1.9.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.20
-pylint @ file:///opt/concourse/worker/volumes/live/9eebf2dc-3c74-4778-701c-c55b13929def/volume/pylint_1598624018844/work
+pylint
 pyparsing==2.4.7
 pytest==6.1.2
 python-dateutil==2.8.1
@@ -50,7 +50,7 @@ requests==2.25.0
 rsa==3.4.2
 s3transfer==0.3.2
 simplejson==3.17.2
-six @ file:///opt/concourse/worker/volumes/live/f983ba11-c9fe-4dff-7ce7-d89b95b09771/volume/six_1605205318156/work
+six
 toml==0.10.2
 typed-ast==1.4.1
 uritemplate==3.0.1
