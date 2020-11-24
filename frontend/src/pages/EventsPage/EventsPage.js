@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Typography,
   Container,
@@ -17,6 +17,21 @@ import EventCard from '../../components/EventCard/EventCard'
 import LoginModal from '../../components/LoginModal/LoginModal'
 import getEvents from '../../api/getEvents'
 import getEventsNearby from '../../api/getEventsNearby'
+
+export const EVENT_CATEGORY_MAP = {
+  music: 'Music',
+  'visual-arts': 'Visual Arts',
+  'performing-arts': 'Performing Arts',
+  film: 'Film',
+  'lectures-books': 'Lectures & Books',
+  fashion: 'Fashion',
+  'food-and-drink': 'Food & Drink',
+  'festivals-fairs': 'Festivals & Fairs',
+  charities: 'Charities',
+  'sports-active-life': 'Sports & Active Life',
+  nightlife: 'Nightlife',
+  'kids-family': 'Kids & Family',
+}
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -40,19 +55,23 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.spacing(1.6),
     marginBottom: theme.spacing(1.85),
   },
+  emptyHint: {
+    padding: theme.spacing(1),
+  },
 }))
 
-export default function EventsNearby() {
+export default function EventsPage() {
   const classes = useStyles()
   const router = useRouter()
   const { category } = router.match.params
   const user = localStorage.getItem('userEmail')
   const pos = localStorage.getItem('pos')
-  const [distance, setDistance] = React.useState(2)
-  const [eventCategory, setEventCategory] = React.useState(10)
-  const [eventList, setEventList] = React.useState([])
-  const [page, setPage] = React.useState(1)
-  const [loginOpen, setLoginOpen] = React.useState(false)
+  const [distance, setDistance] = useState(2)
+  const [eventCategory, setEventCategory] = useState('all')
+  const [categoryList, setCategoryList] = useState([])
+  const [eventList, setEventList] = useState([])
+  const [page, setPage] = useState(1)
+  const [loginOpen, setLoginOpen] = useState(false)
 
   const handleChange = (event, value) => {
     setPage(value)
@@ -91,6 +110,13 @@ export default function EventsNearby() {
     }
   }, [category])
 
+  useEffect(() => {
+    const categories = eventList.map((x) => {
+      if (x.category) return x.category
+    })
+    setCategoryList([...new Set(categories)])
+  }, [eventList])
+
   return (
     <div>
       <Typography variant="h6" component="h5" className={classes.title}>
@@ -120,12 +146,16 @@ export default function EventsNearby() {
           <FormControl className={classes.formControl}>
             <InputLabel shrink>Category</InputLabel>
             <Select value={eventCategory} onChange={handleChangeCategory}>
-              <MenuItem value="">
+              <MenuItem value="all">
                 <em>All</em>
               </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              {categoryList.map((x, key) => {
+                return (
+                  <MenuItem value={x} key={key}>
+                    {EVENT_CATEGORY_MAP[x]}
+                  </MenuItem>
+                )
+              })}
             </Select>
           </FormControl>
         </Grid>
@@ -141,13 +171,27 @@ export default function EventsNearby() {
       <Container>
         <Box my={2}>
           <Grid container spacing={3}>
-            {eventList.map((x, key) => {
-              return (
-                <Grid item xs={6} key={key}>
-                  <EventCard config={x} user={user} openLogin={setLoginOpen} />
-                </Grid>
-              )
-            })}
+            {eventList.length > 0 ? (
+              eventList.map((x, key) => {
+                if (eventCategory !== 'all' && eventCategory !== x.category)
+                  return null
+                else {
+                  return (
+                    <Grid item xs={6} key={key}>
+                      <EventCard
+                        config={x}
+                        user={user}
+                        openLogin={setLoginOpen}
+                      />
+                    </Grid>
+                  )
+                }
+              })
+            ) : (
+              <Typography variant="body1" className={classes.emptyHint}>
+                Oops, there are no such events.
+              </Typography>
+            )}
           </Grid>
         </Box>
       </Container>

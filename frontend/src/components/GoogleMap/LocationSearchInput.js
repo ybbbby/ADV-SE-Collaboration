@@ -63,6 +63,7 @@ class LocationSearchInput extends React.Component {
                   margin="normal"
                   label="Location"
                   fullWidth
+                  inputProps={{ maxLength: 200 }}
                   helperText={this.props.error ? 'Invalid address.' : ''}
                   error={this.props.error}
                   {...getInputProps({
