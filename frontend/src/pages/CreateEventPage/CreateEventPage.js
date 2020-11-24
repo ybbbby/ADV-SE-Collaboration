@@ -191,6 +191,7 @@ const CreateEventPage = (props) => {
               error={titleError}
               onChange={handleTitleChange}
               fullWidth
+              inputProps={{ maxLength: 50 }}
             />
           </Grid>
           <Grid item xs={3}>
@@ -265,6 +266,7 @@ const CreateEventPage = (props) => {
               placeholder="Tell us something about your event"
               onChange={(event) => setDescription(event.target.value)}
               className={classes.descripInput}
+              inputProps={{ maxLength: 600 }}
             />
           </Grid>
           <Grid item xs={6}>
