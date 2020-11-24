@@ -31,6 +31,7 @@ TABLES['event'] = (
     `description` VARCHAR(600) NULL,
     `image` VARCHAR(200) NULL,
     `num_likes` INT NOT NULL,
+    `category` VARCHAR(20) NOT NULL,
     PRIMARY KEY (`id`),
     INDEX `idx_zipcode` (`zipcode` ASC),
     INDEX `host_to_user_idx` (`host` ASC),
