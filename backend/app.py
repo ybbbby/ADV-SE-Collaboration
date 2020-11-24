@@ -23,7 +23,7 @@ from models.join import Join
 from models.like import Like
 
 
-app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
+app = Flask(__name__, static_folder='./build', static_url_path='/')
 smtp_obj = smtplib.SMTP('smtp.gmail.com', 587)
 smtp_obj.starttls()
 smtp_obj.login(config.SMTP_EMAIL, config.SMTP_PWD)

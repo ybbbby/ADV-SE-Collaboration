@@ -13,10 +13,10 @@ def get_connection():
     :return: A connection object
     """
     cnx = mysql.connector.connect(
-        host="adv-eng-yesok.mysql.database.azure.com",
+        host="adv-yesok.mysql.database.azure.com",
         database='yesok',
         # database='YesOKTest',  # for testing
         port=3306,
-        user="yesokadmin@adv-eng-yesok",
+        user="yesokadmin@adv-yesok",
         password=config.DB_PASSWORD)
     return cnx
