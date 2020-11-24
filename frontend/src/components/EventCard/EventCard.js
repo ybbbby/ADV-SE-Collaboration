@@ -12,6 +12,7 @@ import {
   Snackbar,
   Badge,
   Box,
+  Chip,
 } from '@material-ui/core'
 import MuiAlert from '@material-ui/lab/Alert'
 import FavoriteIcon from '@material-ui/icons/Favorite'
@@ -21,6 +22,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
 import ShareModal from '../ShareModal/ShareModal'
 import postLike from '../../api/postLike'
+import { EVENT_CATEGORY_MAP } from '../../pages/EventsPage/EventsPage'
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -51,6 +53,9 @@ const useStyles = makeStyles(() => ({
   },
   title: {
     fontWeight: '800',
+  },
+  chip: {
+    margin: '0 5px',
   },
 }))
 
@@ -132,6 +137,17 @@ function EventCard(props) {
                     className={classes.title}
                   >
                     {config.name}
+                    {config.category ? (
+                      <Chip
+                        color="secondary"
+                        label={EVENT_CATEGORY_MAP[config.category]}
+                        size="small"
+                        variant="outlined"
+                        className={classes.chip}
+                      />
+                    ) : (
+                      <></>
+                    )}
                   </Typography>
 
                   <Typography
@@ -174,7 +190,7 @@ function EventCard(props) {
         </Card>
       </Badge>
       <ShareModal
-        url={`localhost:2000/event/${config.event_id}`}
+        url={`http://yes-ok.herokuapp.com/#/event/${config.event_id}`}
         handleClose={() => setShareModalOpen(false)}
         open={shareModalOpen}
       />

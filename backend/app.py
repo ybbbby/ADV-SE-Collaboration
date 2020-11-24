@@ -13,6 +13,7 @@ import mysql.connector
 
 import config
 import google_auth
+import config
 import utils.create_all_tables as db_create_tables
 import utils.send_email as mail_service
 from models.event import Event
@@ -22,17 +23,35 @@ from models.join import Join
 from models.like import Like
 
 
+app = Flask(__name__, static_folder='./build', static_url_path='/')
 smtp_obj = smtplib.SMTP('smtp.gmail.com', 587)
 smtp_obj.starttls()
 smtp_obj.login(config.SMTP_EMAIL, config.SMTP_PWD)
-app = Flask(__name__)
 LINK = "http://yes-ok.herokuapp.com"
-
-app.secret_key = os.environ.get("FN_FLASK_SECRET_KEY", default=False)
+app.secret_key = config.FN_FLASK_SECRET_KEY
 app.register_blueprint(google_auth.app)
 
 # create tables in the database
 db_create_tables.create_tables()
+
+
+@app.route('/')
+def index():
+    """
+    Display homepage
+    :return: index.html
+    """
+    return app.send_static_file('index.html')
+
+
+@app.errorhandler(404)
+def not_found(event):
+    """
+    Handle 404
+    :return: index.html
+    """
+    print(event)
+    return app.send_static_file('index.html')
 
 
 @app.route('/event', methods=['POST'])
@@ -348,3 +367,7 @@ def delete_notification(recipients, event):
 #     newUser = User(email=email, username=username)
 #     User.create_user(newUser)
 #     return "success"
+
+
+if __name__ == '__main__':
+    app.run(host='localhost', debug=False, port=os.environ.get('PORT', 3000))

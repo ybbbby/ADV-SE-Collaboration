@@ -10,7 +10,7 @@ import {
   CardContent,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { HashRouter as Router } from 'react-router-dom'
 import UserCard from './components/UserCard/UserCard'
 import Categories from './components/Categories/Categories'
 import { Link } from 'react-router-dom'
