@@ -1,21 +1,32 @@
 """
 Module for sending email
 """
-
-
 from typing import List
-from flask_mail import Message
+import smtplib
+from email.mime.text import MIMEText
+from email.header import Header
 
 
-def send(mail: 'Mail', title: str, recipients: List, content: str):
+def send(smtp_obj: 'SMTP', title: str, recipients: List, content: str, hide: bool):
     """
     Send email to all recipients
-    :param mail: Mail object
+    :param smtp_obj: SMTP object
     :param title: Email subject
     :param recipients: a list of user emails
     :param content: email content
+    :param hide: if recipients address need to be hidden
     """
-    msg = Message(title,
-                  recipients=recipients, sender=("YesOKGroup", "iriszhang2396@gmail.com"))
-    msg.body = content
-    mail.send(msg)
+
+    sender = "no-reply@yesok.com"
+    msg = MIMEText(content, 'html')
+    msg["From"] = str(Header('YesOKGroup <no-reply@yesok.com>'))
+    if hide:
+        msg["To"] = str(Header("recipients@yesok.com"))
+    else:
+        msg["To"] = ".".join(recipients)
+    msg["Subject"] = Header(title)
+    try:
+        smtp_obj.sendmail(sender, recipients, msg.as_string())
+    except smtplib.SMTPException:
+        print("Email send error")
+    # smtp_obj.quit()

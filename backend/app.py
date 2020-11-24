@@ -2,31 +2,31 @@
 Flask backend apis of YesOK application
 """
 
-
 from datetime import datetime
 import json
 import os
 import traceback
+import smtplib
 from flask import Flask, request
 from flask_api import status
-from flask_mail import Mail
 import mysql.connector
+
+import config
 import google_auth
 import utils.create_all_tables as db_create_tables
+import utils.send_email as mail_service
 from models.event import Event
 from models.user import User
 from models.comment import Comment
 from models.join import Join
 from models.like import Like
 
+
+smtp_obj = smtplib.SMTP('smtp.gmail.com', 587)
+smtp_obj.starttls()
+smtp_obj.login(config.SMTP_EMAIL, config.SMTP_PWD)
 app = Flask(__name__)
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = ''
-app.config['MAIL_PASSWORD'] = ''
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
-mail = Mail(app)
+LINK = "http://yes-ok.herokuapp.com"
 
 app.secret_key = os.environ.get("FN_FLASK_SECRET_KEY", default=False)
 app.register_blueprint(google_auth.app)
@@ -35,7 +35,6 @@ app.register_blueprint(google_auth.app)
 db_create_tables.create_tables()
 
 
-# Tested - xyz
 @app.route('/event', methods=['POST'])
 def create_new_event():
     """
@@ -44,7 +43,6 @@ def create_new_event():
     """
     user_info = google_auth.get_user_info()
     email = user_info["email"]
-    # name = "123"
     event_name = request.form.get("Event_name")
     address = request.form.get("Address")
     # zipcode = address[-5:]
@@ -93,7 +91,11 @@ def delete_event_by_id(event_id):
     :return: http status code
     """
     try:
+        event = Event.get_event_by_id(event_id)
+        users = User.get_attendees_by_event(event_id)
+        user_emails = [user.email for user in users]
         Event.delete_event_by_id(event_id)
+        delete_notification(user_emails, event)
     except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
@@ -175,12 +177,14 @@ def join_event(event_id):
     :return: http status code
     """
     email = google_auth.get_user_info()["email"]
+
     try:
         exists = Join.user_is_attend(email, event_id)
         if exists:
             Join.delete_join(Join(email, event_id))
         else:
             Join.create_join(Join(email, event_id))
+            join_notification([email], Event.get_event_by_id(event_id, email))
     except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
@@ -206,7 +210,6 @@ def like_event(event_id):
     return "", status.HTTP_200_OK
 
 
-# Tested - xyz
 @app.route('/user/event/<event_id>/comment', methods=['POST'])
 def create_new_comment(event_id):
     """
@@ -293,6 +296,39 @@ def get_nearby_events():
         return "", status.HTTP_400_BAD_REQUEST
     return json.dumps([ob.__dict__ for ob in events], default=str), status.HTTP_200_OK
 
+
+def join_notification(recipients, event):
+    """
+    helper function for notification when joining event
+    :param recipients: list of recipients' email address
+    :param event: event object
+    """
+    title = "You have registered the event successfully!"
+    event_link = LINK + "/event/" + event.event_id
+    content = """
+                <p>You have registered the event {name}  
+                hosted by {host} successfully! To see details, please
+                 visit <a href={eventlink}>here</a></p>
+               """.format(name=event.name,
+                          host=event.author, eventlink=event_link)
+    mail_service.send(smtp_obj, title, recipients, content, False)
+
+
+def delete_notification(recipients, event):
+    """
+    helper function for notification when event is deleted
+    :param recipients: list of recipients' email address
+    :param event: event object
+    """
+    title = "The event you registered is canceled"
+    event_link = LINK + "/#/event/" + event.event_id
+    content = """
+            <p>Unfortunately, the event {name} you 
+            registered is canceled. To see details, please
+             visit <a href={eventlink}>here</a></p>
+    """.format(name=event.name, eventlink=event_link)
+    mail_service.send(smtp_obj, title, recipients, content, True)
+
 # @app.route('/user/event/hosted', methods=['GET'])
 # def get_all_created_events():
 #     email = google_auth.get_user_info()["email"]
@@ -303,10 +339,6 @@ def get_nearby_events():
 #         return "", status.HTTP_400_BAD_REQUEST
 #     return json.dumps([ob.__dict__ for ob in events], default=str), status.HTTP_200_OK
 
-# @app.route('/email', methods=['POST'])
-# def send_email():
-#     # mail_service.send(mail, title, recipients, content)
-#     return ""
 
 # # Test create user method in User
 # @app.route('/user/create', methods=['GET'])
