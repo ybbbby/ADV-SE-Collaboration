@@ -83,7 +83,7 @@ const CreateEventPage = (props) => {
   const classes = useStyles()
   const [title, setTitle] = useState('')
   const [eventCategory, setEventCategory] = useState('')
-  const [pictures, setPictures] = useState([])
+  const [pictures, setPictures] = useState()
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [description, setDescription] = useState('')
   const [address, setAddress] = useState('')
@@ -98,7 +98,7 @@ const CreateEventPage = (props) => {
   }
 
   const onDrop = (picture) => {
-    setPictures([...pictures, picture])
+    setPictures(picture)
   }
 
   const handleTitleChange = (event) => {
@@ -133,7 +133,7 @@ const CreateEventPage = (props) => {
       .then((results) => getLatLng(results[0]))
       .then((latLng) => {
         setAddressError(false)
-        RNS3.put(pictures[0][0], options)
+        RNS3.put(pictures[0], options)
           .then((response) => {
             setLoading(false)
             if (response.status !== 201) {
@@ -240,7 +240,6 @@ const CreateEventPage = (props) => {
             </Grid>
             <Grid item xs={3}>
               <KeyboardTimePicker
-                disableToolbar
                 variant="inline"
                 margin="normal"
                 id="time-picker"
