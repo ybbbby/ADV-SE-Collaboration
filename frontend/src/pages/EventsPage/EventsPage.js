@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import {
   Typography,
   Container,
   Box,
   Grid,
-  Slider,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
+  FormControlLabel,
+  Switch,
 } from '@material-ui/core'
 import Pagination from '@material-ui/lab/Pagination'
 import { makeStyles } from '@material-ui/core/styles'
@@ -51,12 +52,11 @@ const useStyles = makeStyles((theme) => ({
   filterItem: {
     padding: '5px 12px 0 !important',
   },
-  titleText: {
-    fontSize: theme.spacing(1.6),
-    marginBottom: theme.spacing(1.85),
-  },
   emptyHint: {
     padding: theme.spacing(1),
+  },
+  switch: {
+    padding: '16px 0 0 40px !important',
   },
 }))
 
@@ -66,56 +66,86 @@ export default function EventsPage() {
   const { category } = router.match.params
   const user = localStorage.getItem('userEmail')
   const pos = localStorage.getItem('pos')
-  const [distance, setDistance] = useState(2)
+  const cache = useRef({})
+  const [sortOrder, setSortOrder] = useState('distance')
   const [eventCategory, setEventCategory] = useState('all')
   const [categoryList, setCategoryList] = useState([])
   const [eventList, setEventList] = useState([])
   const [page, setPage] = useState(1)
+  const [onlyHost, setOnlyHost] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
 
-  const handleChange = (event, value) => {
+  const filterEvents = (key1, key2, key3) => {
+    if (!cache.current['distance,all,all']) return
+    const hostKey = key3 ? 'host' : 'all'
+    const key = `${key1},${key2},${hostKey}`
+    console.log(key)
+    if (cache.current[key]) {
+      setEventList(cache.current[key])
+    } else {
+      const originalEvents = JSON.parse(
+        JSON.stringify(cache.current['distance,all,all'])
+      )
+      const allEvents =
+        key1 === 'distance'
+          ? originalEvents
+          : originalEvents.sort((a, b) => (a.time > b.time ? 1 : -1))
+      const eventsByCategory = allEvents.flatMap((item) =>
+        key2 === 'all' || item.category === key2 ? item : []
+      )
+      const eventsByHost = key3
+        ? eventsByCategory.flatMap((item) =>
+            user && item.user_email === user ? item : []
+          )
+        : eventsByCategory
+      cache.current[key] = eventsByHost
+      setEventList(cache.current[key])
+    }
+    setPage(1)
+  }
+
+  const handleChangePage = (event, value) => {
     setPage(value)
   }
 
-  const handleChangeDistance = (event, newValue) => {
-    setDistance(newValue)
+  const handleChangeOrder = (event) => {
+    setSortOrder(event.target.value)
+    filterEvents(event.target.value, eventCategory, onlyHost)
   }
 
   const handleChangeCategory = (event) => {
     setEventCategory(event.target.value)
+    filterEvents(sortOrder, event.target.value, onlyHost)
   }
 
-  const marks = [
-    { value: 1 },
-    { value: 2 },
-    { value: 3 },
-    { value: 5 },
-    { value: 10 },
-    { value: 20 },
-  ]
+  const handleChangeHost = (event) => {
+    setOnlyHost(event.target.checked)
+    filterEvents(sortOrder, eventCategory, event.target.checked)
+  }
+
+  const initData = (data) => {
+    setEventList(data)
+    cache.current['distance,all,all'] = data
+    const categories = data.flatMap((x) => (x.category ? x.category : []))
+    setCategoryList([...new Set(categories)])
+  }
 
   useEffect(() => {
+    cache.current.value = {}
     if (category) {
       getEvents(category).then((data) => {
         if (data) {
-          setEventList(data)
+          initData(data)
         }
       })
     } else {
-      getEventsNearby(pos, distance).then((data) => {
+      getEventsNearby(pos).then((data) => {
         if (data) {
-          setEventList(data)
+          initData(data)
         }
       })
     }
   }, [category])
-
-  useEffect(() => {
-    const categories = eventList.map((x) => {
-      if (x.category) return x.category
-    })
-    setCategoryList([...new Set(categories)])
-  }, [eventList])
 
   return (
     <div>
@@ -123,29 +153,31 @@ export default function EventsPage() {
         Events: {category}
       </Typography>
       <Grid container spacing={3} className={classes.filterGroup}>
-        <Grid item xs={4} className={classes.filterItem}>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            className={classes.titleText}
-          >
-            Distance range (/mile):
-          </Typography>
-          <Slider
-            track={false}
-            min={1}
-            max={20}
-            value={distance}
-            onChange={handleChangeDistance}
-            valueLabelDisplay="auto"
-            step={null}
-            marks={marks}
-          />
+        <Grid item xs={2} className={classes.filterItem}>
+          <FormControl className={classes.formControl}>
+            <InputLabel shrink>Sort</InputLabel>
+            <Select
+              value={sortOrder}
+              onChange={handleChangeOrder}
+              disabled={!cache.current['distance,all,all']}
+            >
+              <MenuItem value="distance">
+                <em>By distance</em>
+              </MenuItem>
+              <MenuItem value="time">
+                <em>By time</em>
+              </MenuItem>
+            </Select>
+          </FormControl>
         </Grid>
         <Grid item xs={2} className={classes.filterItem}>
           <FormControl className={classes.formControl}>
             <InputLabel shrink>Category</InputLabel>
-            <Select value={eventCategory} onChange={handleChangeCategory}>
+            <Select
+              value={eventCategory}
+              onChange={handleChangeCategory}
+              disabled={!cache.current['distance,all,all']}
+            >
               <MenuItem value="all">
                 <em>All</em>
               </MenuItem>
@@ -159,11 +191,24 @@ export default function EventsPage() {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={6} className={classes.filterItem}>
+        <Grid item xs={3} className={classes.switch}>
+          <FormControlLabel
+            className={classes.formControl}
+            control={
+              <Switch
+                checked={onlyHost}
+                onChange={handleChangeHost}
+                disabled={!cache.current['distance,all,all']}
+              />
+            }
+            label="Only host"
+          />
+        </Grid>
+        <Grid item xs={5} className={classes.filterItem}>
           <Pagination
-            count={10}
+            count={Math.ceil(eventList.length / 10)}
             page={page}
-            onChange={handleChange}
+            onChange={handleChangePage}
             className={classes.pagination}
           />
         </Grid>
@@ -172,21 +217,11 @@ export default function EventsPage() {
         <Box my={2}>
           <Grid container spacing={3}>
             {eventList.length > 0 ? (
-              eventList.map((x, key) => {
-                if (eventCategory !== 'all' && eventCategory !== x.category)
-                  return null
-                else {
-                  return (
-                    <Grid item xs={6} key={key}>
-                      <EventCard
-                        config={x}
-                        user={user}
-                        openLogin={setLoginOpen}
-                      />
-                    </Grid>
-                  )
-                }
-              })
+              eventList.slice((page - 1) * 10, page * 10).map((x, key) => (
+                <Grid item xs={6} key={key}>
+                  <EventCard config={x} user={user} openLogin={setLoginOpen} />
+                </Grid>
+              ))
             ) : (
               <Typography variant="body1" className={classes.emptyHint}>
                 Oops, there are no such events.
