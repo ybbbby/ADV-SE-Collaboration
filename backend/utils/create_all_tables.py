@@ -7,6 +7,7 @@ import mysql.connector
 import utils.database_connector as db_connector
 
 TABLES = {}
+FUNCTIONS = {}
 
 TABLES['user'] = (
     '''
@@ -91,6 +92,23 @@ TABLES['like'] = (
     '''
 )
 
+FUNCTIONS['cal_dist'] = (
+    '''
+    create function cal_dist(lat1 double, lng1 double, lat2 double, lng2 double)
+    returns double
+    BEGIN
+    declare dx,dy,b,lx,ly double;
+    set dx = lng1 - lng2;
+    set dy = lat1 - lat2;
+    set b = (lat1 + lat2) / 2.0;
+    set lx = radians(dx) * 6367000.0* cos(radians(b));
+    set ly = 6367000.0 *  radians(dy);
+    return lx *lx + ly *ly;
+
+    END
+    '''
+)
+
 
 def create_tables():
     """
@@ -107,6 +125,15 @@ def create_tables():
             print(err.msg)
         else:
             print("create all tables: OK")
+    for func_name in FUNCTIONS:
+        function_desc = FUNCTIONS[func_name]
+        try:
+            print("Creating function {}: ".format(func_name), end='')
+            cursor.execute(function_desc)
+        except mysql.connector.Error as err:
+            print(err.msg)
+        else:
+            print("create all function: OK")
 
     cursor.close()
     cnx.close()

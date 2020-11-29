@@ -336,19 +336,21 @@ class Event:
         cnx.close()
 
     @staticmethod
-    def get_nearby_events(user: str):
+    def get_nearby_events(user: str, latitude: float, longitude: float):
         """
 
         :return: A nearby event list
         """
         cnx = db_connector.get_connection()
         cursor = cnx.cursor()
-        query = ("SELECT * FROM `event`")
-        cursor.execute(query)
+        query = ("SELECT *, cal_dist(%s, %s, latitude, longitude) dist FROM event "
+                 "where `time` >= now() order by dist")
+        event_data = (latitude, longitude)
+        cursor.execute(query, event_data)
         events = []
         for (eid, name, host, address,
              longitude, latitude, zipcode, event_time, description,
-             image, num_likes, category) in cursor:
+             image, num_likes, category, _) in cursor:
             new_event = Event(user=host, name=name, address=address,
                               longitude=longitude, latitude=latitude, zipcode=zipcode,
                               event_time=datetime.datetime.strptime(str(event_time),
