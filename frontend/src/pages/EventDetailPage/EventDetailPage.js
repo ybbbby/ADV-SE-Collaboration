@@ -130,7 +130,6 @@ export default function EventDetail() {
       if (!data) {
         return
       }
-      console.log(data)
       setParticipants(data)
     })
   }, [eventID])
@@ -425,13 +424,19 @@ export default function EventDetail() {
             )}
           </Grid>
           <Grid item xs={12}>
+            <Box className={classes.titleBox}>
+              <Typography variant="h5">Comments&nbsp;&nbsp;</Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12}>
             <Comment
               setfailInfo={setfailInfo}
               setServerity={setServerity}
               setAlertOpen={setAlertOpen}
               setLoginOpen={setLoginOpen}
               eventId={eventID}
-              commentsProps={commentsProps}
+              comments={commentsProps}
+              setComments={setCommentsProps}
             />
           </Grid>
         </Grid>

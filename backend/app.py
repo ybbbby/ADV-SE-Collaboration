@@ -173,8 +173,7 @@ def get_attendees_by_event(event_id):
     except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
-    return json.dumps([ob.__dict__ for ob in users],
-                      use_decimal=True, default=str), status.HTTP_200_OK
+    return json.dumps([ob.__dict__ for ob in users], default=str), status.HTTP_200_OK
 
 
 @app.route('/user/info', methods=['GET'])

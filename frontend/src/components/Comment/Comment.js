@@ -8,10 +8,11 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Avatar from '@material-ui/core/Avatar'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
-import IconButton from '@material-ui/core/IconButton'
+import Button from '@material-ui/core/Button'
 import TelegramIcon from '@material-ui/icons/Telegram'
 import PropTypes from 'prop-types'
 import { format } from 'date-fns'
+
 function randomColor(k) {
   var hash = 0,
     i,
@@ -42,22 +43,20 @@ function randomColor(k) {
   let color = colors[hash % 16]
   return color
 }
+
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: '90%',
     maxWidth: 752,
     backgroundColor: theme.palette.background.paper,
     flexGrow: 1,
   },
-  inline: {
-    display: 'inline',
-  },
   input: {
-    marginLeft: '2%',
-    flex: 1,
-    width: '80%',
+    width: 'calc(100% - 95px)',
+    padding: '6px 10px 6px 0',
   },
 }))
+
 export default function AlignItemsList(props) {
   const classes = useStyles()
   const {
@@ -66,24 +65,11 @@ export default function AlignItemsList(props) {
     setAlertOpen,
     setLoginOpen,
     eventId,
-    commentsProps,
+    comments,
+    setComments,
   } = props
   const user = localStorage.getItem('userEmail')
   const [text, setText] = useState('')
-  /*
-  const [comments, setComments] = useState([
-    {
-      user: 'eren@example.com',
-      content: 'string',
-      time: '2020-11-26T05:36:00.467Z',
-    },
-    {
-      user: 'Deku@example.com',
-      content: 'string',
-      time: '2020-11-26T05:36:00.467Z',
-    },
-  ])*/
-  const [comments, setComments] = useState(commentsProps)
   const handleDataChange = (e) => {
     setText(e.target.value)
   }
@@ -115,23 +101,15 @@ export default function AlignItemsList(props) {
       })
       .then(() => {
         setComments([
+          ...comments,
           {
             user: user,
             content: text,
-            Time: format(date, 'yyyy-MM-dd HH:mm:ss'),
+            time: 'just now',
           },
-          ...comments,
         ])
       })
       .catch(() => {
-        setComments([
-          {
-            user: user,
-            content: text,
-            Time: format(date, 'yyyy-MM-dd HH:mm:ss'),
-          },
-          ...comments,
-        ])
         setfailInfo('Fail to add comments due to connection error with server')
         setServerity('error')
         setAlertOpen(true)
@@ -139,15 +117,15 @@ export default function AlignItemsList(props) {
     setText('')
   }
   const Comment = (userName, time, content) => (
-    <ListItem alignItems="flex-start">
+    <ListItem style={{ padding: 0 }}>
       <ListItemAvatar>
         <Avatar
-          alt={userName}
-          src="/static/images/avatar/1.jpg"
           style={{
             backgroundColor: randomColor(userName),
           }}
-        />
+        >
+          {userName[0].toUpperCase()}
+        </Avatar>
       </ListItemAvatar>
       <ListItemText
         primary={
@@ -173,12 +151,7 @@ export default function AlignItemsList(props) {
         }
         secondary={
           <React.Fragment>
-            <Typography
-              component="span"
-              variant="body1"
-              className={classes.inline}
-              color="textPrimary"
-            >
+            <Typography component="span" variant="body1" color="textPrimary">
               {content}
             </Typography>
             {''}
@@ -195,34 +168,35 @@ export default function AlignItemsList(props) {
           return (
             <div key={i}>
               {Comment(comment['user'], comment['time'], comment['content'], i)}
-              {divider ? <></> : <Divider variant="inset" component="li" />}
+              {divider ? <></> : <Divider component="li" />}
             </div>
           )
         })}
-        <br />
-        <TextField
-          className={classes.input}
-          placeholder={
-            comments.length == 0
-              ? 'Be the first one to comment!'
-              : "What's your opinion on this event?"
-          }
-          value={text}
-          onChange={handleDataChange}
-          onKeyDown={handleKeyDown}
-        />
-        <IconButton
-          type="submit"
-          className={classes.iconButton}
-          aria-label="search"
-          onClick={handleSend}
-        >
-          {localStorage.getItem('userEmail') ? (
-            <TelegramIcon color="primary" />
-          ) : (
-            <TelegramIcon color="disabled" />
-          )}
-        </IconButton>
+        {localStorage.getItem('userEmail') ? (
+          <>
+            <TextField
+              className={classes.input}
+              placeholder={
+                comments.length == 0
+                  ? 'Be the first one to comment!'
+                  : "What's your opinion on this event?"
+              }
+              value={text}
+              onChange={handleDataChange}
+              onKeyDown={handleKeyDown}
+            />
+            <Button
+              variant="contained"
+              color="default"
+              endIcon={<TelegramIcon />}
+              onClick={handleSend}
+            >
+              Send
+            </Button>
+          </>
+        ) : (
+          <></>
+        )}
       </List>
     </>
   )
@@ -234,5 +208,6 @@ AlignItemsList.propTypes = {
   setAlertOpen: PropTypes.func.isRequired,
   setLoginOpen: PropTypes.func.isRequired,
   eventId: PropTypes.string.isRequired,
-  commentsProps: PropTypes.any,
+  comments: PropTypes.any,
+  setComments: PropTypes.func,
 }

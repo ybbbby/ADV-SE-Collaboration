@@ -7,6 +7,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Dialog from '@material-ui/core/Dialog'
+
 function randomColor(k) {
   var hash = 0,
     i,
@@ -46,27 +47,25 @@ export default function SimpleDialog(props) {
   }
 
   return (
-    <Dialog
-      onClose={handleClose}
-      aria-labelledby="simple-dialog-title"
-      open={open}
-    >
+    <Dialog onClose={handleClose} open={open}>
       <DialogTitle id="simple-dialog-title">
         Participants({participants.length})
       </DialogTitle>
-      <List>
+      <List style={{ padding: '10px 15px 20px' }}>
         {participants.map((person) => (
           <ListItem key={person.email}>
             <ListItemAvatar>
               <Avatar
-                alt={person.name}
-                src="/static/images/avatar/1.jpg"
                 style={{
-                  backgroundColor: randomColor(person.name),
+                  backgroundColor: randomColor(person.email),
                 }}
-              />
+              >
+                {person.username[0]}
+              </Avatar>
             </ListItemAvatar>
-            <ListItemText primary={person.name + '(' + person.email + ')'} />
+            <ListItemText
+              primary={person.username + '(' + person.email + ')'}
+            />
           </ListItem>
         ))}
       </List>
