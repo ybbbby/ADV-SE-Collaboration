@@ -1,0 +1,18 @@
+matrix:
+  include:
+    - language: python
+      python: 3.7
+      before_script:
+        - cd backend
+      script:
+        - python -m tests.test_all
+
+    - language: node_js
+      node_js:
+        - 7
+      before_script:
+        - cd frontend
+
+notifications:
+  email:
+    - dq2146@columbia.edu
