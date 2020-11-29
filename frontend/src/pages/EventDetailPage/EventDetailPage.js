@@ -24,8 +24,11 @@ import useRouter from 'use-react-router'
 import LoginModal from '../../components/LoginModal/LoginModal'
 import { red } from '@material-ui/core/colors'
 import ShareModal from '../../components/ShareModal/ShareModal'
+import Comment from '../../components/Comment/Comment'
+import Participants from '../../components/Participants/Participants'
 import getEvent from '../../api/getEvent'
-
+import PeopleIcon from '@material-ui/icons/People'
+import getEventAttendees from '../../api/getEventAttendees'
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />
 }
@@ -75,6 +78,7 @@ export default function EventDetail() {
     lng: 30.33,
   })
   const [alertOpen, setAlertOpen] = useState(false)
+  const [participantsOpen, setParticipantsOpen] = useState(false)
   const [serverity, setServerity] = useState('error')
   const [shareModalOpen, setShareModalOpen] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
@@ -83,6 +87,8 @@ export default function EventDetail() {
   const [author, setAuthor] = useState('host')
   const [openInput, setOpenInput] = useState(false)
   const [failInfo, setfailInfo] = useState('')
+  const [commentsProps, setCommentsProps] = useState([])
+  const [participants, setParticipants] = useState([])
 
   const handleClick = (num) => {
     setType(num)
@@ -104,6 +110,7 @@ export default function EventDetail() {
         lat: Number(data.latitude),
         lng: Number(data.longitude),
       })
+      setCommentsProps(data.comments)
       setLike(data.liked)
       setAttend(data.attended)
       setimageURL(data.image)
@@ -118,6 +125,13 @@ export default function EventDetail() {
       if (user === data.user_email) {
         setIsAuthor(true)
       }
+    })
+    getEventAttendees(eventID).then((data) => {
+      if (!data) {
+        return
+      }
+      console.log(data)
+      setParticipants(data)
     })
   }, [eventID])
 
@@ -215,6 +229,13 @@ export default function EventDetail() {
         setfailInfo(alertText)
         setServerity('success')
         setAlertOpen(true)
+        getEventAttendees(eventID).then((data) => {
+          if (!data) {
+            return
+          }
+          console.log(data)
+          setParticipants(data)
+        })
       })
       .catch(() => {
         setfailInfo('Fail to update due to connection error with server')
@@ -319,6 +340,14 @@ export default function EventDetail() {
           >
             <ShareIcon />
           </IconButton>
+          <IconButton
+            aria-label="check participants"
+            onClick={() => {
+              setParticipantsOpen(true)
+            }}
+          >
+            <PeopleIcon />
+          </IconButton>
         </Grid>
         <Grid item xs={4}></Grid>
         <Grid item xs={4}>
@@ -395,6 +424,16 @@ export default function EventDetail() {
               />
             )}
           </Grid>
+          <Grid item xs={12}>
+            <Comment
+              setfailInfo={setfailInfo}
+              setServerity={setServerity}
+              setAlertOpen={setAlertOpen}
+              setLoginOpen={setLoginOpen}
+              eventId={eventID}
+              commentsProps={commentsProps}
+            />
+          </Grid>
         </Grid>
         <Grid item xs={3}>
           <Grid item xs={12}>
@@ -461,6 +500,11 @@ export default function EventDetail() {
         type={type}
         date={selectedDate}
         description={description}
+      />
+      <Participants
+        open={participantsOpen}
+        setOpen={setParticipantsOpen}
+        participants={participants}
       />
       <ShareModal
         url={`http://yes-ok.herokuapp.com/#/event/${eventID}`}
