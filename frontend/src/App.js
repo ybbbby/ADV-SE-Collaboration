@@ -16,6 +16,7 @@ import Categories from './components/Categories/Categories'
 import { Link } from 'react-router-dom'
 import Routes from './routes'
 import getUserInfo from './api/getUserInfo'
+import io from 'socket.io-client'
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -51,13 +52,35 @@ export default function App() {
   const classes = useStyles()
   const [userData, setUserData] = useState({ picture: '', name: '', email: '' })
   const [isLogin, setLogin] = useState(false)
-
+  var socket = null
   useEffect(() => {
     getUserInfo().then((data) => {
       if (data) {
         setUserData(data)
         localStorage.setItem('userEmail', data['email'])
         setLogin(true)
+        socket = io('/yesok')
+        socket.emit('user', { user: data['email'] })
+
+        if (!('permission' in Notification) || !Notification.permission) {
+          Notification.requestPermission().then((permission) => {
+            Notification.permission = permission
+          })
+        }
+        socket.on('comment', function (res) {
+          const img = '/yes.png'
+          new Notification('New Comment', {
+            body: res['data'] + 'comments under your event!',
+            icon: img,
+          })
+        })
+        socket.on('join', function (res) {
+          const img = '/yes.png'
+          new Notification('New friend join!', {
+            body: res['data'] + 'joins your event!',
+            icon: img,
+          })
+        })
       }
     })
     if (!localStorage.getItem('pos')) {
