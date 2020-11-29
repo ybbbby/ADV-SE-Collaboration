@@ -12,6 +12,7 @@ import {
   Switch,
 } from '@material-ui/core'
 import Pagination from '@material-ui/lab/Pagination'
+import Skeleton from '@material-ui/lab/Skeleton'
 import { makeStyles } from '@material-ui/core/styles'
 import useRouter from 'use-react-router'
 import EventCard from '../../components/EventCard/EventCard'
@@ -74,6 +75,7 @@ export default function EventsPage() {
   const [page, setPage] = useState(1)
   const [onlyHost, setOnlyHost] = useState(false)
   const [loginOpen, setLoginOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const filterEvents = (key1, key2, key3) => {
     if (!cache.current['distance,all,all']) return
@@ -131,20 +133,29 @@ export default function EventsPage() {
   }
 
   useEffect(() => {
+    let isSubscribed = true
     cache.current.value = {}
+    setIsLoading(true)
     if (category) {
       getEvents(category).then((data) => {
-        if (data) {
-          initData(data)
+        if (isSubscribed) {
+          if (data) {
+            initData(data)
+          }
+          setIsLoading(false)
         }
       })
     } else {
       getEventsNearby(pos).then((data) => {
-        if (data) {
-          initData(data)
+        if (isSubscribed) {
+          if (data) {
+            initData(data)
+          }
+          setIsLoading(false)
         }
       })
     }
+    return () => (isSubscribed = false)
   }, [category])
 
   return (
@@ -216,7 +227,22 @@ export default function EventsPage() {
       <Container>
         <Box my={2}>
           <Grid container spacing={3}>
-            {eventList.length > 0 ? (
+            {isLoading ? (
+              <>
+                <Grid item xs={6}>
+                  <Skeleton variant="rect" height={270} />
+                  <Skeleton />
+                  <Skeleton />
+                  <Skeleton />
+                </Grid>
+                <Grid item xs={6}>
+                  <Skeleton variant="rect" height={270} />
+                  <Skeleton />
+                  <Skeleton />
+                  <Skeleton />
+                </Grid>
+              </>
+            ) : eventList.length > 0 ? (
               eventList.slice((page - 1) * 10, page * 10).map((x, key) => (
                 <Grid item xs={6} key={key}>
                   <EventCard config={x} user={user} openLogin={setLoginOpen} />

@@ -8,10 +8,11 @@ import {
   ListItemText,
   Divider,
 } from '@material-ui/core'
-import FavoriteIcon from '@material-ui/icons/Favorite'
+import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined'
 import HistoryIcon from '@material-ui/icons/History'
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined'
 import { Link } from 'react-router-dom'
 import LoginModal from '../LoginModal/LoginModal'
 import logout from '../../api/logout'
@@ -50,10 +51,19 @@ export default function Categories(props) {
 
   return (
     <List component="nav" className={classes.root}>
+      <Link to={isLogin ? '/' : '#'} className={classes.link}>
+        <ListItem button onClick={handleClick}>
+          <ListItemIcon>
+            <HomeOutlinedIcon />
+          </ListItemIcon>
+          <ListItemText primary="Home" />
+        </ListItem>
+      </Link>
+      <Divider />
       <Link to={isLogin ? '/events/liked' : '#'} className={classes.link}>
         <ListItem button onClick={handleClick}>
           <ListItemIcon>
-            <FavoriteIcon />
+            <FavoriteBorderOutlinedIcon />
           </ListItemIcon>
           <ListItemText primary="Favourites" />
         </ListItem>
