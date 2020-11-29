@@ -413,7 +413,9 @@ export default function EventDetail() {
           </Grid>
           <Grid item xs={12}>
             {description ? (
-              <Typography variant="body1">{description}</Typography>
+              <Typography variant="body1" style={{ width: '90%' }}>
+                {description}
+              </Typography>
             ) : (
               <Skeleton
                 variant="rect"

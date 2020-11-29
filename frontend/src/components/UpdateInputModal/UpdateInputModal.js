@@ -122,6 +122,7 @@ function UpdateInputModal(props) {
           value={newDescription}
           onChange={handleDesChange}
           className={classes.descripInput}
+          inputProps={{ maxLength: 600 }}
         />
       </Box>
     )
