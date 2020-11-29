@@ -1,9 +1,8 @@
-async function getEventsNearby(position, radius) {
+async function getEventsNearby(position) {
   try {
-    const result = await fetch(
-      `/events/nearby?radius=${radius}&pos=${position}`,
-      { method: 'GET' }
-    )
+    const result = await fetch(`/events/nearby?pos=${position}`, {
+      method: 'GET',
+    })
     const data = await result.json()
     return data
   } catch (e) {

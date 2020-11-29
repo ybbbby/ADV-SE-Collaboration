@@ -42,30 +42,10 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(4),
   },
   card: {
-    position: 'sticky',
-    top: '80px',
     textAlign: 'center',
     boxShadow: 'rgba(0, 0, 0, 0.3) 0px 8px 40px -12px',
   },
 }))
-
-function Copyright() {
-  return (
-    <Typography
-      variant="body2"
-      color="textSecondary"
-      align="center"
-      style={{ padding: '10px' }}
-    >
-      {'Copyright © '}
-      <Link to="/" style={{ color: 'black' }}>
-        YesOK
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  )
-}
 
 export default function App() {
   const classes = useStyles()
@@ -124,7 +104,6 @@ export default function App() {
                 <Routes />
               </Grid>
             </Grid>
-            <Copyright />
           </Box>
         </Container>
       </Router>
