@@ -12,6 +12,7 @@ matrix:
         - 14
       before_script:
         - cd frontend
+        - yarn global add jest
 
 notifications:
   email:
