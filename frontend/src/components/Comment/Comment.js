@@ -11,39 +11,8 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import TelegramIcon from '@material-ui/icons/Telegram'
 import PropTypes from 'prop-types'
+import randomColor from '../../util/util'
 import { format } from 'date-fns'
-
-function randomColor(k) {
-  var hash = 0,
-    i,
-    chr
-  for (i = 0; i < k.length; i++) {
-    chr = k.charCodeAt(i)
-    hash = (hash << 5) - hash + chr
-    hash |= 0 // Convert to 32bit integer
-  }
-  const colors = [
-    '#f44336',
-    '#e91e63',
-    '#9c27b0',
-    '#673ab7',
-    '#3f51b5',
-    '#2196f3',
-    '#03a9f4',
-    '#00bcd4',
-    '#009688',
-    '#4caf50',
-    '#8bc34a',
-    '#cddc39',
-    '#ffeb3b',
-    '#ffc107',
-    '#ff9800',
-    '#ff5722',
-  ]
-  let color = colors[hash % 16]
-  return color
-}
-
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '90%',
@@ -117,7 +86,7 @@ export default function AlignItemsList(props) {
     setText('')
   }
   const Comment = (userName, time, content) => (
-    <ListItem style={{ padding: 0 }}>
+    <ListItem style={{ padding: 0 }} alignItems="flex-start">
       <ListItemAvatar>
         <Avatar
           style={{
@@ -150,12 +119,21 @@ export default function AlignItemsList(props) {
           </>
         }
         secondary={
-          <React.Fragment>
+          <span
+            style={{
+              maxWidth: '100%',
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 3,
+              textOverflow: 'clip',
+              overflow: 'auto',
+            }}
+          >
             <Typography component="span" variant="body1" color="textPrimary">
               {content}
             </Typography>
             {''}
-          </React.Fragment>
+          </span>
         }
       />
     </ListItem>
@@ -184,6 +162,9 @@ export default function AlignItemsList(props) {
               value={text}
               onChange={handleDataChange}
               onKeyDown={handleKeyDown}
+              onInput={(e) => {
+                e.target.value = e.target.value.slice(0, 300)
+              }}
             />
             <Button
               variant="contained"

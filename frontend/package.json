@@ -33,6 +33,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "latest",
     "react-transition-group": "^4.4.1",
+    "socket.io-client": "^3.0.3",
     "use-react-router": "^1.0.7"
   },
   "browserslist": {
