@@ -13,6 +13,8 @@ import TelegramIcon from '@material-ui/icons/Telegram'
 import PropTypes from 'prop-types'
 import randomColor from '../../util/util'
 import { format } from 'date-fns'
+import g from '../../global'
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '90%',
@@ -36,6 +38,7 @@ export default function AlignItemsList(props) {
     eventId,
     comments,
     setComments,
+    eventHost,
   } = props
   const user = localStorage.getItem('userEmail')
   const [text, setText] = useState('')
@@ -69,6 +72,10 @@ export default function AlignItemsList(props) {
         }
       })
       .then(() => {
+        g.goEasy.publish({
+          channel: eventHost,
+          message: `${user} adds a new comment: ${text}`,
+        })
         setComments([
           ...comments,
           {
@@ -162,9 +169,7 @@ export default function AlignItemsList(props) {
               value={text}
               onChange={handleDataChange}
               onKeyDown={handleKeyDown}
-              onInput={(e) => {
-                e.target.value = e.target.value.slice(0, 300)
-              }}
+              inputProps={{ maxLength: 300 }}
             />
             <Button
               variant="contained"
@@ -191,4 +196,5 @@ AlignItemsList.propTypes = {
   eventId: PropTypes.string.isRequired,
   comments: PropTypes.any,
   setComments: PropTypes.func,
+  eventHost: PropTypes.string.isRequired,
 }

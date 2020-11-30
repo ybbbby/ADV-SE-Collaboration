@@ -9,7 +9,6 @@ import traceback
 import smtplib
 from flask import Flask, request
 from flask_api import status
-from flask_socketio import SocketIO, emit, disconnect
 import mysql.connector
 
 import config
@@ -23,7 +22,6 @@ from models.comment import Comment
 from models.join import Join
 from models.like import Like
 
-async_mode = None
 
 app = Flask(__name__, static_folder='./build', static_url_path='/')
 smtp_obj = smtplib.SMTP('smtp.gmail.com', 587)
@@ -32,16 +30,10 @@ smtp_obj.login(config.SMTP_EMAIL, config.SMTP_PWD)
 LINK = "http://yes-ok.herokuapp.com"
 app.secret_key = config.FN_FLASK_SECRET_KEY
 app.register_blueprint(google_auth.app)
-socketio = SocketIO(app, async_mode=async_mode)
 clients = {}
 
 # create tables in the database
 db_create_tables.create_tables()
-
-@socketio.on('user', namespace='/yesok')
-def user(message):
-    clients[message['user']] = request.sid
-    print(clients)
 
 
 @app.route('/')
@@ -205,7 +197,6 @@ def join_event(event_id):
     """
     info = google_auth.get_user_info()
     email = info["email"]
-    name = info["name"]
 
     try:
         exists = Join.user_is_attend(email, event_id)
@@ -214,9 +205,6 @@ def join_event(event_id):
         else:
             Join.create_join(Join(email, event_id))
             join_notification([email], Event.get_event_by_id(event_id, email))
-            host = Event.get_event_by_id(event_id).host
-            socketio.emit('join', {'data': name, 'count': 1},
-                room=clients[email], namespace='/yesok')
     except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
@@ -252,13 +240,10 @@ def create_new_comment(event_id):
     content = request.form.get("Content")
     user_info = google_auth.get_user_info()
     email = user_info["email"]
-    name = user_info["name"]
     comment = Comment(user=email, content=content,
                       comment_time=datetime.strptime(time, '%Y-%m-%d %H:%M:%S'), event=event_id)
     try:
         Comment.create_comment(comment)
-        socketio.emit('comment', {'data': name, 'count': 1},
-                room=clients[email], namespace='/yesok')
         # send notification to the event host
         # event = Event.get_event_by_id(id)
         # email_content = name + " just commented your event " + event.name + "."
@@ -389,4 +374,4 @@ def delete_notification(recipients, event):
 
 
 if __name__ == '__main__':
-    socketio.run(app, host='localhost', debug=False, port=os.environ.get('PORT', 3000))
+    app.run(host='localhost', debug=False, port=os.environ.get('PORT', 3000))

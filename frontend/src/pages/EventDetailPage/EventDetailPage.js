@@ -29,6 +29,8 @@ import Participants from '../../components/Participants/Participants'
 import getEvent from '../../api/getEvent'
 import PeopleIcon from '@material-ui/icons/People'
 import getEventAttendees from '../../api/getEventAttendees'
+import g from '../../global'
+
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />
 }
@@ -85,6 +87,7 @@ export default function EventDetail() {
   const [imageURL, setimageURL] = useState('')
   const [title, setTitle] = useState('Title')
   const [author, setAuthor] = useState('host')
+  const [hostEmail, setHostEmail] = useState('')
   const [openInput, setOpenInput] = useState(false)
   const [failInfo, setfailInfo] = useState('')
   const [commentsProps, setCommentsProps] = useState([])
@@ -122,6 +125,7 @@ export default function EventDetail() {
       setLikeButtonColor(color)
       setTitle(data.name)
       setAuthor(data.author)
+      setHostEmail(data.user_email)
       if (user === data.user_email) {
         setIsAuthor(true)
       }
@@ -225,6 +229,12 @@ export default function EventDetail() {
         const alertText = attend
           ? 'Successfully cancelled your registration.'
           : 'You have reistered this event!'
+        if (!attend) {
+          g.goEasy.publish({
+            channel: hostEmail,
+            message: `${user} just joined your event`,
+          })
+        }
         setfailInfo(alertText)
         setServerity('success')
         setAlertOpen(true)
@@ -232,7 +242,6 @@ export default function EventDetail() {
           if (!data) {
             return
           }
-          console.log(data)
           setParticipants(data)
         })
       })
@@ -439,6 +448,7 @@ export default function EventDetail() {
               eventId={eventID}
               comments={commentsProps}
               setComments={setCommentsProps}
+              eventHost={hostEmail}
             />
           </Grid>
         </Grid>
