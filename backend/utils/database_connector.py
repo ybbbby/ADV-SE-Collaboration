@@ -14,9 +14,11 @@ def get_connection():
     """
     cnx = mysql.connector.connect(
         host="adv-yesok.mysql.database.azure.com",
+        # host="localhost",
         database='yesok',
         # database='YesOKTest',  # for testing
         port=3306,
         user="yesokadmin@adv-yesok",
+        # user="root",
         password=config.DB_PASSWORD)
     return cnx

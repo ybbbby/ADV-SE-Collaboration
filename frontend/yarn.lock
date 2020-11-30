@@ -5364,6 +5364,11 @@ globby@^6.1.0:
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
 
+goeasy@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/goeasy/-/goeasy-1.1.1.tgz#32d8be1135931192384f3900214bedd35b587948"
+  integrity sha512-rFyWLMHdImgEZHECQjg78SXYvE85oqyuzoOyDGrJzrbTSO1vv55dnwAvpn3CsdiLd0e0QIDxtln47KNAE1Og5w==
+
 google-map-react@^2.1.9:
   version "2.1.9"
   resolved "https://registry.yarnpkg.com/google-map-react/-/google-map-react-2.1.9.tgz#6e539ce8bf28e7b8cda6058402e7581d1d1cec3d"

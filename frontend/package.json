@@ -20,6 +20,7 @@
     "clsx": "latest",
     "core-js": "^3.6.5",
     "date-fns": "^2.16.1",
+    "goeasy": "^1.1.1",
     "google-map-react": "^2.1.9",
     "google-maps-react": "^2.0.6",
     "jest": "26.6.0",

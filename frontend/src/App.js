@@ -16,7 +16,7 @@ import Categories from './components/Categories/Categories'
 import { Link } from 'react-router-dom'
 import Routes from './routes'
 import getUserInfo from './api/getUserInfo'
-import io from 'socket.io-client'
+import g from './global'
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -52,34 +52,35 @@ export default function App() {
   const classes = useStyles()
   const [userData, setUserData] = useState({ picture: '', name: '', email: '' })
   const [isLogin, setLogin] = useState(false)
-  var socket = null
   useEffect(() => {
+    if (!('Notification' in window)) {
+      alert('This browser does not support desktop notification')
+    } else if (Notification.permission === 'granted') {
+      new Notification('Welcome to YesOK!')
+    } else if (Notification.permission !== 'denied') {
+      Notification.requestPermission().then(function (permission) {
+        if (permission === 'granted') {
+          new Notification('Welcome to YesOK!')
+        }
+      })
+    }
     getUserInfo().then((data) => {
       if (data) {
         setUserData(data)
         localStorage.setItem('userEmail', data['email'])
         setLogin(true)
-        socket = io('/yesok')
-        socket.emit('user', { user: data['email'] })
-
-        if (!('permission' in Notification) || !Notification.permission) {
-          Notification.requestPermission().then((permission) => {
-            Notification.permission = permission
-          })
-        }
-        socket.on('comment', function (res) {
-          const img = '/yes.png'
-          new Notification('New Comment', {
-            body: res['data'] + 'comments under your event!',
-            icon: img,
-          })
-        })
-        socket.on('join', function (res) {
-          const img = '/yes.png'
-          new Notification('New friend join!', {
-            body: res['data'] + 'joins your event!',
-            icon: img,
-          })
+        g.goEasy.subscribe({
+          channel: data['email'],
+          onMessage: function (message) {
+            console.log(
+              'Channel:' + message.channel + ' content:' + message.content
+            )
+            const img = '/yes.png'
+            new Notification('New message', {
+              body: message.content,
+              icon: img,
+            })
+          },
         })
       }
     })
