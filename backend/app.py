@@ -243,7 +243,7 @@ def create_new_comment(event_id):
     comment = Comment(user=email, content=content,
                       comment_time=datetime.strptime(time, '%Y-%m-%d %H:%M:%S'), event=event_id)
     try:
-        Comment.create_comment(comment)
+        comment_id = Comment.create_comment(comment)
         # send notification to the event host
         # event = Event.get_event_by_id(id)
         # email_content = name + " just commented your event " + event.name + "."
@@ -252,8 +252,16 @@ def create_new_comment(event_id):
     except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
-    return "", status.HTTP_200_OK
+    return comment_id, status.HTTP_200_OK
 
+@app.route('/comment/<comment_id>', methods=['DELETE'])
+def delete_comment(comment_id):
+    try:
+        Comment.delete_comment(comment_id)
+    except mysql.connector.Error:
+        traceback.print_exc()
+        return "", status.HTTP_400_BAD_REQUEST
+    return "", status.HTTP_200_OK
 
 @app.route('/events/liked', methods=['GET'])
 def get_all_event_liked_by_user():
