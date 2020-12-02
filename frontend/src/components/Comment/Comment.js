@@ -12,8 +12,11 @@ import Button from '@material-ui/core/Button'
 import TelegramIcon from '@material-ui/icons/Telegram'
 import PropTypes from 'prop-types'
 import randomColor from '../../util/util'
+import deleteComment from '../../api/deleteComment'
+import postComment from '../../api/postComment'
 import { format } from 'date-fns'
 import g from '../../global'
+import red from '@material-ui/core/colors/red'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,49 +53,60 @@ export default function AlignItemsList(props) {
       handleSend()
     }
   }
+  const handleDelete = (id) => {
+    deleteComment(id).then((data) => {
+      if (data) {
+        var array = [...comments]
+        for (var i = 0; i < array.length; i++) {
+          if (array[i].id == id) {
+            array.splice(i, 1)
+            setComments(array)
+          }
+        }
+        setfailInfo('Comment deleted!')
+        setServerity('success')
+        setAlertOpen(true)
+      } else {
+        setfailInfo('Fail to delete the comment')
+        setServerity('error')
+        setAlertOpen(true)
+      }
+    })
+  }
   const handleSend = () => {
     if (!user) {
       setLoginOpen(true)
       return
     }
-    const url = `/user/event/` + eventId + `/comment`
     const requestForm = new FormData()
     requestForm.append('Content', text)
     const date = new Date()
     requestForm.append('Time', format(date, 'yyyy-MM-dd HH:mm:ss'))
-    fetch(url, {
-      method: 'POST',
-      body: requestForm,
-    })
-      .then((response) => {
-        if (response.status < 200 || response.status > 299) {
-          throw Error(response.statusText)
-        } else {
-          return response.text()
-        }
-      })
-      .then(() => {
+    postComment(eventId, requestForm).then((id) => {
+      if (id) {
         g.goEasy.publish({
           channel: eventHost,
           message: `${user} adds a new comment: ${text}`,
         })
+        console.log(id)
         setComments([
-          ...comments,
           {
             user: user,
             content: text,
             time: 'just now',
+            id: id,
           },
+          ...comments,
         ])
-      })
-      .catch(() => {
+      } else {
         setfailInfo('Fail to add comments due to connection error with server')
         setServerity('error')
         setAlertOpen(true)
-      })
+      }
+    })
     setText('')
   }
-  const Comment = (userName, time, content) => (
+  const Comment = (userName, time, content, id) => (
     <ListItem style={{ padding: 0 }} alignItems="flex-start">
       <ListItemAvatar>
         <Avatar
@@ -123,6 +137,17 @@ export default function AlignItemsList(props) {
             >
               {time}
             </Typography>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            {userName === user ? (
+              <Button
+                style={{ color: red[500] }}
+                onClick={() => handleDelete(id)}
+              >
+                Delete
+              </Button>
+            ) : (
+              <></>
+            )}
           </>
         }
         secondary={
@@ -148,15 +173,6 @@ export default function AlignItemsList(props) {
   return (
     <>
       <List className={classes.root}>
-        {comments.map((comment, i) => {
-          const divider = i == comments.length - 1
-          return (
-            <div key={i}>
-              {Comment(comment['user'], comment['time'], comment['content'], i)}
-              {divider ? <></> : <Divider component="li" />}
-            </div>
-          )
-        })}
         {localStorage.getItem('userEmail') ? (
           <>
             <TextField
@@ -183,6 +199,22 @@ export default function AlignItemsList(props) {
         ) : (
           <></>
         )}
+        <br />
+        <br />
+        {comments.map((comment, i) => {
+          const divider = i == comments.length - 1
+          return (
+            <div key={i}>
+              {Comment(
+                comment['user'],
+                comment['time'],
+                comment['content'],
+                comment['id']
+              )}
+              {divider ? <></> : <Divider component="li" />}
+            </div>
+          )
+        })}
       </List>
     </>
   )

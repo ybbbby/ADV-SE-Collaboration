@@ -23,7 +23,7 @@ from models.join import Join
 from models.like import Like
 
 
-app = Flask(__name__, static_folder='./build', static_url_path='/')
+app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
 smtp_obj = smtplib.SMTP('smtp.gmail.com', 587)
 smtp_obj.starttls()
 smtp_obj.login(config.SMTP_EMAIL, config.SMTP_PWD)
@@ -254,6 +254,7 @@ def create_new_comment(event_id):
         return "", status.HTTP_400_BAD_REQUEST
     return comment_id, status.HTTP_200_OK
 
+
 @app.route('/comment/<comment_id>', methods=['DELETE'])
 def delete_comment(comment_id):
     try:
@@ -262,6 +263,7 @@ def delete_comment(comment_id):
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
     return "", status.HTTP_200_OK
+
 
 @app.route('/events/liked', methods=['GET'])
 def get_all_event_liked_by_user():

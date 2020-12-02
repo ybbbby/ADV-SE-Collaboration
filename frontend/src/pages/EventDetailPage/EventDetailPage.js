@@ -29,7 +29,11 @@ import Participants from '../../components/Participants/Participants'
 import getEvent from '../../api/getEvent'
 import PeopleIcon from '@material-ui/icons/People'
 import getEventAttendees from '../../api/getEventAttendees'
+import updateEvent from '../../api/updateEvent'
+import deleteEventApi from '../../api/deleteEvent'
 import g from '../../global'
+import postLike from '../../api/postLike'
+import postJoin from '../../api/postJoin'
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -113,7 +117,7 @@ export default function EventDetail() {
         lat: Number(data.latitude),
         lng: Number(data.longitude),
       })
-      setCommentsProps(data.comments)
+      setCommentsProps(data.comments.reverse())
       setLike(data.liked)
       setAttend(data.attended)
       setimageURL(data.image)
@@ -151,19 +155,8 @@ export default function EventDetail() {
       requestForm.append('Longitude', newValue.lng)
       requestForm.append('Latitude', newValue.lat)
     }
-    const url = `/event/${eventID}`
-    fetch(url, {
-      method: 'POST',
-      body: requestForm,
-    })
-      .then((response) => {
-        if (response.status < 200 || response.status > 299) {
-          throw Error(response.statusText)
-        } else {
-          return response.text()
-        }
-      })
-      .then((data) => {
+    updateEvent(eventID, requestForm).then((data) => {
+      if (data) {
         console.log(data)
         if (t === 'time') {
           setSelectedDate(newValue)
@@ -176,55 +169,32 @@ export default function EventDetail() {
             lng: newValue.lng,
           })
         }
-      })
-      .catch(() => {
+      } else {
         setfailInfo('Fail to update due to connection error with server')
         setServerity('error')
         setAlertOpen(true)
-      })
+      }
+    })
   }
 
   const deleteEvent = () => {
-    const url = `/event/${eventID}`
-    fetch(url, {
-      method: 'DELETE',
-    })
-      .then((response) => {
-        if (response.status !== 200) {
-          throw Error(response.statusText)
-        } else {
-          return response.text()
-        }
-      })
-      .then(() => {
+    deleteEventApi(eventID).then((res) => {
+      if (res) {
         window.location = '/'
         setfailInfo('Successfully deleted your event!')
         setServerity('success')
         setAlertOpen(true)
-      })
-      .catch(() => {
+      } else {
         setfailInfo('Fail to delete the event!')
         setServerity('error')
         setAlertOpen(true)
-      })
+      }
+    })
   }
 
   const registerEvent = () => {
-    const url = `/user/event/${eventID}/join`
-    const requestForm = new FormData()
-    requestForm.append('join', !attend)
-    fetch(url, {
-      method: 'POST',
-      body: requestForm,
-    })
-      .then((response) => {
-        if (response.status !== 200) {
-          throw Error(response.statusText)
-        } else {
-          return response.text()
-        }
-      })
-      .then(() => {
+    postJoin(eventID, !attend).then((res) => {
+      if (res) {
         setAttend(!attend)
         const alertText = attend
           ? 'Successfully cancelled your registration.'
@@ -244,12 +214,12 @@ export default function EventDetail() {
           }
           setParticipants(data)
         })
-      })
-      .catch(() => {
+      } else {
         setfailInfo('Fail to update due to connection error with server')
         setServerity('error')
         setAlertOpen(true)
-      })
+      }
+    })
   }
 
   const handleClose = (value) => {
@@ -290,21 +260,8 @@ export default function EventDetail() {
     }
     const currentStatus = like
     const color = currentStatus ? 'rgba(0, 0, 0, 0.54)' : red[500]
-    const url = `/user/event/${eventID}/like`
-    const requestForm = new FormData()
-    requestForm.append('like', !currentStatus)
-    fetch(url, {
-      method: 'POST',
-      body: requestForm,
-    })
-      .then((response) => {
-        if (response.status !== 200) {
-          throw Error(response.statusText)
-        } else {
-          return response.text()
-        }
-      })
-      .then(() => {
+    postLike(eventID, !currentStatus).then((res) => {
+      if (res) {
         setLike(!currentStatus)
         setLikeButtonColor(color)
         if (!currentStatus) {
@@ -315,10 +272,10 @@ export default function EventDetail() {
           setServerity('info')
         }
         setAlertOpen(true)
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+      } else {
+        console.error('ababa')
+      }
+    })
   }
 
   return (
@@ -435,11 +392,9 @@ export default function EventDetail() {
             )}
           </Grid>
           <Grid item xs={12}>
-            <Box className={classes.titleBox}>
+            <Box>
               <Typography variant="h5">Comments&nbsp;&nbsp;</Typography>
             </Box>
-          </Grid>
-          <Grid item xs={12}>
             <Comment
               setfailInfo={setfailInfo}
               setServerity={setServerity}
