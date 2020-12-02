@@ -29,6 +29,10 @@ const useStyles = makeStyles((theme) => ({
     width: 'calc(100% - 95px)',
     padding: '6px 10px 6px 0',
   },
+  deleteButton: {
+    color: red[500],
+    float: 'right',
+  },
 }))
 
 export default function AlignItemsList(props) {
@@ -140,7 +144,7 @@ export default function AlignItemsList(props) {
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             {userName === user ? (
               <Button
-                style={{ color: red[500] }}
+                className={classes.deleteButton}
                 onClick={() => handleDelete(id)}
               >
                 Delete
