@@ -1,5 +1,6 @@
 /* eslint-env jest */
 import updateEvent from '../../api/updateEvent'
+import mockupdate from './__mockData__/update'
 
 beforeEach(() => {
   fetch.resetMocks()
@@ -7,9 +8,9 @@ beforeEach(() => {
 
 describe('test updateEvent api', () => {
   it('should load events data', () => {
-    fetch.mockResponseOnce('12345')
+    fetch.mockResponseOnce(JSON.stringify(mockupdate))
     updateEvent(123, new FormData()).then((data) => {
-      expect(data).toEqual('12345')
+      expect(data).toEqual(true)
     })
   })
 

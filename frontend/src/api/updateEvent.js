@@ -4,8 +4,7 @@ async function updateEvent(eventId, requestForm) {
       method: 'POST',
       body: requestForm,
     })
-    const data = await result.text()
-    return data
+    return result.status === 200
   } catch (e) {
     return null
   }
