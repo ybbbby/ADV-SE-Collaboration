@@ -264,7 +264,7 @@ def create_new_comment(event_id):
     try:
         comment_id = Comment.create_comment(comment)
         # send notification to the event host
-        #event = Event.get_event_by_id(id)
+        # event = Event.get_event_by_id(id)
         event = Event.get_event_by_id(event_id)
         email_content = name + " just commented your event " + event.name + "."
         # mail_service.send(mail=mail, title="A user just comment your event",
@@ -362,7 +362,7 @@ def join_notification(recipients, event):
     title = "You have registered the event successfully!"
     event_link = LINK + "/event/" + event.event_id
     content = """
-                <p>You have registered the event {name}  
+                <p>You have registered the event {name}
                 hosted by {host} successfully! To see details, please
                  visit <a href={eventlink}>here</a></p>
                """.format(name=event.name,
@@ -379,7 +379,7 @@ def delete_notification(recipients, event):
     title = "The event you registered is canceled"
     event_link = LINK + "/#/event/" + event.event_id
     content = """
-            <p>Unfortunately, the event {name} you 
+            <p>Unfortunately, the event {name} you
             registered is canceled. To see details, please
              visit <a href={eventlink}>here</a></p>
     """.format(name=event.name, eventlink=event_link)
@@ -406,6 +406,6 @@ def delete_notification(recipients, event):
 #     return "success"
 
 
-# if __name__ == '__main__':
-#    app.run(host='localhost', debug=False,
-#            port=os.environ.get('PORT', 3000))
+if __name__ == '__main__':
+    socket.run(app, host='localhost', debug=False,
+               port=os.environ.get('PORT', 3000))
