@@ -9,3 +9,4 @@ backend/build
 **/__pycache__
 **/.vscode
 **/.pytest_cache
+*.pyc
