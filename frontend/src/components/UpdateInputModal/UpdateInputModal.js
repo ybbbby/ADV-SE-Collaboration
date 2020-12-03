@@ -50,7 +50,6 @@ function UpdateInputModal(props) {
   const [newDescription, setNewDescription] = useState(description)
   const [newAddress, setNewAddress] = useState('')
   const [addressError, setAddressError] = useState(false)
-  const F = false
   const handleDateChange = (date) => {
     setSelectedDate(date)
   }
@@ -76,33 +75,13 @@ function UpdateInputModal(props) {
     }
   }
   let selector
-  /*
-  if (type === 1) {
-    selector = (
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <KeyboardDatePicker
-          disableToolbar
-          variant="inline"
-          format="MM/dd/yyyy"
-          margin="normal"
-          id="date-picker-inline"
-          label="Change date"
-          value={selectedDate}
-          onChange={handleDateChange}
-          KeyboardButtonProps={{
-            'aria-label': 'change date',
-          }}
-        />
-      </MuiPickersUtilsProvider>
-    )
-  } else*/
   if (type === 2) {
     selector = (
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <KeyboardDateTimePicker
           id="time-picker"
           label="Change time"
-          ampm={F}
+          ampm={false}
           value={selectedDate}
           disablePast
           onChange={handleDateChange}

@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: '10px',
   },
 }))
-// more to do: register button evnet, show participants
+
 export default function EventDetail() {
   const router = useRouter()
   const { eventID } = router.match.params
@@ -107,8 +107,9 @@ export default function EventDetail() {
   }
 
   useEffect(() => {
+    let isSubscribed = true
     getEvent(eventID).then((data) => {
-      if (!data) {
+      if (!data || !isSubscribed) {
         return
       }
       console.log(data)
@@ -135,11 +136,12 @@ export default function EventDetail() {
       }
     })
     getEventAttendees(eventID).then((data) => {
-      if (!data) {
+      if (!data || !isSubscribed) {
         return
       }
       setParticipants(data)
     })
+    return () => (isSubscribed = false)
   }, [eventID])
 
   const UpdateInfo = (t, newValue) => {
@@ -392,7 +394,7 @@ export default function EventDetail() {
             )}
           </Grid>
           <Grid item xs={12}>
-            <Box>
+            <Box className={classes.titleBox}>
               <Typography variant="h5">Comments&nbsp;&nbsp;</Typography>
             </Box>
             <Comment
