@@ -2,18 +2,16 @@
 Flask backend apis of YesOK application
 """
 
-from datetime import datetime
-import json
-import os
-import traceback
-import smtplib
-from flask import Flask, request
-from flask_api import status
 import mysql.connector
-
+from flask_api import status
+from flask import Flask, request
+import smtplib
+import traceback
+import os
+import json
+from datetime import datetime
 import config
 import google_auth
-import config
 import utils.create_all_tables as db_create_tables
 import utils.send_email as mail_service
 from models.event import Event
@@ -21,6 +19,8 @@ from models.user import User
 from models.comment import Comment
 from models.join import Join
 from models.like import Like
+from flask_socketio import SocketIO, emit, join_room
+from flask_cors import CORS
 
 
 app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
@@ -30,6 +30,8 @@ smtp_obj.login(config.SMTP_EMAIL, config.SMTP_PWD)
 LINK = "http://yes-ok.herokuapp.com"
 app.secret_key = config.FN_FLASK_SECRET_KEY
 app.register_blueprint(google_auth.app)
+socket = SocketIO(app)
+CORS(app)
 clients = {}
 
 # create tables in the database
@@ -43,6 +45,18 @@ def index():
     :return: index.html
     """
     return app.send_static_file('index.html')
+
+
+@socket.on('connect')
+def on_connect():
+    print('user connected!!!!!!!!!!!!!!!!!!!!!!!')
+
+
+@socket.on('user')
+def user(message):
+    print(message)
+    clients[message['user']] = request.sid
+    print(clients)
 
 
 @app.errorhandler(404)
@@ -197,6 +211,7 @@ def join_event(event_id):
     """
     info = google_auth.get_user_info()
     email = info["email"]
+    name = info["name"]
 
     try:
         exists = Join.user_is_attend(email, event_id)
@@ -205,6 +220,9 @@ def join_event(event_id):
         else:
             Join.create_join(Join(email, event_id))
             join_notification([email], Event.get_event_by_id(event_id, email))
+            host = Event.get_event_by_id(event_id).user_email
+            socket.emit('join', {'data': name, 'count': 1},
+                        room=clients[host])
     except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
@@ -240,15 +258,20 @@ def create_new_comment(event_id):
     content = request.form.get("Content")
     user_info = google_auth.get_user_info()
     email = user_info["email"]
+    name = user_info["name"]
     comment = Comment(user=email, content=content,
                       comment_time=datetime.strptime(time, '%Y-%m-%d %H:%M:%S'), event=event_id)
     try:
         comment_id = Comment.create_comment(comment)
         # send notification to the event host
-        # event = Event.get_event_by_id(id)
-        # email_content = name + " just commented your event " + event.name + "."
+        #event = Event.get_event_by_id(id)
+        event = Event.get_event_by_id(event_id)
+        email_content = name + " just commented your event " + event.name + "."
         # mail_service.send(mail=mail, title="A user just comment your event",
         # recipients=[event.user_email], content=email_content)
+
+        socket.emit('comment', {'data': email_content, 'count': 1},
+                    room=clients[event.user_email])
     except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
@@ -383,5 +406,6 @@ def delete_notification(recipients, event):
 #     return "success"
 
 
-if __name__ == '__main__':
-    app.run(host='localhost', debug=False, port=os.environ.get('PORT', 3000))
+# if __name__ == '__main__':
+#    app.run(host='localhost', debug=False,
+#            port=os.environ.get('PORT', 3000))

@@ -15,7 +15,6 @@ import randomColor from '../../util/util'
 import deleteComment from '../../api/deleteComment'
 import postComment from '../../api/postComment'
 import { format } from 'date-fns'
-import g from '../../global'
 import red from '@material-ui/core/colors/red'
 
 const useStyles = makeStyles((theme) => ({
@@ -45,7 +44,6 @@ export default function AlignItemsList(props) {
     eventId,
     comments,
     setComments,
-    eventHost,
   } = props
   const user = localStorage.getItem('userEmail')
   const [text, setText] = useState('')
@@ -88,10 +86,6 @@ export default function AlignItemsList(props) {
     requestForm.append('Time', format(date, 'yyyy-MM-dd HH:mm:ss'))
     postComment(eventId, requestForm).then((id) => {
       if (id) {
-        g.goEasy.publish({
-          channel: eventHost,
-          message: `${user} adds a new comment: ${text}`,
-        })
         console.log(id)
         setComments([
           {

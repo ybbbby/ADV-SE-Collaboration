@@ -31,7 +31,6 @@ import PeopleIcon from '@material-ui/icons/People'
 import getEventAttendees from '../../api/getEventAttendees'
 import updateEvent from '../../api/updateEvent'
 import deleteEventApi from '../../api/deleteEvent'
-import g from '../../global'
 import postLike from '../../api/postLike'
 import postJoin from '../../api/postJoin'
 
@@ -201,12 +200,6 @@ export default function EventDetail() {
         const alertText = attend
           ? 'Successfully cancelled your registration.'
           : 'You have reistered this event!'
-        if (!attend) {
-          g.goEasy.publish({
-            channel: hostEmail,
-            message: `${user} just joined your event`,
-          })
-        }
         setfailInfo(alertText)
         setServerity('success')
         setAlertOpen(true)

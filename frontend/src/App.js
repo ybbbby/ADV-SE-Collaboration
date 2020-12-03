@@ -16,7 +16,7 @@ import Categories from './components/Categories/Categories'
 import { Link } from 'react-router-dom'
 import Routes from './routes'
 import getUserInfo from './api/getUserInfo'
-import g from './global'
+import io from 'socket.io-client'
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -48,6 +48,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+const socket = io('http://localhost:3000')
+socket.emit('deactivate_user', {})
+
 export default function App() {
   const classes = useStyles()
   const [userData, setUserData] = useState({ picture: '', name: '', email: '' })
@@ -69,6 +72,22 @@ export default function App() {
         setUserData(data)
         localStorage.setItem('userEmail', data['email'])
         setLogin(true)
+        socket.emit('user', { user: data['email'] })
+        socket.on('comment', function (res) {
+          const img = '/yes.png'
+          new Notification('New Comment', {
+            body: res['data'],
+            icon: img,
+          })
+        })
+        socket.on('join', function (res) {
+          const img = '/yes.png'
+          new Notification('New friend join!', {
+            body: res['data'] + 'joins your event!',
+            icon: img,
+          })
+        })
+        /*
         g.goEasy.subscribe({
           channel: data['email'],
           onMessage: function (message) {
@@ -82,6 +101,7 @@ export default function App() {
             })
           },
         })
+        */
       }
     })
     if (!localStorage.getItem('pos')) {
