@@ -3,8 +3,6 @@ Test methods in join file
 """
 import unittest
 # import sys
-from datetime import datetime
-from decimal import Decimal
 
 # sys.path.append("..")
 

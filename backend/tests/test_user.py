@@ -85,7 +85,9 @@ class TestUser(unittest.TestCase):
         Test function get_attendees_by_event
         """
         user = "test@test.com"
-        event_id = Event.create_event(create_event())
+        event = create_event()
+        event.category = "test"
+        event_id = Event.create_event(event)
         Join.create_join(Join(user, event_id))
         users = User.get_attendees_by_event(event_id)
         self.assertEqual(users[0].email, user)
