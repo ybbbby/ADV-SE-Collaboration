@@ -1,0 +1,167 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ShareModal snapshot when logged in 1`] = `
+<WithStyles(ForwardRef(List))
+  className="makeStyles-root-27"
+  component="nav"
+>
+  <Link
+    className="makeStyles-link-28"
+    to="/"
+  >
+    <WithStyles(ForwardRef(ListItem))
+      button={true}
+      onClick={[Function]}
+    >
+      <WithStyles(ForwardRef(ListItemIcon))>
+        <Memo([object Object]) />
+      </WithStyles(ForwardRef(ListItemIcon))>
+      <WithStyles(ForwardRef(ListItemText))
+        primary="Home"
+      />
+    </WithStyles(ForwardRef(ListItem))>
+  </Link>
+  <WithStyles(ForwardRef(Divider)) />
+  <Link
+    className="makeStyles-link-28"
+    to="/events/liked"
+  >
+    <WithStyles(ForwardRef(ListItem))
+      button={true}
+      onClick={[Function]}
+    >
+      <WithStyles(ForwardRef(ListItemIcon))>
+        <Memo([object Object]) />
+      </WithStyles(ForwardRef(ListItemIcon))>
+      <WithStyles(ForwardRef(ListItemText))
+        primary="Favourites"
+      />
+    </WithStyles(ForwardRef(ListItem))>
+  </Link>
+  <WithStyles(ForwardRef(Divider)) />
+  <Link
+    className="makeStyles-link-28"
+    to="/events/ongoing"
+  >
+    <WithStyles(ForwardRef(ListItem))
+      button={true}
+      onClick={[Function]}
+    >
+      <WithStyles(ForwardRef(ListItemIcon))>
+        <Memo([object Object]) />
+      </WithStyles(ForwardRef(ListItemIcon))>
+      <WithStyles(ForwardRef(ListItemText))
+        primary="To go"
+      />
+    </WithStyles(ForwardRef(ListItem))>
+  </Link>
+  <WithStyles(ForwardRef(Divider)) />
+  <Link
+    className="makeStyles-link-28"
+    to="/events/history"
+  >
+    <WithStyles(ForwardRef(ListItem))
+      button={true}
+      onClick={[Function]}
+    >
+      <WithStyles(ForwardRef(ListItemIcon))>
+        <Memo([object Object]) />
+      </WithStyles(ForwardRef(ListItemIcon))>
+      <WithStyles(ForwardRef(ListItemText))
+        primary="History"
+      />
+    </WithStyles(ForwardRef(ListItem))>
+  </Link>
+  <WithStyles(ForwardRef(Divider)) />
+  <WithStyles(ForwardRef(ListItem))
+    button={true}
+    onClick={[Function]}
+  >
+    <WithStyles(ForwardRef(ListItemIcon))>
+      <Memo([object Object]) />
+    </WithStyles(ForwardRef(ListItemIcon))>
+    <WithStyles(ForwardRef(ListItemText))
+      primary="Logout"
+    />
+  </WithStyles(ForwardRef(ListItem))>
+</WithStyles(ForwardRef(List))>
+`;
+
+exports[`ShareModal snapshot when not logged in 1`] = `
+<WithStyles(ForwardRef(List))
+  className="makeStyles-root-27"
+  component="nav"
+>
+  <Link
+    className="makeStyles-link-28"
+    to="#"
+  >
+    <WithStyles(ForwardRef(ListItem))
+      button={true}
+      onClick={[Function]}
+    >
+      <WithStyles(ForwardRef(ListItemIcon))>
+        <Memo([object Object]) />
+      </WithStyles(ForwardRef(ListItemIcon))>
+      <WithStyles(ForwardRef(ListItemText))
+        primary="Home"
+      />
+    </WithStyles(ForwardRef(ListItem))>
+  </Link>
+  <WithStyles(ForwardRef(Divider)) />
+  <Link
+    className="makeStyles-link-28"
+    to="#"
+  >
+    <WithStyles(ForwardRef(ListItem))
+      button={true}
+      onClick={[Function]}
+    >
+      <WithStyles(ForwardRef(ListItemIcon))>
+        <Memo([object Object]) />
+      </WithStyles(ForwardRef(ListItemIcon))>
+      <WithStyles(ForwardRef(ListItemText))
+        primary="Favourites"
+      />
+    </WithStyles(ForwardRef(ListItem))>
+  </Link>
+  <WithStyles(ForwardRef(Divider)) />
+  <Link
+    className="makeStyles-link-28"
+    to="#"
+  >
+    <WithStyles(ForwardRef(ListItem))
+      button={true}
+      onClick={[Function]}
+    >
+      <WithStyles(ForwardRef(ListItemIcon))>
+        <Memo([object Object]) />
+      </WithStyles(ForwardRef(ListItemIcon))>
+      <WithStyles(ForwardRef(ListItemText))
+        primary="To go"
+      />
+    </WithStyles(ForwardRef(ListItem))>
+  </Link>
+  <WithStyles(ForwardRef(Divider)) />
+  <Link
+    className="makeStyles-link-28"
+    to="#"
+  >
+    <WithStyles(ForwardRef(ListItem))
+      button={true}
+      onClick={[Function]}
+    >
+      <WithStyles(ForwardRef(ListItemIcon))>
+        <Memo([object Object]) />
+      </WithStyles(ForwardRef(ListItemIcon))>
+      <WithStyles(ForwardRef(ListItemText))
+        primary="History"
+      />
+    </WithStyles(ForwardRef(ListItem))>
+  </Link>
+  <LoginModal
+    handleClose={[Function]}
+    open={false}
+  />
+</WithStyles(ForwardRef(List))>
+`;
