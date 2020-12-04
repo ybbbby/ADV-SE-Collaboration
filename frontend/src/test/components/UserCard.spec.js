@@ -58,6 +58,7 @@ describe('UserCard', () => {
     userEvent.click(screen.getByRole('button'))
     userEvent.click(screen.getByRole('button', { name: 'close' }))
     // todo: no idea how to simulate
+    // the handleClose function is tested in the LoginModal tests
   })
 
   it('snapshot when logged in', () => {

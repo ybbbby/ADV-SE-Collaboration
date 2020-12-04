@@ -91,11 +91,7 @@ function EventCard(props) {
     })
   }
 
-  const closeAlert = (event, reason) => {
-    if (reason === 'clickaway') {
-      return
-    }
-
+  const closeAlert = () => {
     setAlertOpen(false)
   }
 
@@ -216,7 +212,7 @@ function EventCard(props) {
 EventCard.propTypes = {
   user: PropTypes.string,
   config: PropTypes.object.isRequired,
-  openLogin: PropTypes.func,
+  openLogin: PropTypes.func.isRequired,
 }
 
 export default EventCard

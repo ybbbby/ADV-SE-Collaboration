@@ -9,18 +9,14 @@ describe('LoginModal', () => {
   test('does not render modal when closed', () => {
     let openLogin = false
     const setOpenLogin = jest.fn(() => (openLogin = false))
-    render(
-      <LoginModal handleClose={() => setOpenLogin(false)} open={openLogin} />
-    )
+    render(<LoginModal handleClose={() => setOpenLogin()} open={openLogin} />)
     expect(screen.queryByText('Welcome Back!')).toBeNull()
   })
 
   test('renders modal when opened', () => {
     let openLogin = true
     const setOpenLogin = jest.fn(() => (openLogin = false))
-    render(
-      <LoginModal handleClose={() => setOpenLogin(false)} open={openLogin} />
-    )
+    render(<LoginModal handleClose={() => setOpenLogin()} open={openLogin} />)
     expect(screen.queryByText('Welcome Back!')).toBeDefined()
   })
 
@@ -28,9 +24,7 @@ describe('LoginModal', () => {
     fetch.mockResponseOnce('/')
     let openLogin = true
     const setOpenLogin = jest.fn(() => (openLogin = false))
-    render(
-      <LoginModal handleClose={() => setOpenLogin(false)} open={openLogin} />
-    )
+    render(<LoginModal handleClose={() => setOpenLogin()} open={openLogin} />)
     await waitFor(() =>
       userEvent.click(
         screen.getByRole('button', { name: 'Sign in with Google' })
@@ -42,9 +36,7 @@ describe('LoginModal', () => {
   test('close modal', async () => {
     let openLogin = true
     const setOpenLogin = jest.fn(() => (openLogin = false))
-    render(
-      <LoginModal handleClose={() => setOpenLogin(false)} open={openLogin} />
-    )
+    render(<LoginModal handleClose={() => setOpenLogin()} open={openLogin} />)
     await waitFor(() =>
       userEvent.click(screen.getByRole('button', { name: 'close' }))
     )
@@ -54,9 +46,7 @@ describe('LoginModal', () => {
   test('close modal by clicking away', () => {
     let openLogin = true
     const setOpenLogin = jest.fn(() => (openLogin = false))
-    render(
-      <LoginModal handleClose={() => setOpenLogin(false)} open={openLogin} />
-    )
+    render(<LoginModal handleClose={() => setOpenLogin()} open={openLogin} />)
     fireEvent.keyDown(screen.getByRole('presentation'), {
       key: 'Escape',
       code: 'Escape',
@@ -68,7 +58,7 @@ describe('LoginModal', () => {
     let openLogin = true
     const setOpenLogin = jest.fn(() => (openLogin = false))
     const wrapper = shallow(
-      <LoginModal handleClose={() => setOpenLogin(false)} open={openLogin} />
+      <LoginModal handleClose={() => setOpenLogin()} open={openLogin} />
     )
     expect(wrapper).toMatchSnapshot()
   })
@@ -77,7 +67,7 @@ describe('LoginModal', () => {
     let openLogin = false
     const setOpenLogin = jest.fn(() => (openLogin = false))
     const wrapper = shallow(
-      <LoginModal handleClose={() => setOpenLogin(false)} open={openLogin} />
+      <LoginModal handleClose={() => setOpenLogin()} open={openLogin} />
     )
     expect(wrapper).toMatchSnapshot()
   })
