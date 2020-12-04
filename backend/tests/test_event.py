@@ -512,8 +512,7 @@ class TestEvent(unittest.TestCase):
         latitude = 40.730610
         longitude = -73.935242
         dif = 0.001
-        user2 = User("test2@test.com", "test2")
-        User.create_user(user2)
+        User.create_user(self.user2)
         for i in range(5):
             time = datetime.strptime("2023-12-12 12:12:12", "%Y-%m-%d %H:%M:%S")
             tmp_event = Event(user=self.useremail,
@@ -524,7 +523,7 @@ class TestEvent(unittest.TestCase):
                              longitude=longitude + dif,
                              latitude=latitude + dif)
             if i % 2 == 0:
-                tmp_event.user_email = user2.email
+                tmp_event.user_email = self.user2.email
             dif *= 10
             tmp_event.category = "test"
             tmp_event_id = Event.create_event(tmp_event)
@@ -544,8 +543,7 @@ class TestEvent(unittest.TestCase):
         latitude = 40.730610
         longitude = -73.935242
         dif = 0.001
-        user2 = User("test2@test.com", "test2")
-        User.create_user(user2)
+        User.create_user(self.user2)
         for i in range(5):
             time = datetime.strptime("2023-12-12 12:12:12", "%Y-%m-%d %H:%M:%S")
             tmp_event = Event(user=self.useremail,
@@ -556,7 +554,7 @@ class TestEvent(unittest.TestCase):
                              longitude=longitude + dif,
                              latitude=latitude + dif)
             if i % 2 == 0:
-                tmp_event.user_email = user2.email
+                tmp_event.user_email = self.user2.email
             dif *= 10
             tmp_event.category = "test"
             tmp_event_id = Event.create_event(tmp_event)
@@ -576,8 +574,7 @@ class TestEvent(unittest.TestCase):
         latitude = 40.730610
         longitude = -73.935242
         dif = 0.001
-        user2 = User("test2@test.com", "test2")
-        User.create_user(user2)
+        User.create_user(self.user2)
         for i in range(5):
             time = datetime.strptime("2023-12-12 12:12:12", "%Y-%m-%d %H:%M:%S")
             tmp_event = Event(user=self.useremail,
@@ -588,7 +585,7 @@ class TestEvent(unittest.TestCase):
                              longitude=longitude + dif,
                              latitude=latitude + dif)
             if i % 2 == 0:
-                tmp_event.user_email = user2.email
+                tmp_event.user_email = self.user2.email
             dif *= 10
             tmp_event.category = "test"
             tmp_event_id = Event.create_event(tmp_event)
