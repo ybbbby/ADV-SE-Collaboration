@@ -40,9 +40,30 @@ class TestJoin(unittest.TestCase):
         Event.delete_event_by_id(self.event)
         User.delete_user_by_email(self.user)
 
-    def test_create_join(self) -> None:
+    def test_create_join_1(self) -> None:
         """
-        test create_join
+        test create_join: user and event exist
+        """
+        Join.create_join(Join(self.user, self.event))
+        self.assertTrue(Join.user_is_attend(self.user, self.event))
+
+    def test_create_join_2(self) -> None:
+        """
+        test create_join: user exists, event doesn’t exist
+        """
+        Join.create_join(Join(self.user, self.event))
+        self.assertTrue(Join.user_is_attend(self.user, self.event))
+
+    def test_create_join_3(self) -> None:
+        """
+        test create_join: user doesn’t exist, event exists
+        """
+        Join.create_join(Join(self.user, self.event))
+        self.assertTrue(Join.user_is_attend(self.user, self.event))
+
+    def test_create_join_4(self) -> None:
+        """
+        test create_join: user and event don’t exist
         """
         Join.create_join(Join(self.user, self.event))
         self.assertTrue(Join.user_is_attend(self.user, self.event))
