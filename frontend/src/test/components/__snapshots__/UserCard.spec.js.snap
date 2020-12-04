@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserCard snapshot when logged in 1`] = `
+<Fragment>
+  <WithStyles(ForwardRef(Avatar))
+    className="makeStyles-avatar-33"
+    src="testurl"
+  />
+  <WithStyles(ForwardRef(Typography))
+    className="makeStyles-username-34"
+  >
+    test
+  </WithStyles(ForwardRef(Typography))>
+  <WithStyles(ForwardRef(Typography))
+    className="makeStyles-email-35"
+    color="textSecondary"
+  >
+    test@columbia.edu
+  </WithStyles(ForwardRef(Typography))>
+  <Link
+    className="makeStyles-link-36"
+    to="/newevent"
+  >
+    <WithStyles(ForwardRef(Button))
+      className="makeStyles-createButton-37"
+      color="primary"
+    >
+      Create event
+    </WithStyles(ForwardRef(Button))>
+  </Link>
+</Fragment>
+`;
+
+exports[`UserCard snapshot when not logged in 1`] = `
+<Fragment>
+  <WithStyles(ForwardRef(Avatar))
+    className="makeStyles-avatar-33"
+  />
+  <WithStyles(ForwardRef(Button))
+    color="inherit"
+    onClick={[Function]}
+  >
+    Login
+  </WithStyles(ForwardRef(Button))>
+  <LoginModal
+    handleClose={[Function]}
+    open={false}
+  />
+</Fragment>
+`;
