@@ -32,6 +32,7 @@ def create_event():
                   event_time=time,
                   longitude=longitude,
                   latitude=latitude)
+    event.category = "test"
     return event
 
 
