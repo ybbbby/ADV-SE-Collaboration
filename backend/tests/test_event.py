@@ -14,6 +14,7 @@ from models.join import Join
 
 from models.event import Event
 from app import app
+import mysql.connector
 
 
 def create_event():
@@ -64,9 +65,10 @@ class TestEvent(unittest.TestCase):
         User.delete_user_by_email(self.useremail)
         User.delete_user_by_email(self.user2.email)
 
-    def test_create_event(self):
+    def test_create_event_1(self):
         """
         Test create_event
+        All columns are valid
         """
         event = create_event()
         event_id = Event.create_event(event)
@@ -80,9 +82,64 @@ class TestEvent(unittest.TestCase):
         self.assertAlmostEqual(ret_event.longitude, event.longitude)
         self.assertAlmostEqual(ret_event.latitude, event.latitude)
 
-    def test_delete_event(self):
+    def test_create_event_2(self):
+        """
+        Test create_event
+        User does not exist
+        """
+        event = create_event()
+        event.user_email = "fake@test.com"
+        self.assertRaises(mysql.connector.Error, Event.create_event, event)
+
+    def test_create_event_3(self):
+        """
+        Test create_event
+        Event name too long
+        """
+        event = create_event()
+        event.name = "event" * 20
+        self.assertRaises(mysql.connector.Error, Event.create_event, event)
+
+    def test_create_event_4(self):
+        """
+        Test create_event
+        Address length too long
+        """
+        event = create_event()
+        event.name = "address" * 200
+        self.assertRaises(mysql.connector.Error, Event.create_event, event)
+
+    def test_create_event_5(self):
+        """
+        Test create_event
+        Description length too long
+        """
+        event = create_event()
+        event.description = "description" * 600
+        self.assertRaises(mysql.connector.Error, Event.create_event, event)
+
+    def test_create_event_6(self):
+        """
+        Test create_event
+        Image path length too long
+        """
+        event = create_event()
+        event.image = "http://path.com/123" * 200
+        self.assertRaises(mysql.connector.Error, Event.create_event, event)
+
+    def test_create_event_7(self):
+        """
+        Test create_event
+        Category length too long
+        """
+        event = create_event()
+        event.category = "category" * 200
+        self.assertRaises(mysql.connector.Error, Event.create_event, event)
+
+    def test_delete_event_1(self):
         """
         Test delete_event
+        The event exists
         """
         event = create_event()
         event_id = Event.create_event(event)
@@ -91,10 +148,18 @@ class TestEvent(unittest.TestCase):
         event = Event.get_event_by_id(event_id, event.user_email)
         self.assertIsNone(event)
 
-    # update description
-    def test_update_event1(self):
+    def test_delete_event_2(self):
         """
-        Test update_event
+        Test delete_event
+        The event does not exists
+        """
+        Event.delete_event_by_id("0")
+        event = Event.get_event_by_id("0", self.useremail)
+        self.assertIsNone(event)
+
+    def test_update_event_1(self):
+        """
+        Test update_event, update description
         """
         event = create_event()
         event_id = Event.create_event(event)
@@ -104,10 +169,9 @@ class TestEvent(unittest.TestCase):
         ret = Event.get_event_by_id(event_id, event.user_email)
         self.assertEqual(ret.description, description)
 
-    # update time
-    def test_update_event2(self):
+    def test_update_event_2(self):
         """
-        Test update_event
+        Test update_event, update time
         """
         event = create_event()
         event_id = Event.create_event(event)
@@ -117,10 +181,9 @@ class TestEvent(unittest.TestCase):
         ret = Event.get_event_by_id(event_id, event.user_email)
         self.assertEqual(ret.time, time)
 
-    # update address, longitude, latitude
-    def test_update_event3(self):
+    def test_update_event_3(self):
         """
-        Test update_event
+        Test update_event, update address, longitude, latitude
         """
         event = create_event()
         event_id = Event.create_event(event)
@@ -136,7 +199,32 @@ class TestEvent(unittest.TestCase):
         self.assertAlmostEqual(ret.longitude, longitude)
         self.assertAlmostEqual(ret.latitude, latitude)
 
-    # get event not exists
+    def test_update_event_4(self):
+        """
+        Test update_event
+        The new description is too long
+        """
+        event = create_event()
+        event_id = Event.create_event(event)
+        self.event_ids.append(event_id)
+        description = "new desc" * 600
+        self.assertRaises(mysql.connector.Error, Event.update_event, {"description": description}, event_id)
+
+    def test_update_event_5(self):
+        """
+        Test update_event, update address, longitude, latitude
+        New address length is too long
+        """
+        event = create_event()
+        event_id = Event.create_event(event)
+        self.event_ids.append(event_id)
+        address = "412 E, 110th St, New york" * 200
+        longitude = Decimal(22.1111)
+        latitude = Decimal(33.2222)
+        self.assertRaises(mysql.connector.Error, Event.update_event, {"address": address,
+                            "longitude": longitude,
+                            "latitude": latitude}, event_id)
+
     def test_get_event_id1(self):
         """
         Test get_event_id
@@ -146,10 +234,10 @@ class TestEvent(unittest.TestCase):
         event = Event.get_event_by_id(event_id)
         self.assertIsNone(event)
 
-    # get event exists
     def test_get_event_id2(self):
         """
         Test get_event_id
+        Test case2: get event not exists
         """
         event = create_event()
         event_id = Event.create_event(event)
@@ -157,7 +245,7 @@ class TestEvent(unittest.TestCase):
         event = Event.get_event_by_id(event_id)
         self.assertEqual(event.event_id, event_id)
 
-    def test_get_all_event_created_by_user1(self):
+    def test_get_all_event_created_by_user_1(self):
         """
         Test get_all_event_created_by_user
         Case1: user has created some events
@@ -181,15 +269,23 @@ class TestEvent(unittest.TestCase):
             self.assertTrue(res.event_id in self.event_ids)
         self.assertEqual(10, len(result))
 
-    def test_get_all_event_created_by_user2(self):
+    def test_get_all_event_created_by_user_2(self):
         """
         Test get_all_event_created_by_user
-        Case1: user has not created some events
+        Case2: user has not created some events
         """
         result = Event.get_all_event_created_by_user(self.useremail)
         self.assertEqual(len(result), 0)
 
-    def test_get_all_event_liked_by_user1(self):
+    def test_get_all_event_created_by_user_3(self):
+        """
+        Test get_all_event_created_by_user
+        Case3: user does not exist
+        """
+        result = Event.get_all_event_created_by_user("fakeuser@test.com")
+        self.assertEqual(len(result), 0)
+
+    def test_get_all_event_liked_by_user_1(self):
         """
         Test get_all_event_liked_by_user
         Case2: user has liked some events
@@ -216,7 +312,7 @@ class TestEvent(unittest.TestCase):
             self.assertTrue(res.event_id in self.event_ids)
         self.assertEqual(10, len(result))
 
-    def test_get_all_event_liked_by_user2(self):
+    def test_get_all_event_liked_by_user_2(self):
         """
         Test get_all_event_liked_by_user
         Case2: user has not liked any events
@@ -224,7 +320,15 @@ class TestEvent(unittest.TestCase):
         result = Event.get_all_event_liked_by_user(self.useremail)
         self.assertEqual(len(result), 0)
 
-    def test_get_all_history_event_by_user(self):
+    def test_get_all_event_liked_by_user_3(self):
+        """
+        Test get_all_event_liked_by_user
+        Case3: user not exist
+        """
+        result = Event.get_all_event_liked_by_user("fakeuser@test.com")
+        self.assertEqual(len(result), 0)
+
+    def test_get_all_history_event_by_user_1(self):
         """
         Test get_all_history_event_by_user
         Case1: user has history events
@@ -271,8 +375,7 @@ class TestEvent(unittest.TestCase):
             self.assertTrue(res.event_id in self.event_ids)
         self.assertEqual(5, len(result))
 
-
-    def test_get_all_event_liked_by_user2(self):
+    def test_get_all_event_liked_by_user_2(self):
         """
         Test get_all_history_event_by_user
         Case2: user has no history events
@@ -280,7 +383,15 @@ class TestEvent(unittest.TestCase):
         result = Event.get_all_event_liked_by_user(self.useremail)
         self.assertEqual(len(result), 0)
 
-    def test_get_all_event_joined_by_user1(self):
+    def test_get_all_event_liked_by_user_3(self):
+        """
+        Test get_all_history_event_by_user
+        Case3: user not exist
+        """
+        result = Event.get_all_event_liked_by_user("fakeuser@test.com")
+        self.assertEqual(len(result), 0)
+
+    def test_get_all_event_joined_by_user_1(self):
         """
         Test get_all_ongoing_event_by_user
         Case1: user has joined some events
@@ -313,7 +424,7 @@ class TestEvent(unittest.TestCase):
             self.assertTrue(res.event_id in self.event_ids)
         self.assertEqual(5, len(result))
 
-    def test_get_all_event_joined_by_user2(self):
+    def test_get_all_event_joined_by_user_2(self):
         """
         Test get_all_ongoing_event_by_user
         Case2: user has never joined some events
@@ -321,7 +432,15 @@ class TestEvent(unittest.TestCase):
         result = Event.get_all_event_joined_by_user(self.useremail)
         self.assertEqual(len(result), 0)
 
-    def test_get_all_ongoing_event_by_user1(self):
+    def test_get_all_event_joined_by_user_3(self):
+        """
+        Test get_all_ongoing_event_by_user
+        Case3: user not exist
+        """
+        result = Event.get_all_event_joined_by_user("fakeuser@test.com")
+        self.assertEqual(len(result), 0)
+
+    def test_get_all_ongoing_event_by_user_1(self):
         """
         Test get_all_ongoing_event_by_user
         Case1: user has some ongoing events
@@ -368,7 +487,7 @@ class TestEvent(unittest.TestCase):
             self.assertTrue(res.event_id in self.event_ids)
         self.assertEqual(5, len(result))
 
-    def test_get_all_ongoing_event_by_user2(self):
+    def test_get_all_ongoing_event_by_user_2(self):
         """
         Test get_all_ongoing_event_by_user
         Case2: user has no ongoing events
@@ -376,7 +495,15 @@ class TestEvent(unittest.TestCase):
         result = Event.get_all_ongoing_event_by_user(self.useremail)
         self.assertEqual(len(result), 0)
 
-    def test_get_nearby_events1(self):
+    def test_get_all_ongoing_event_by_user_3(self):
+        """
+        Test get_all_ongoing_event_by_user
+        Case3: user not exist
+        """
+        result = Event.get_all_ongoing_event_by_user("fakeuser@test.com")
+        self.assertEqual(len(result), 0)
+
+    def test_get_nearby_events_1(self):
         """
         Test get_nearby_events
         Test case1: if user email is provided
@@ -408,7 +535,7 @@ class TestEvent(unittest.TestCase):
         for i in range(len(result)):
             self.assertEqual(result[i].event_id, self.event_ids[i])
 
-    def test_get_nearby_events2(self):
+    def test_get_nearby_events_2(self):
         """
         Test get_nearby_events
         Test case2: if no user email is provided
@@ -439,5 +566,39 @@ class TestEvent(unittest.TestCase):
         self.assertEqual(5, len(result))
         for i in range(len(result)):
             self.assertEqual(result[i].event_id, self.event_ids[i])
+
+    def test_get_nearby_events_3(self):
+        """
+        Test get_nearby_events
+        Test case3: if user email is provided, but user not exisst
+        """
+
+        latitude = 40.730610
+        longitude = -73.935242
+        dif = 0.001
+        user2 = User("test2@test.com", "test2")
+        User.create_user(user2)
+        for i in range(5):
+            time = datetime.strptime("2023-12-12 12:12:12", "%Y-%m-%d %H:%M:%S")
+            tmp_event = Event(user=self.useremail,
+                             name="testevent" + str(i),
+                             address="address" + str(i),
+                             zipcode=10025,
+                             event_time=time,
+                             longitude=longitude + dif,
+                             latitude=latitude + dif)
+            if i % 2 == 0:
+                tmp_event.user_email = user2.email
+            dif *= 10
+            tmp_event.category = "test"
+            tmp_event_id = Event.create_event(tmp_event)
+            self.event_ids.append(tmp_event_id)
+
+        result = Event.get_nearby_events("fakeuser@test.com", latitude, longitude)
+        self.assertEqual(5, len(result))
+        for i in range(len(result)):
+            self.assertEqual(result[i].event_id, self.event_ids[i])
+
+
 if __name__ == '__main__':
     unittest.main()
