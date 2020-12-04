@@ -1,0 +1,217 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ShareModal snapshot when closed 1`] = `
+<WithStyles(ForwardRef(Dialog))
+  aria-labelledby="form-dialog-title"
+  onClose={[Function]}
+  open={false}
+>
+  <WithStyles(ForwardRef(DialogTitle))
+    id="form-dialog-title"
+  >
+    Share the event
+  </WithStyles(ForwardRef(DialogTitle))>
+  <WithStyles(ForwardRef(DialogContent))>
+    <div
+      className="makeStyles-socialMedia-29"
+    >
+      <WithStyles(ForwardRef(Tooltip))
+        title="Share on Twitter"
+      >
+        <WithStyles(ForwardRef(Link))
+          color="inherit"
+          href="https://twitter.com/intent/tweet?url=www.google.com"
+          target="_blank"
+        >
+          <Memo([object Object])
+            className="makeStyles-socialIcon-30"
+          />
+        </WithStyles(ForwardRef(Link))>
+      </WithStyles(ForwardRef(Tooltip))>
+      <WithStyles(ForwardRef(Tooltip))
+        title="Share on Facebook"
+      >
+        <WithStyles(ForwardRef(Link))
+          color="inherit"
+          href="https://www.facebook.com/sharer/sharer.php?u=www.google.com"
+          target="_blank"
+        >
+          <Memo([object Object])
+            className="makeStyles-socialIcon-30"
+          />
+        </WithStyles(ForwardRef(Link))>
+      </WithStyles(ForwardRef(Tooltip))>
+      <WithStyles(ForwardRef(Tooltip))
+        title="Share by Email"
+      >
+        <WithStyles(ForwardRef(Link))
+          color="inherit"
+          href="mailto:info@example.com?&subject=&body=www.google.com"
+        >
+          <Memo([object Object])
+            className="makeStyles-socialIcon-30"
+          />
+        </WithStyles(ForwardRef(Link))>
+      </WithStyles(ForwardRef(Tooltip))>
+    </div>
+    <WithStyles(ForwardRef(Paper))
+      className="makeStyles-root-28"
+    >
+      <WithStyles(ForwardRef(InputBase))
+        className="makeStyles-input-26"
+        inputProps={
+          Object {
+            "aria-label": "event sharing link",
+            "readOnly": true,
+          }
+        }
+        placeholder="www.google.com"
+      />
+      <ClickAwayListener
+        onClickAway={[Function]}
+      >
+        <CopyToClipboard
+          onCopy={[Function]}
+          text="www.google.com"
+        >
+          <WithStyles(ForwardRef(Tooltip))
+            PopperProps={
+              Object {
+                "disablePortal": true,
+              }
+            }
+            arrow={true}
+            disableFocusListener={true}
+            disableHoverListener={true}
+            open={false}
+            title="Copied"
+          >
+            <WithStyles(ForwardRef(IconButton))
+              aria-label="copy"
+              className="makeStyles-iconButton-27"
+            >
+              <Memo([object Object]) />
+            </WithStyles(ForwardRef(IconButton))>
+          </WithStyles(ForwardRef(Tooltip))>
+        </CopyToClipboard>
+      </ClickAwayListener>
+    </WithStyles(ForwardRef(Paper))>
+  </WithStyles(ForwardRef(DialogContent))>
+  <WithStyles(ForwardRef(DialogActions))>
+    <WithStyles(ForwardRef(Button))
+      color="primary"
+      onClick={[Function]}
+    >
+      Cancel
+    </WithStyles(ForwardRef(Button))>
+  </WithStyles(ForwardRef(DialogActions))>
+</WithStyles(ForwardRef(Dialog))>
+`;
+
+exports[`ShareModal snapshot when open 1`] = `
+<WithStyles(ForwardRef(Dialog))
+  aria-labelledby="form-dialog-title"
+  onClose={[Function]}
+  open={true}
+>
+  <WithStyles(ForwardRef(DialogTitle))
+    id="form-dialog-title"
+  >
+    Share the event
+  </WithStyles(ForwardRef(DialogTitle))>
+  <WithStyles(ForwardRef(DialogContent))>
+    <div
+      className="makeStyles-socialMedia-29"
+    >
+      <WithStyles(ForwardRef(Tooltip))
+        title="Share on Twitter"
+      >
+        <WithStyles(ForwardRef(Link))
+          color="inherit"
+          href="https://twitter.com/intent/tweet?url=www.google.com"
+          target="_blank"
+        >
+          <Memo([object Object])
+            className="makeStyles-socialIcon-30"
+          />
+        </WithStyles(ForwardRef(Link))>
+      </WithStyles(ForwardRef(Tooltip))>
+      <WithStyles(ForwardRef(Tooltip))
+        title="Share on Facebook"
+      >
+        <WithStyles(ForwardRef(Link))
+          color="inherit"
+          href="https://www.facebook.com/sharer/sharer.php?u=www.google.com"
+          target="_blank"
+        >
+          <Memo([object Object])
+            className="makeStyles-socialIcon-30"
+          />
+        </WithStyles(ForwardRef(Link))>
+      </WithStyles(ForwardRef(Tooltip))>
+      <WithStyles(ForwardRef(Tooltip))
+        title="Share by Email"
+      >
+        <WithStyles(ForwardRef(Link))
+          color="inherit"
+          href="mailto:info@example.com?&subject=&body=www.google.com"
+        >
+          <Memo([object Object])
+            className="makeStyles-socialIcon-30"
+          />
+        </WithStyles(ForwardRef(Link))>
+      </WithStyles(ForwardRef(Tooltip))>
+    </div>
+    <WithStyles(ForwardRef(Paper))
+      className="makeStyles-root-28"
+    >
+      <WithStyles(ForwardRef(InputBase))
+        className="makeStyles-input-26"
+        inputProps={
+          Object {
+            "aria-label": "event sharing link",
+            "readOnly": true,
+          }
+        }
+        placeholder="www.google.com"
+      />
+      <ClickAwayListener
+        onClickAway={[Function]}
+      >
+        <CopyToClipboard
+          onCopy={[Function]}
+          text="www.google.com"
+        >
+          <WithStyles(ForwardRef(Tooltip))
+            PopperProps={
+              Object {
+                "disablePortal": true,
+              }
+            }
+            arrow={true}
+            disableFocusListener={true}
+            disableHoverListener={true}
+            open={false}
+            title="Copied"
+          >
+            <WithStyles(ForwardRef(IconButton))
+              aria-label="copy"
+              className="makeStyles-iconButton-27"
+            >
+              <Memo([object Object]) />
+            </WithStyles(ForwardRef(IconButton))>
+          </WithStyles(ForwardRef(Tooltip))>
+        </CopyToClipboard>
+      </ClickAwayListener>
+    </WithStyles(ForwardRef(Paper))>
+  </WithStyles(ForwardRef(DialogContent))>
+  <WithStyles(ForwardRef(DialogActions))>
+    <WithStyles(ForwardRef(Button))
+      color="primary"
+      onClick={[Function]}
+    >
+      Cancel
+    </WithStyles(ForwardRef(Button))>
+  </WithStyles(ForwardRef(DialogActions))>
+</WithStyles(ForwardRef(Dialog))>
+`;
