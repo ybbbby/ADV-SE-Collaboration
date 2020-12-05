@@ -154,6 +154,8 @@ def get_event_by_id(event_id):
     email = user_info["email"]
     try:
         event = Event.get_event_by_id(event_id, email)
+        if not event:
+            return "", status.HTTP_400_BAD_REQUEST
     except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
