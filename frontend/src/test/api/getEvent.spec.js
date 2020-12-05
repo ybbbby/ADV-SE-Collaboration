@@ -1,6 +1,6 @@
 /* eslint-env jest */
 import getEvent from '../../api/getEvent'
-import mockEvent from './__mockData__/event'
+import mockEvent from '../__mockData__/event'
 
 beforeEach(() => {
   fetch.resetMocks()
@@ -11,7 +11,7 @@ describe('test getEvent api', () => {
     fetch.mockResponseOnce(JSON.stringify(mockEvent))
     getEvent('1605497505188481').then((data) => {
       expect(data).toBeDefined()
-      expect(data[0].description).toEqual('waesrdfghfdsasdfsd')
+      expect(data.description).toEqual('22211')
     })
   })
 

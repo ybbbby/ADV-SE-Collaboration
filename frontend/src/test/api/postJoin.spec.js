@@ -1,6 +1,6 @@
 /* eslint-env jest */
 import postJoin from '../../api/postJoin'
-import mockJoin from './__mockData__/join'
+import mockJoin from '../__mockData__/join'
 
 beforeEach(() => {
   fetch.resetMocks()

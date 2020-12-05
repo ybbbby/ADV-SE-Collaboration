@@ -1,0 +1,18 @@
+export default {
+  address: '1275 York Avenue, New York, NY, USA',
+  attended: false,
+  author: 'test user',
+  category: 'music',
+  comments: [],
+  description: '22211',
+  event_id: '160685996825045',
+  image: 'https://yesok.s3.amazonaws.com/uploads%2FIMG_2396.JPG',
+  latitude: '40.764215',
+  liked: false,
+  longitude: '-73.956104',
+  name: 'event name',
+  num_likes: 0,
+  time: '2020-12-25 17:49:00',
+  user_email: 'test@columbia.edu',
+  zipcode: '10025',
+}

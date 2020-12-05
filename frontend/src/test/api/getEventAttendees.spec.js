@@ -1,6 +1,6 @@
 /* eslint-env jest */
 import getEventAttendees from '../../api/getEventAttendees'
-import mockEvent from './__mockData__/eventAttendees'
+import mockEvent from '../__mockData__/eventAttendees'
 
 beforeEach(() => {
   fetch.resetMocks()

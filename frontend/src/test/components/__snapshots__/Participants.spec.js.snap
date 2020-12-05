@@ -1,0 +1,83 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Participants snapshot when closed 1`] = `
+<WithStyles(ForwardRef(Dialog))
+  onClose={[Function]}
+  open={false}
+>
+  <WithStyles(ForwardRef(DialogTitle))
+    id="simple-dialog-title"
+  >
+    Participants(
+    1
+    )
+  </WithStyles(ForwardRef(DialogTitle))>
+  <WithStyles(ForwardRef(List))
+    style={
+      Object {
+        "padding": "10px 15px 20px",
+      }
+    }
+  >
+    <WithStyles(ForwardRef(ListItem))
+      key="test@columbia.edu"
+    >
+      <WithStyles(ForwardRef(ListItemAvatar))>
+        <WithStyles(ForwardRef(Avatar))
+          style={
+            Object {
+              "backgroundColor": "#009688",
+            }
+          }
+        >
+          t
+        </WithStyles(ForwardRef(Avatar))>
+      </WithStyles(ForwardRef(ListItemAvatar))>
+      <WithStyles(ForwardRef(ListItemText))
+        primary="test(test@columbia.edu)"
+      />
+    </WithStyles(ForwardRef(ListItem))>
+  </WithStyles(ForwardRef(List))>
+</WithStyles(ForwardRef(Dialog))>
+`;
+
+exports[`Participants snapshot when opened 1`] = `
+<WithStyles(ForwardRef(Dialog))
+  onClose={[Function]}
+  open={true}
+>
+  <WithStyles(ForwardRef(DialogTitle))
+    id="simple-dialog-title"
+  >
+    Participants(
+    1
+    )
+  </WithStyles(ForwardRef(DialogTitle))>
+  <WithStyles(ForwardRef(List))
+    style={
+      Object {
+        "padding": "10px 15px 20px",
+      }
+    }
+  >
+    <WithStyles(ForwardRef(ListItem))
+      key="test@columbia.edu"
+    >
+      <WithStyles(ForwardRef(ListItemAvatar))>
+        <WithStyles(ForwardRef(Avatar))
+          style={
+            Object {
+              "backgroundColor": "#009688",
+            }
+          }
+        >
+          t
+        </WithStyles(ForwardRef(Avatar))>
+      </WithStyles(ForwardRef(ListItemAvatar))>
+      <WithStyles(ForwardRef(ListItemText))
+        primary="test(test@columbia.edu)"
+      />
+    </WithStyles(ForwardRef(ListItem))>
+  </WithStyles(ForwardRef(List))>
+</WithStyles(ForwardRef(Dialog))>
+`;
