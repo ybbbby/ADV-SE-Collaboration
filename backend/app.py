@@ -22,7 +22,7 @@ from models.join import Join
 from models.like import Like
 
 
-app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
+app = Flask(__name__, static_folder='./build', static_url_path='/')
 smtp_obj = smtplib.SMTP('smtp.gmail.com', 587)
 smtp_obj.starttls()
 smtp_obj.login(config.SMTP_EMAIL, config.SMTP_PWD)
@@ -369,17 +369,6 @@ def delete_notification(recipients, event):
              visit <a href={eventlink}>here</a></p>
     """.format(name=event.name, eventlink=event_link)
     mail_service.send(smtp_obj, title, recipients, content, True)
-
-# @app.route('/user/event/hosted', methods=['GET'])
-# def get_all_created_events():
-#     email = google_auth.get_user_info()["email"]
-#     try:
-#         events = Event.get_all_event_created_by_user(email)
-#     except:
-#         traceback.print_exc()
-#         return "", status.HTTP_400_BAD_REQUEST
-#     return json.dumps([ob.__dict__ for ob in events], default=str), status.HTTP_200_OK
-
 
 # # Test create user method in User
 # @app.route('/user/create', methods=['GET'])

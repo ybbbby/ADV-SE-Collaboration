@@ -137,6 +137,7 @@ export default function EventsPage() {
     setIsLoading(true)
     if (category) {
       getEvents(category).then((data) => {
+        /* istanbul ignore else */
         if (isSubscribed) {
           if (data) {
             initData(data)
@@ -146,6 +147,7 @@ export default function EventsPage() {
       })
     } else {
       getEventsNearby(pos).then((data) => {
+        /* istanbul ignore else */
         if (isSubscribed) {
           if (data) {
             initData(data)
@@ -255,7 +257,6 @@ export default function EventsPage() {
           </Grid>
         </Box>
       </Container>
-      {/* istanbul ignore next */}
       <LoginModal handleClose={() => setLoginOpen(false)} open={loginOpen} />
     </div>
   )
