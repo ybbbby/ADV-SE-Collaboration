@@ -547,7 +547,7 @@ class TestEvent(unittest.TestCase):
 
         result = Event.get_nearby_events(None, latitude, longitude)
         self.assertEqual(5, len(result))
-        for i in enumerate(result):
+        for i, _ in enumerate(result):
             self.assertEqual(result[i].event_id, self.event_ids[i])
 
     def test_get_nearby_events_3(self):
@@ -578,7 +578,7 @@ class TestEvent(unittest.TestCase):
 
         result = Event.get_nearby_events("fakeuser@test.com", latitude, longitude)
         self.assertEqual(5, len(result))
-        for i in enumerate(result):
+        for i, _ in enumerate(result):
             self.assertEqual(result[i].event_id, self.event_ids[i])
 
 
