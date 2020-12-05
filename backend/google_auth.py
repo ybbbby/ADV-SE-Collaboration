@@ -57,11 +57,14 @@ def build_credentials():
         token_uri=ACCESS_TOKEN_URI)
 
 
-def get_user_info():
+def get_user_info(testing=False):
     """
     Get the information of the current user
     :return: dictionary of the current user info
     """
+    if testing:
+        return {'email': 'test@test.com', 'name': 'test'}
+
     credentials = build_credentials()
 
     oauth2_client = googleapiclient.discovery.build(
@@ -114,24 +117,28 @@ def google_auth_redirect():
     Validate the user
     :return: redirect the uri
     """
-    req_state = flask.request.args.get('state', default=None, type=None)
+    testing = flask.request.args.get('testing', default=False, type=bool)
+    if testing:
+        flask.session[AUTH_TOKEN_KEY] = "testing"
+    else:
+        req_state = flask.request.args.get('state', default=None, type=None)
 
-    if req_state != flask.session[AUTH_STATE_KEY]:
-        response = flask.make_response('Invalid state parameter', 401)
-        return response
+        if req_state != flask.session[AUTH_STATE_KEY]:
+            response = flask.make_response('Invalid state parameter', 401)
+            return response
 
-    session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
-                            scope=AUTHORIZATION_SCOPE,
-                            state=flask.session[AUTH_STATE_KEY],
-                            redirect_uri=AUTH_REDIRECT_URI)
+        session = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
+                                scope=AUTHORIZATION_SCOPE,
+                                state=flask.session[AUTH_STATE_KEY],
+                                redirect_uri=AUTH_REDIRECT_URI)
 
-    oauth2_tokens = session.fetch_access_token(
-        ACCESS_TOKEN_URI,
-        authorization_response=flask.request.url)
+        oauth2_tokens = session.fetch_access_token(
+            ACCESS_TOKEN_URI,
+            authorization_response=flask.request.url)
 
-    flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
+        flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
 
-    user_info = get_user_info()
+    user_info = get_user_info(testing)
     email = user_info["email"]
     username = user_info["name"]
     new_user = User(email=email, username=username)
