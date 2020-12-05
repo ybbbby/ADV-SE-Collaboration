@@ -23,6 +23,10 @@ class Test:
         """
         test index, login and userinfo
         """
+        response = client.get('/user/info')
+        assert response.status_code == 200
+        assert json.loads(response.data) == "NOUSER"
+
         response = client.get('/')
         assert response.status_code == 200
 
