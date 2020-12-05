@@ -11,7 +11,6 @@ from flask import Flask, request
 from flask_api import status
 import mysql.connector
 
-import config
 import google_auth
 import config
 import utils.create_all_tables as db_create_tables
@@ -155,6 +154,8 @@ def get_event_by_id(event_id):
     email = user_info["email"]
     try:
         event = Event.get_event_by_id(event_id, email)
+        if not event:
+            return "", status.HTTP_400_BAD_REQUEST
     except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST
@@ -186,7 +187,7 @@ def userinfo():
     if google_auth.is_logged_in():
         user_info = google_auth.get_user_info()
         return json.dumps(user_info, indent=4)
-    return "NOUSER"
+    return json.dumps("NOUSER", indent=4)
 
 
 @app.route('/user/event/<event_id>/join', methods=['POST'])
