@@ -326,9 +326,12 @@ def get_nearby_events():
         email = google_auth.get_user_info()["email"]
     try:
         pos = request.args.get("pos")
-        latitude = float("{:.6f}".format(float(pos.split(",")[0])))
-        longitude = float("{:.6f}".format(float(pos.split(",")[1])))
-        events = Event.get_nearby_events(email, latitude, longitude)
+        if pos == "null":
+            events = Event.get_all_ongoing_events(email)
+        else:
+            latitude = float("{:.6f}".format(float(pos.split(",")[0])))
+            longitude = float("{:.6f}".format(float(pos.split(",")[1])))
+            events = Event.get_nearby_events(email, latitude, longitude)
     except mysql.connector.Error:
         traceback.print_exc()
         return "", status.HTTP_400_BAD_REQUEST

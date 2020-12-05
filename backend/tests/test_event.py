@@ -55,7 +55,7 @@ class TestEvent(unittest.TestCase):
         self.event = create_event()
         self.event_ids = []
 
-        #Only for getNearByTest
+        # Only for getNearByTest
         self.user2 = User(email="test@test2", username="testUser2")
         User.create_user(self.user2)
 
@@ -223,8 +223,8 @@ class TestEvent(unittest.TestCase):
         longitude = Decimal(22.1111)
         latitude = Decimal(33.2222)
         self.assertRaises(mysql.connector.Error, Event.update_event, {"address": address,
-                            "longitude": longitude,
-                            "latitude": latitude}, event_id)
+                                                                      "longitude": longitude,
+                                                                      "latitude": latitude}, event_id)
 
     def test_get_event_id1(self):
         """
@@ -257,12 +257,12 @@ class TestEvent(unittest.TestCase):
         for i in range(10):
             time = datetime.strptime("2020-12-12 12:12:12", "%Y-%m-%d %H:%M:%S")
             tmp_event = Event(user=self.useremail,
-                             name="testevent" + str(i),
-                             address="address" + str(i),
-                             zipcode=10025,
-                             event_time=time,
-                             longitude=longitude + i,
-                             latitude=latitude + i)
+                              name="testevent" + str(i),
+                              address="address" + str(i),
+                              zipcode=10025,
+                              event_time=time,
+                              longitude=longitude + i,
+                              latitude=latitude + i)
             tmp_event.category = "test"
             self.event_ids.append(Event.create_event(tmp_event))
         result = Event.get_all_event_created_by_user(self.useremail)
@@ -297,12 +297,12 @@ class TestEvent(unittest.TestCase):
         for i in range(10):
             time = datetime.strptime("2020-12-12 12:12:12", "%Y-%m-%d %H:%M:%S")
             tmp_event = Event(user=self.useremail,
-                             name="testevent" + str(i),
-                             address="address" + str(i),
-                             zipcode=10025,
-                             event_time=time,
-                             longitude=longitude + i,
-                             latitude=latitude + i)
+                              name="testevent" + str(i),
+                              address="address" + str(i),
+                              zipcode=10025,
+                              event_time=time,
+                              longitude=longitude + i,
+                              latitude=latitude + i)
             tmp_event.category = "test"
             tmp_event_id = Event.create_event(tmp_event)
             self.event_ids.append(tmp_event_id)
@@ -341,12 +341,12 @@ class TestEvent(unittest.TestCase):
             longitude += 0.01
             time = datetime.strptime("2019-12-12 12:12:12", "%Y-%m-%d %H:%M:%S")
             tmp_event = Event(user=self.useremail,
-                             name="testevent" + str(i),
-                             address="address" + str(i),
-                             zipcode=10025,
-                             event_time=time,
-                             longitude=longitude + i,
-                             latitude=latitude)
+                              name="testevent" + str(i),
+                              address="address" + str(i),
+                              zipcode=10025,
+                              event_time=time,
+                              longitude=longitude + i,
+                              latitude=latitude)
             tmp_event.category = "test"
             tmp_event_id = Event.create_event(tmp_event)
             self.event_ids.append(tmp_event_id)
@@ -358,12 +358,12 @@ class TestEvent(unittest.TestCase):
             longitude += 0.01
             time = datetime.strptime("2023-12-12 12:12:12", "%Y-%m-%d %H:%M:%S")
             tmp_event = Event(user=self.useremail,
-                             name="testevent" + str(i + 5),
-                             address="address" + str(i + 5),
-                             zipcode=10025,
-                             event_time=time,
-                             longitude=longitude + i,
-                             latitude=latitude)
+                              name="testevent" + str(i + 5),
+                              address="address" + str(i + 5),
+                              zipcode=10025,
+                              event_time=time,
+                              longitude=longitude + i,
+                              latitude=latitude)
             tmp_event.category = "test"
             tmp_event_id = Event.create_event(tmp_event)
             self.event_ids.append(tmp_event_id)
@@ -437,12 +437,12 @@ class TestEvent(unittest.TestCase):
             longitude += 0.01
             time = datetime.strptime("2019-12-12 12:12:12", "%Y-%m-%d %H:%M:%S")
             tmp_event = Event(user=self.useremail,
-                             name="testevent" + str(i),
-                             address="address" + str(i),
-                             zipcode=10025,
-                             event_time=time,
-                             longitude=longitude,
-                             latitude=latitude)
+                              name="testevent" + str(i),
+                              address="address" + str(i),
+                              zipcode=10025,
+                              event_time=time,
+                              longitude=longitude,
+                              latitude=latitude)
             tmp_event.category = "test"
             tmp_event_id = Event.create_event(tmp_event)
             self.event_ids.append(tmp_event_id)
@@ -454,12 +454,12 @@ class TestEvent(unittest.TestCase):
             longitude += 0.01
             time = datetime.strptime("2023-12-12 12:12:12", "%Y-%m-%d %H:%M:%S")
             tmp_event = Event(user=self.useremail,
-                             name="testevent" + str(i + 5),
-                             address="address" + str(i + 5),
-                             zipcode=10025,
-                             event_time=time,
-                             longitude=longitude,
-                             latitude=latitude)
+                              name="testevent" + str(i + 5),
+                              address="address" + str(i + 5),
+                              zipcode=10025,
+                              event_time=time,
+                              longitude=longitude,
+                              latitude=latitude)
             tmp_event.category = "test"
             tmp_event_id = Event.create_event(tmp_event)
             self.event_ids.append(tmp_event_id)
@@ -501,12 +501,12 @@ class TestEvent(unittest.TestCase):
         for i in range(5):
             time = datetime.strptime("2023-12-12 12:12:12", "%Y-%m-%d %H:%M:%S")
             tmp_event = Event(user=self.useremail,
-                             name="testevent" + str(i),
-                             address="address" + str(i),
-                             zipcode=10025,
-                             event_time=time,
-                             longitude=longitude + dif,
-                             latitude=latitude + dif)
+                              name="testevent" + str(i),
+                              address="address" + str(i),
+                              zipcode=10025,
+                              event_time=time,
+                              longitude=longitude + dif,
+                              latitude=latitude + dif)
             if i % 2 == 0:
                 tmp_event.user_email = self.user2.email
             dif *= 10
@@ -532,12 +532,12 @@ class TestEvent(unittest.TestCase):
         for i in range(5):
             time = datetime.strptime("2023-12-12 12:12:12", "%Y-%m-%d %H:%M:%S")
             tmp_event = Event(user=self.useremail,
-                             name="testevent" + str(i),
-                             address="address" + str(i),
-                             zipcode=10025,
-                             event_time=time,
-                             longitude=longitude + dif,
-                             latitude=latitude + dif)
+                              name="testevent" + str(i),
+                              address="address" + str(i),
+                              zipcode=10025,
+                              event_time=time,
+                              longitude=longitude + dif,
+                              latitude=latitude + dif)
             if i % 2 == 0:
                 tmp_event.user_email = self.user2.email
             dif *= 10
@@ -553,7 +553,7 @@ class TestEvent(unittest.TestCase):
     def test_get_nearby_events_3(self):
         """
         Test get_nearby_events
-        Test case3: if user email is provided, but user not exisst
+        Test case3: if user email is provided, but user not exist
         """
 
         latitude = 40.730610
@@ -563,12 +563,12 @@ class TestEvent(unittest.TestCase):
         for i in range(5):
             time = datetime.strptime("2023-12-12 12:12:12", "%Y-%m-%d %H:%M:%S")
             tmp_event = Event(user=self.useremail,
-                             name="testevent" + str(i),
-                             address="address" + str(i),
-                             zipcode=10025,
-                             event_time=time,
-                             longitude=longitude + dif,
-                             latitude=latitude + dif)
+                              name="testevent" + str(i),
+                              address="address" + str(i),
+                              zipcode=10025,
+                              event_time=time,
+                              longitude=longitude + dif,
+                              latitude=latitude + dif)
             if i % 2 == 0:
                 tmp_event.user_email = self.user2.email
             dif *= 10
@@ -577,6 +577,99 @@ class TestEvent(unittest.TestCase):
             self.event_ids.append(tmp_event_id)
 
         result = Event.get_nearby_events("fakeuser@test.com", latitude, longitude)
+        self.assertEqual(5, len(result))
+        for i, _ in enumerate(result):
+            self.assertEqual(result[i].event_id, self.event_ids[i])
+
+    def test_get_all_ongoing_events_1(self):
+        """
+        Test get_all_ongoing_events
+        Test case 1: if user is provided
+        """
+
+        latitude = 40.730610
+        longitude = -73.935242
+        dif = 0.001
+        User.create_user(self.user2)
+        for i in range(5):
+            time = datetime.strptime("2023-12-12 12:12:12", "%Y-%m-%d %H:%M:%S")
+            tmp_event = Event(user=self.useremail,
+                              name="testevent" + str(i),
+                              address="address" + str(i),
+                              zipcode=10025,
+                              event_time=time,
+                              longitude=longitude + dif,
+                              latitude=latitude + dif)
+            if i % 2 == 0:
+                tmp_event.user_email = self.user2.email
+            dif *= 10
+            tmp_event.category = "test"
+            tmp_event_id = Event.create_event(tmp_event)
+            self.event_ids.append(tmp_event_id)
+
+        result = Event.get_all_ongoing_events(self.useremail)
+        self.assertEqual(5, len(result))
+        for i, _ in enumerate(result):
+            self.assertEqual(result[i].event_id, self.event_ids[i])
+
+    def test_get_all_ongoing_events_2(self):
+        """
+        Test get_all_ongoing_events
+        Test case2: if user is not provided
+        """
+
+        latitude = 40.730610
+        longitude = -73.935242
+        dif = 0.001
+        User.create_user(self.user2)
+        for i in range(5):
+            time = datetime.strptime("2023-12-12 12:12:12", "%Y-%m-%d %H:%M:%S")
+            tmp_event = Event(user=self.useremail,
+                              name="testevent" + str(i),
+                              address="address" + str(i),
+                              zipcode=10025,
+                              event_time=time,
+                              longitude=longitude + dif,
+                              latitude=latitude + dif)
+            if i % 2 == 0:
+                tmp_event.user_email = self.user2.email
+            dif *= 10
+            tmp_event.category = "test"
+            tmp_event_id = Event.create_event(tmp_event)
+            self.event_ids.append(tmp_event_id)
+
+        result = Event.get_all_ongoing_events(None)
+        self.assertEqual(5, len(result))
+        for i, _ in enumerate(result):
+            self.assertEqual(result[i].event_id, self.event_ids[i])
+
+    def test_get_all_ongoing_events_3(self):
+        """
+        Test get_all_ongoing_events
+        Test case3: user is provided, but not exists
+        """
+
+        latitude = 40.730610
+        longitude = -73.935242
+        dif = 0.001
+        User.create_user(self.user2)
+        for i in range(5):
+            time = datetime.strptime("2023-12-12 12:12:12", "%Y-%m-%d %H:%M:%S")
+            tmp_event = Event(user=self.useremail,
+                              name="testevent" + str(i),
+                              address="address" + str(i),
+                              zipcode=10025,
+                              event_time=time,
+                              longitude=longitude + dif,
+                              latitude=latitude + dif)
+            if i % 2 == 0:
+                tmp_event.user_email = self.user2.email
+            dif *= 10
+            tmp_event.category = "test"
+            tmp_event_id = Event.create_event(tmp_event)
+            self.event_ids.append(tmp_event_id)
+
+        result = Event.get_all_ongoing_events("fakeuser@test.com")
         self.assertEqual(5, len(result))
         for i, _ in enumerate(result):
             self.assertEqual(result[i].event_id, self.event_ids[i])

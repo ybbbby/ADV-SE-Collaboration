@@ -12,6 +12,7 @@ from models.user import User
 from models.event import Event
 from tests.test_event import create_event
 from app import app
+import mysql.connector
 
 
 class TestLike(unittest.TestCase):

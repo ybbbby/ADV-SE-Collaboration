@@ -48,7 +48,6 @@ class Test:
 
         """
         self.test_login(client)
-
         # create event
         response = client.post('/event', data={
             "Event_name": "event",
@@ -143,6 +142,14 @@ class Test:
             assert response.status_code == 200
 
         uri = '/events/nearby?pos={},{}'.format(latitude, longitude)
+        response = client.get(uri)
+        assert response.status_code == 200
+        events = json.loads(response.data)
+        assert len(events) == 3
+        for i in range(3):
+            assert events[i]["event_id"] == event_ids[i]
+
+        uri = '/events/nearby?pos=null'
         response = client.get(uri)
         assert response.status_code == 200
         events = json.loads(response.data)
