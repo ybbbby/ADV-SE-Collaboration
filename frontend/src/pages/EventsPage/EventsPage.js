@@ -14,7 +14,7 @@ import {
 import Pagination from '@material-ui/lab/Pagination'
 import Skeleton from '@material-ui/lab/Skeleton'
 import { makeStyles } from '@material-ui/core/styles'
-import useRouter from 'use-react-router'
+import { useRouteMatch } from 'react-router-dom'
 import EventCard from '../../components/EventCard/EventCard'
 import LoginModal from '../../components/LoginModal/LoginModal'
 import getEvents from '../../api/getEvents'
@@ -63,8 +63,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EventsPage() {
   const classes = useStyles()
-  const router = useRouter()
-  const { category } = router.match.params
+  const router = useRouteMatch()
+  const { category } = router.params
   const user = localStorage.getItem('userEmail')
   const pos = localStorage.getItem('pos')
   const cache = useRef({})
@@ -78,7 +78,6 @@ export default function EventsPage() {
   const [isLoading, setIsLoading] = useState(false)
 
   const filterEvents = (key1, key2, key3) => {
-    if (!cache.current['distance,all,all']) return
     const hostKey = key3 ? 'host' : 'all'
     const key = `${key1},${key2},${hostKey}`
     console.log(key)
@@ -256,6 +255,7 @@ export default function EventsPage() {
           </Grid>
         </Box>
       </Container>
+      {/* istanbul ignore next */}
       <LoginModal handleClose={() => setLoginOpen(false)} open={loginOpen} />
     </div>
   )

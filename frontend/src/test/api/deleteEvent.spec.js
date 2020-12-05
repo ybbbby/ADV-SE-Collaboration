@@ -1,6 +1,6 @@
 /* eslint-env jest */
 import deleteEvent from '../../api/deleteEvent'
-import mockDelete from './__mockData__/deleteEvent'
+import mockDelete from '../__mockData__/deleteEvent'
 
 beforeEach(() => {
   fetch.resetMocks()

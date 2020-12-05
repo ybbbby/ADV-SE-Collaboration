@@ -1,6 +1,6 @@
 /* eslint-env jest */
 import getUserInfo from '../../api/getUserInfo'
-import mockUser from './__mockData__/userInfo'
+import mockUser from '../__mockData__/userInfo'
 
 beforeEach(() => {
   fetch.resetMocks()

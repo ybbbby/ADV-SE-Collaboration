@@ -1,6 +1,6 @@
 /* eslint-env jest */
 import updateEvent from '../../api/updateEvent'
-import mockupdate from './__mockData__/update'
+import mockupdate from '../__mockData__/update'
 
 beforeEach(() => {
   fetch.resetMocks()

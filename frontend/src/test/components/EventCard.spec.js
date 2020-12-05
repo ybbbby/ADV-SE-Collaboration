@@ -1,28 +1,10 @@
 /* eslint-env jest */
 import { shallow } from 'enzyme'
-import { HashRouter as Router } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 import React from 'react'
 import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import EventCard from '../../components/EventCard/EventCard'
-
-const eventConfig = {
-  address: '1275 York Avenue, New York, NY, USA',
-  attended: false,
-  author: 'test user',
-  category: 'music',
-  comments: [],
-  description: '22211',
-  event_id: '160685996825045',
-  image: 'https://yesok.s3.amazonaws.com/uploads%2FIMG_2396.JPG',
-  latitude: '40.764215',
-  liked: false,
-  longitude: '-73.956104',
-  name: 'event name',
-  num_likes: 0,
-  time: '2020-12-25 17:49:00',
-  user_email: 'test@columbia.edu',
-  zipcode: '10025',
-}
+import eventConfig from '../__mockData__/event'
 
 const openLogin = jest.fn()
 
@@ -143,7 +125,7 @@ describe('EventCard', () => {
     fireEvent.click(
       screen.getByLabelText('add to favorites', { selector: 'button' })
     )
-    expect(screen.findAllByRole('presentation')).toBeDefined()
+    expect(screen.queryAllByRole('presentation')).toBeDefined()
   })
 
   test('clicks learn more when logged in', () => {
@@ -160,14 +142,15 @@ describe('EventCard', () => {
     expect(screen.queryByText('Welcome Back!')).toBeNull()
   })
 
-  test('clicks learn more when not logged in', () => {
+  test('clicks learn more when not logged in', async () => {
     render(
       <Router>
         <EventCard user={null} config={eventConfig} openLogin={openLogin} />
       </Router>
     )
+    expect(screen.getByRole('button', { name: 'Learn More' })).toBeDefined()
     fireEvent.click(screen.getByRole('button', { name: 'Learn More' }))
-    expect(screen.findAllByRole('presentation')).toBeDefined()
+    expect(screen.queryAllByRole('presentation')).toBeDefined()
   })
 
   test('clicks share button when logged in', async () => {
@@ -186,7 +169,8 @@ describe('EventCard', () => {
 
   test('close alert after clicking the like button', async () => {
     fetch.mockResponseOnce({ status: 200 })
-    const { getByRole, queryByText } = render(
+    eventConfig.liked = false
+    const { getByText, queryByText } = render(
       <Router>
         <EventCard
           user={'test@columbia.edu'}
@@ -199,7 +183,7 @@ describe('EventCard', () => {
       screen.getByLabelText('add to favorites', { selector: 'button' })
     )
     await waitFor(() => {
-      expect(getByRole('button', { name: 'Close' })).toBeInTheDocument()
+      expect(getByText('Saved to your favourite events!')).toBeInTheDocument()
     })
     fireEvent.click(screen.getByRole('button', { name: 'Close' }))
     await waitFor(() => {

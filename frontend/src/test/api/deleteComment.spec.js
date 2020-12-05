@@ -1,6 +1,6 @@
 /* eslint-env jest */
 import deleteComment from '../../api/deleteComment'
-import mockDelete from './__mockData__/deleteComment'
+import mockDelete from '../__mockData__/deleteComment'
 
 beforeEach(() => {
   fetch.resetMocks()
