@@ -15,7 +15,9 @@ matrix:
         - cd frontend
         - yarn install
       script:
-        - yarn test -u
+        - yarn test --coverage
+      after_script:
+        - COVERALLS_REPO_TOKEN=1zhoh7CB1VGzg1Z2BC1R6DuVe8kTBObpP yarn coveralls
 
 notifications:
   email:
