@@ -1,0 +1,229 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EventCard snapshot when logged in 1`] = `
+<Fragment>
+  <WithStyles(ForwardRef(Badge))
+    badgeContent="host"
+    color="primary"
+    invisible={false}
+    style={
+      Object {
+        "display": "block",
+      }
+    }
+  >
+    <WithStyles(ForwardRef(Card))
+      className="makeStyles-root-169"
+    >
+      <WithStyles(ForwardRef(CardActionArea))>
+        <Link
+          className="makeStyles-expand-170"
+          to="/event/160685996825045"
+        >
+          <Styled(MuiBox)
+            minHeight={250}
+            position="relative"
+          >
+            <WithStyles(ForwardRef(CardMedia))
+              className="makeStyles-cardImage-171"
+              image="https://yesok.s3.amazonaws.com/uploads%2FIMG_2396.JPG"
+            />
+            <WithStyles(ForwardRef(CardContent))
+              className="makeStyles-content-172"
+            >
+              <WithStyles(ForwardRef(Typography))
+                color="textSecondary"
+                component="p"
+                variant="caption"
+              >
+                2020-12-25 17:49:00
+              </WithStyles(ForwardRef(Typography))>
+              <WithStyles(ForwardRef(Typography))
+                className="makeStyles-title-173"
+                color="textPrimary"
+                component="h2"
+                gutterBottom={true}
+                variant="h5"
+              >
+                event name
+              </WithStyles(ForwardRef(Typography))>
+              <WithStyles(ForwardRef(Typography))
+                color="textSecondary"
+                component="p"
+                variant="body1"
+              >
+                1275 York Avenue, New York, NY, USA
+              </WithStyles(ForwardRef(Typography))>
+            </WithStyles(ForwardRef(CardContent))>
+          </Styled(MuiBox)>
+        </Link>
+      </WithStyles(ForwardRef(CardActionArea))>
+      <WithStyles(ForwardRef(CardActions))
+        disableSpacing={true}
+      >
+        <WithStyles(ForwardRef(IconButton))
+          aria-label="add to favorites"
+          onClick={[Function]}
+        >
+          <Memo([object Object])
+            style={
+              Object {
+                "color": "#f44336",
+              }
+            }
+          />
+        </WithStyles(ForwardRef(IconButton))>
+        <WithStyles(ForwardRef(IconButton))
+          aria-label="share"
+          onClick={[Function]}
+        >
+          <Memo([object Object]) />
+        </WithStyles(ForwardRef(IconButton))>
+        <Link
+          className="makeStyles-expand-170"
+          to="/event/160685996825045"
+        >
+          <WithStyles(ForwardRef(Button))
+            color="primary"
+            onClick={[Function]}
+            size="small"
+          >
+            Learn More
+          </WithStyles(ForwardRef(Button))>
+        </Link>
+      </WithStyles(ForwardRef(CardActions))>
+    </WithStyles(ForwardRef(Card))>
+  </WithStyles(ForwardRef(Badge))>
+  <ShareModal
+    handleClose={[Function]}
+    open={false}
+    url="http://yes-ok.herokuapp.com/#/event/160685996825045"
+  />
+  <WithStyles(ForwardRef(Snackbar))
+    autoHideDuration={3000}
+    onClose={[Function]}
+    open={false}
+  >
+    <Alert
+      onClose={[Function]}
+      severity="success"
+    >
+      Saved to your favourite events!
+    </Alert>
+  </WithStyles(ForwardRef(Snackbar))>
+</Fragment>
+`;
+
+exports[`EventCard snapshot when not logged in 1`] = `
+<Fragment>
+  <WithStyles(ForwardRef(Badge))
+    badgeContent="host"
+    color="primary"
+    invisible={true}
+    style={
+      Object {
+        "display": "block",
+      }
+    }
+  >
+    <WithStyles(ForwardRef(Card))
+      className="makeStyles-root-169"
+    >
+      <WithStyles(ForwardRef(CardActionArea))>
+        <Link
+          className="makeStyles-expand-170"
+          to="#"
+        >
+          <Styled(MuiBox)
+            minHeight={250}
+            position="relative"
+          >
+            <WithStyles(ForwardRef(CardMedia))
+              className="makeStyles-cardImage-171"
+              image="https://yesok.s3.amazonaws.com/uploads%2FIMG_2396.JPG"
+            />
+            <WithStyles(ForwardRef(CardContent))
+              className="makeStyles-content-172"
+            >
+              <WithStyles(ForwardRef(Typography))
+                color="textSecondary"
+                component="p"
+                variant="caption"
+              >
+                2020-12-25 17:49:00
+              </WithStyles(ForwardRef(Typography))>
+              <WithStyles(ForwardRef(Typography))
+                className="makeStyles-title-173"
+                color="textPrimary"
+                component="h2"
+                gutterBottom={true}
+                variant="h5"
+              >
+                event name
+              </WithStyles(ForwardRef(Typography))>
+              <WithStyles(ForwardRef(Typography))
+                color="textSecondary"
+                component="p"
+                variant="body1"
+              >
+                1275 York Avenue, New York, NY, USA
+              </WithStyles(ForwardRef(Typography))>
+            </WithStyles(ForwardRef(CardContent))>
+          </Styled(MuiBox)>
+        </Link>
+      </WithStyles(ForwardRef(CardActionArea))>
+      <WithStyles(ForwardRef(CardActions))
+        disableSpacing={true}
+      >
+        <WithStyles(ForwardRef(IconButton))
+          aria-label="add to favorites"
+          onClick={[Function]}
+        >
+          <Memo([object Object])
+            style={
+              Object {
+                "color": "#f44336",
+              }
+            }
+          />
+        </WithStyles(ForwardRef(IconButton))>
+        <WithStyles(ForwardRef(IconButton))
+          aria-label="share"
+          onClick={[Function]}
+        >
+          <Memo([object Object]) />
+        </WithStyles(ForwardRef(IconButton))>
+        <Link
+          className="makeStyles-expand-170"
+          to="#"
+        >
+          <WithStyles(ForwardRef(Button))
+            color="primary"
+            onClick={[Function]}
+            size="small"
+          >
+            Learn More
+          </WithStyles(ForwardRef(Button))>
+        </Link>
+      </WithStyles(ForwardRef(CardActions))>
+    </WithStyles(ForwardRef(Card))>
+  </WithStyles(ForwardRef(Badge))>
+  <ShareModal
+    handleClose={[Function]}
+    open={false}
+    url="http://yes-ok.herokuapp.com/#/event/160685996825045"
+  />
+  <WithStyles(ForwardRef(Snackbar))
+    autoHideDuration={3000}
+    onClose={[Function]}
+    open={false}
+  >
+    <Alert
+      onClose={[Function]}
+      severity="success"
+    >
+      Saved to your favourite events!
+    </Alert>
+  </WithStyles(ForwardRef(Snackbar))>
+</Fragment>
+`;

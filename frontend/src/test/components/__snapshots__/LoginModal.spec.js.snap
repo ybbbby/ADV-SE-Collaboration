@@ -1,0 +1,93 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoginModal snapshot when closed 1`] = `
+<WithStyles(ForwardRef(Dialog))
+  aria-labelledby="form-dialog-title"
+  onClose={[Function]}
+  open={false}
+>
+  <WithStyles(ForwardRef(DialogTitle))
+    id="form-dialog-title"
+  >
+    <WithStyles(ForwardRef(IconButton))
+      aria-label="close"
+      className="makeStyles-closeButton-21"
+      onClick={[Function]}
+    >
+      <Memo([object Object]) />
+    </WithStyles(ForwardRef(IconButton))>
+  </WithStyles(ForwardRef(DialogTitle))>
+  <WithStyles(ForwardRef(DialogContent))
+    className="makeStyles-content-22"
+  >
+    <WithStyles(ForwardRef(Typography))
+      gutterBottom={true}
+      variant="h4"
+    >
+      Welcome Back!
+    </WithStyles(ForwardRef(Typography))>
+    <WithStyles(ForwardRef(Typography))
+      gutterBottom={true}
+      variant="subtitle1"
+    >
+      Sign in to get personalized event recommendations based on your location. Explore, save and join the events you like, and interact with other users nearby.
+    </WithStyles(ForwardRef(Typography))>
+    <WithStyles(ForwardRef(Button))
+      className="makeStyles-loginButton-23"
+      onClick={[Function]}
+      variant="outlined"
+    >
+      <GoogleIcon
+        className="makeStyles-google-24"
+      />
+      Sign in with Google
+    </WithStyles(ForwardRef(Button))>
+  </WithStyles(ForwardRef(DialogContent))>
+</WithStyles(ForwardRef(Dialog))>
+`;
+
+exports[`LoginModal snapshot when open 1`] = `
+<WithStyles(ForwardRef(Dialog))
+  aria-labelledby="form-dialog-title"
+  onClose={[Function]}
+  open={true}
+>
+  <WithStyles(ForwardRef(DialogTitle))
+    id="form-dialog-title"
+  >
+    <WithStyles(ForwardRef(IconButton))
+      aria-label="close"
+      className="makeStyles-closeButton-21"
+      onClick={[Function]}
+    >
+      <Memo([object Object]) />
+    </WithStyles(ForwardRef(IconButton))>
+  </WithStyles(ForwardRef(DialogTitle))>
+  <WithStyles(ForwardRef(DialogContent))
+    className="makeStyles-content-22"
+  >
+    <WithStyles(ForwardRef(Typography))
+      gutterBottom={true}
+      variant="h4"
+    >
+      Welcome Back!
+    </WithStyles(ForwardRef(Typography))>
+    <WithStyles(ForwardRef(Typography))
+      gutterBottom={true}
+      variant="subtitle1"
+    >
+      Sign in to get personalized event recommendations based on your location. Explore, save and join the events you like, and interact with other users nearby.
+    </WithStyles(ForwardRef(Typography))>
+    <WithStyles(ForwardRef(Button))
+      className="makeStyles-loginButton-23"
+      onClick={[Function]}
+      variant="outlined"
+    >
+      <GoogleIcon
+        className="makeStyles-google-24"
+      />
+      Sign in with Google
+    </WithStyles(ForwardRef(Button))>
+  </WithStyles(ForwardRef(DialogContent))>
+</WithStyles(ForwardRef(Dialog))>
+`;
