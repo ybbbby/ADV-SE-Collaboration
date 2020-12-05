@@ -349,10 +349,10 @@ class Event:
         cursor.execute(query, event_data)
         events = []
         for (eid, name, host, address,
-             longitude, latitude, zipcode, event_time, description,
+             longi, lati, zipcode, event_time, description,
              image, num_likes, category, _) in cursor:
             new_event = Event(user=host, name=name, address=address,
-                              longitude=longitude, latitude=latitude, zipcode=zipcode,
+                              longitude=longi, latitude=lati, zipcode=zipcode,
                               event_time=datetime.datetime.strptime(str(event_time),
                                                                     "%Y-%m-%d %H:%M:%S"))
             new_event.event_id = eid

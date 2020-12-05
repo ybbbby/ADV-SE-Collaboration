@@ -4,7 +4,6 @@ Google OAuth blueprint
 
 
 import functools
-import os
 import flask
 
 from authlib.client import OAuth2Session

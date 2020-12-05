@@ -12,8 +12,6 @@ from models.event import Event
 from models.user import User
 from models.join import Join
 
-import mysql.connector
-
 
 def create_event():
     """
