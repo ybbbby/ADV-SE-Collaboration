@@ -19,7 +19,8 @@ class Test:
     """
     Test App file
     """
-    def test_login(self, client):
+    @staticmethod
+    def test_login(client):
         """
         test index, login and userinfo
         """
@@ -47,6 +48,7 @@ class Test:
 
         """
         self.test_login(client)
+
         # create event
         response = client.post('/event', data={
             "Event_name": "event",

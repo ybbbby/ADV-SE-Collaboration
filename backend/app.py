@@ -258,6 +258,10 @@ def create_new_comment(event_id):
 
 @app.route('/comment/<comment_id>', methods=['DELETE'])
 def delete_comment(comment_id):
+    """
+    Delete a comment
+    :return: ""
+    """
     try:
         Comment.delete_comment(comment_id)
     except mysql.connector.Error:

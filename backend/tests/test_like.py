@@ -3,17 +3,15 @@ Test methods in like file
 """
 import unittest
 # import sys
-from datetime import datetime
-from decimal import Decimal
 
 # sys.path.append("..")
 
+import mysql.connector
 from models.like import Like
 from models.user import User
 from models.event import Event
 from tests.test_event import create_event
 from app import app
-import mysql.connector
 
 
 class TestLike(unittest.TestCase):

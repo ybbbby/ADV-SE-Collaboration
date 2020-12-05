@@ -1,3 +1,7 @@
+"""
+Config file example
+"""
+
 DB_PASSWORD = ''
 ACCESS_TOKEN_URI = ''
 AUTHORIZATION_URL = ''

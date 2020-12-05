@@ -1,0 +1,38 @@
+************* Module backend.google_auth
+backend/google_auth.py:7:0: W0611: Unused import os (unused-import)
+************* Module backend.config
+backend/config.py:4:0: C0301: Line too long (101/100) (line-too-long)
+backend/config.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module backend.config.example
+backend/config.example.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+************* Module backend.app
+backend/app.py:260:0: C0116: Missing function or method docstring (missing-function-docstring)
+************* Module backend.tests.test_user
+backend/tests/test_user.py:15:0: W0611: Unused import mysql.connector (unused-import)
+************* Module backend.tests.test_like
+backend/tests/test_like.py:6:0: W0611: Unused datetime imported from datetime (unused-import)
+backend/tests/test_like.py:7:0: W0611: Unused Decimal imported from decimal (unused-import)
+************* Module backend.tests.test_event
+backend/tests/test_event.py:211:0: C0301: Line too long (108/100) (line-too-long)
+backend/tests/test_event.py:378:4: E0102: method already defined line 315 (function-redefined)
+backend/tests/test_event.py:386:4: E0102: method already defined line 323 (function-redefined)
+backend/tests/test_event.py:534:8: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+backend/tests/test_event.py:565:8: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+backend/tests/test_event.py:596:8: C0200: Consider using enumerate instead of iterating with range and len (consider-using-enumerate)
+backend/tests/test_event.py:42:0: R0904: Too many public methods (34/20) (too-many-public-methods)
+************* Module backend.tests.test_app
+backend/tests/test_app.py:22:25: W0621: Redefining name 'client' from outer scope (line 10) (redefined-outer-name)
+backend/tests/test_app.py:22:4: R0201: Method could be a function (no-self-use)
+backend/tests/test_app.py:43:21: W0621: Redefining name 'client' from outer scope (line 10) (redefined-outer-name)
+backend/tests/test_app.py:116:21: W0621: Redefining name 'client' from outer scope (line 10) (redefined-outer-name)
+backend/tests/test_app.py:156:21: W0621: Redefining name 'client' from outer scope (line 10) (redefined-outer-name)
+backend/tests/test_app.py:213:21: W0621: Redefining name 'client' from outer scope (line 10) (redefined-outer-name)
+backend/tests/test_app.py:263:21: W0621: Redefining name 'client' from outer scope (line 10) (redefined-outer-name)
+backend/tests/test_app.py:306:21: W0621: Redefining name 'client' from outer scope (line 10) (redefined-outer-name)
+************* Module backend.models.event
+backend/models/event.py:352:13: R1704: Redefining argument with the local name 'longitude' (redefined-argument-from-local)
+backend/models/event.py:352:24: R1704: Redefining argument with the local name 'latitude' (redefined-argument-from-local)
+
+------------------------------------------------------------------
+Your code has been rated at 9.79/10 (previous run: 9.79/10, +0.00)
+

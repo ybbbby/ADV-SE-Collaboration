@@ -6,12 +6,12 @@ import unittest
 
 # sys.path.append("..")
 
+import mysql.connector
 from models.join import Join
 from models.user import User
 from models.event import Event
 from tests.test_event import create_event
 from app import app
-import mysql.connector
 
 
 class TestJoin(unittest.TestCase):

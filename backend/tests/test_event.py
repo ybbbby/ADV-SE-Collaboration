@@ -6,6 +6,7 @@ import unittest
 from datetime import datetime
 from decimal import Decimal
 
+import mysql.connector
 from models.user import User
 from models.like import Like
 from models.join import Join
@@ -14,7 +15,6 @@ from models.join import Join
 
 from models.event import Event
 from app import app
-import mysql.connector
 
 
 def create_event():
@@ -208,7 +208,8 @@ class TestEvent(unittest.TestCase):
         event_id = Event.create_event(event)
         self.event_ids.append(event_id)
         description = "new desc" * 600
-        self.assertRaises(mysql.connector.Error, Event.update_event, {"description": description}, event_id)
+        self.assertRaises(mysql.connector.Error, Event.update_event,
+                          {"description": description}, event_id)
 
     def test_update_event_5(self):
         """
@@ -375,22 +376,6 @@ class TestEvent(unittest.TestCase):
             self.assertTrue(res.event_id in self.event_ids)
         self.assertEqual(5, len(result))
 
-    def test_get_all_event_liked_by_user_2(self):
-        """
-        Test get_all_history_event_by_user
-        Case2: user has no history events
-        """
-        result = Event.get_all_event_liked_by_user(self.useremail)
-        self.assertEqual(len(result), 0)
-
-    def test_get_all_event_liked_by_user_3(self):
-        """
-        Test get_all_history_event_by_user
-        Case3: user not exist
-        """
-        result = Event.get_all_event_liked_by_user("fakeuser@test.com")
-        self.assertEqual(len(result), 0)
-
     def test_get_all_event_joined_by_user_1(self):
         """
         Test get_all_ongoing_event_by_user
@@ -531,7 +516,7 @@ class TestEvent(unittest.TestCase):
 
         result = Event.get_nearby_events(self.useremail, latitude, longitude)
         self.assertEqual(5, len(result))
-        for i in range(len(result)):
+        for i, _ in enumerate(result):
             self.assertEqual(result[i].event_id, self.event_ids[i])
 
     def test_get_nearby_events_2(self):
@@ -562,7 +547,7 @@ class TestEvent(unittest.TestCase):
 
         result = Event.get_nearby_events(None, latitude, longitude)
         self.assertEqual(5, len(result))
-        for i in range(len(result)):
+        for i in enumerate(result):
             self.assertEqual(result[i].event_id, self.event_ids[i])
 
     def test_get_nearby_events_3(self):
@@ -593,7 +578,7 @@ class TestEvent(unittest.TestCase):
 
         result = Event.get_nearby_events("fakeuser@test.com", latitude, longitude)
         self.assertEqual(5, len(result))
-        for i in range(len(result)):
+        for i in enumerate(result):
             self.assertEqual(result[i].event_id, self.event_ids[i])
 
 
