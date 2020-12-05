@@ -4,6 +4,7 @@ async function getUserInfo() {
       method: 'GET',
     })
     const data = await result.json()
+    if (data === 'NOUSER') return null
     return data
   } catch (e) {
     return null

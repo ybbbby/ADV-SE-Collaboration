@@ -16,6 +16,13 @@ describe('test getUserInfo api', () => {
     })
   })
 
+  it('returns null when NOUSER', () => {
+    fetch.mockResponseOnce(JSON.stringify('NOUSER'))
+    getUserInfo().then((data) => {
+      expect(data).toEqual(null)
+    })
+  })
+
   it('returns null when exception', async () => {
     fetch.mockReject(() => Promise.reject('API is down'))
 
