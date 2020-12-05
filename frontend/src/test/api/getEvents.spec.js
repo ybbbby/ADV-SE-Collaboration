@@ -1,6 +1,6 @@
 /* eslint-env jest */
 import getEvents from '../../api/getEvents'
-import mockEvents from './__mockData__/events'
+import mockEvents from '../__mockData__/events'
 
 beforeEach(() => {
   fetch.resetMocks()
@@ -11,7 +11,7 @@ describe('test getEvents api', () => {
     fetch.mockResponseOnce(JSON.stringify(mockEvents))
     getEvents('history').then((data) => {
       expect(data).toBeDefined()
-      expect(data[0].author).toEqual('Minxuan Gao')
+      expect(data[0].author).toEqual('test user1')
     })
   })
 

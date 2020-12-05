@@ -1,6 +1,6 @@
 /* eslint-env jest */
 import postLike from '../../api/postLike'
-import mockLike from './__mockData__/like'
+import mockLike from '../__mockData__/like'
 
 beforeEach(() => {
   fetch.resetMocks()

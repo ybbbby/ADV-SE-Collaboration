@@ -1,7 +1,7 @@
 /* eslint-env jest */
 import { shallow } from 'enzyme'
 import React from 'react'
-import { HashRouter as Router } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Categories from '../../components/Categories/Categories'

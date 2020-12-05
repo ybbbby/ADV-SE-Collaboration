@@ -2,8 +2,9 @@ matrix:
   include:
     - language: python
       python: 3.7
-      before_script:
-        - cd backend
+      install:
+        - cd backend/
+        - pip install -r requirements.txt
       script:
         - python -m tests.test_all
 
@@ -13,6 +14,8 @@ matrix:
       before_script:
         - cd frontend
         - yarn install
+      script:
+        - yarn test -u
 
 notifications:
   email:
