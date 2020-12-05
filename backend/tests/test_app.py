@@ -19,10 +19,15 @@ class Test:
     """
     Test App file
     """
-    def test_login(self, client):
+    @staticmethod
+    def test_login(client):
         """
         test index, login and userinfo
         """
+        response = client.get('/user/info')
+        assert response.status_code == 200
+        assert json.loads(response.data) == "NOUSER"
+
         response = client.get('/')
         assert response.status_code == 200
 
@@ -137,6 +142,14 @@ class Test:
             assert response.status_code == 200
 
         uri = '/events/nearby?pos={},{}'.format(latitude, longitude)
+        response = client.get(uri)
+        assert response.status_code == 200
+        events = json.loads(response.data)
+        assert len(events) == 3
+        for i in range(3):
+            assert events[i]["event_id"] == event_ids[i]
+
+        uri = '/events/nearby?pos=null'
         response = client.get(uri)
         assert response.status_code == 200
         events = json.loads(response.data)

@@ -349,10 +349,46 @@ class Event:
         cursor.execute(query, event_data)
         events = []
         for (eid, name, host, address,
-             longitude, latitude, zipcode, event_time, description,
+             longi, lati, zipcode, event_time, description,
              image, num_likes, category, _) in cursor:
             new_event = Event(user=host, name=name, address=address,
-                              longitude=longitude, latitude=latitude, zipcode=zipcode,
+                              longitude=longi, latitude=lati, zipcode=zipcode,
+                              event_time=datetime.datetime.strptime(str(event_time),
+                                                                    "%Y-%m-%d %H:%M:%S"))
+            new_event.event_id = eid
+            new_event.description = description
+            new_event.image = image
+            new_event.num_likes = num_likes
+            new_event.category = category
+            if user:
+                new_event.liked = Like.exist(user, eid)
+                new_event.attended = Join.user_is_attend(
+                    user=user, event=eid)
+            else:
+                new_event.liked = False
+                new_event.attended = False
+            new_event.comments = Comment.get_comment_by_event(eid)
+            events.append(new_event)
+        cursor.close()
+        cnx.close()
+        return events
+
+    @staticmethod
+    def get_all_ongoing_events(user: str):
+        """
+       :return: An ongoing event list
+       """
+        cnx = db_connector.get_connection()
+        cursor = cnx.cursor()
+        query = ("SELECT * FROM event "
+                 "where `time` >= now()")
+        cursor.execute(query)
+        events = []
+        for (eid, name, host, address,
+             longi, lati, zipcode, event_time, description,
+             image, num_likes, category) in cursor:
+            new_event = Event(user=host, name=name, address=address,
+                              longitude=longi, latitude=lati, zipcode=zipcode,
                               event_time=datetime.datetime.strptime(str(event_time),
                                                                     "%Y-%m-%d %H:%M:%S"))
             new_event.event_id = eid

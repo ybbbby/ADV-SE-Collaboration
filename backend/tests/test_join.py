@@ -6,6 +6,7 @@ import unittest
 
 # sys.path.append("..")
 
+import mysql.connector
 from models.join import Join
 from models.user import User
 from models.event import Event
