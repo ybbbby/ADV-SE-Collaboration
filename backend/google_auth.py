@@ -57,12 +57,12 @@ def build_credentials():
         token_uri=ACCESS_TOKEN_URI)
 
 
-def get_user_info(testing=False):
+def get_user_info():
     """
     Get the information of the current user
     :return: dictionary of the current user info
     """
-    if testing:
+    if config.TEST:
         return {'email': 'test@test.com', 'name': 'test'}
 
     credentials = build_credentials()
@@ -117,8 +117,7 @@ def google_auth_redirect():
     Validate the user
     :return: redirect the uri
     """
-    testing = flask.request.args.get('testing', default=False, type=bool)
-    if testing:
+    if config.TEST:
         flask.session[AUTH_TOKEN_KEY] = "testing"
     else:
         req_state = flask.request.args.get('state', default=None, type=None)
@@ -138,7 +137,7 @@ def google_auth_redirect():
 
         flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
 
-    user_info = get_user_info(testing)
+    user_info = get_user_info()
     email = user_info["email"]
     username = user_info["name"]
     new_user = User(email=email, username=username)
