@@ -39,7 +39,7 @@ class Test:
 
         response = client.get('/user/info')
         assert response.status_code == 200
-        assert json.loads(response.data) == {'email': 'test@test.com', 'name': 'test'}
+        assert json.loads(response.data) == {'email': 'xz2878@columbia.edu', 'name': 'test'}
 
     def test_1(self, client):
         """
@@ -250,7 +250,7 @@ class Test:
 
         response = client.get('/event/%s/attendees' % event_id)
         users = json.loads(response.data)
-        assert [user['email'] for user in users] == ['test@test.com']
+        assert [user['email'] for user in users] == ['xz2878@columbia.edu']
 
         response = client.post('/user/event/%s/join' % event_id)
         assert response.status_code == 200
@@ -264,7 +264,7 @@ class Test:
 
         response = client.get('/event/%s/attendees' % event_id)
         users = json.loads(response.data)
-        assert [user['email'] for user in users] == ['test@test.com']
+        assert [user['email'] for user in users] == ['xz2878@columbia.edu']
 
         response = client.delete('/event/%s' % event_id)
         assert response.status_code == 200
