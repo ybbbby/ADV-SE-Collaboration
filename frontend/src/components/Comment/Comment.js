@@ -47,6 +47,7 @@ export default function AlignItemsList(props) {
     eventHost,
   } = props
   const user = localStorage.getItem('userEmail')
+  console.log(user)
   const [text, setText] = useState('')
   const handleDataChange = (e) => {
     setText(e.target.value)

@@ -29,6 +29,7 @@ jest.mock('../../global', () => {
 describe('EventsPage', () => {
   beforeEach(() => {
     fetch.resetMocks()
+    localStorage.clear()
   })
   test('renders event detail info correctly 1', async () => {
     fetch.mockResponses(
@@ -338,29 +339,6 @@ describe('EventsPage', () => {
     fireEvent.click(getByRole('button', { name: 'check participants' }))
     await waitFor(() => {
       expect(queryByText('Deku')).toBeDefined()
-    })
-  })
-  test('render login close event', async () => {
-    fetch.mockResponses(
-      [JSON.stringify(mockEvent), { status: 200 }],
-      [JSON.stringify(mockEventAttendees), { status: 200 }]
-    )
-    const { queryByText, getByRole } = render(
-      <Router>
-        <EventDetailPage />
-      </Router>
-    )
-    await waitFor(() => {
-      expect(queryByText('test user')).toBeDefined()
-      expect(queryByText('music')).toBeDefined()
-    })
-    fireEvent.click(getByRole('button', { name: 'Send' }))
-    await waitFor(() => {
-      expect(queryByText('Welcome')).toBeDefined()
-    })
-    fireEvent.click(getByRole('button', { name: 'Close' }))
-    await waitFor(() => {
-      expect(queryByText('Welcome')).toBeNull()
     })
   })
 })
