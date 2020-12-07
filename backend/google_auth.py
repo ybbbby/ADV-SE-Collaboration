@@ -62,7 +62,7 @@ def get_user_info():
     :return: dictionary of the current user info
     """
     if config.TEST:
-        return {'email': 'test@test.com', 'name': 'test'}
+        return {'email': 'xz2878@columbia.edu', 'name': 'test'}
 
     credentials = build_credentials()
 

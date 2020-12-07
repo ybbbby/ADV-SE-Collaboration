@@ -6,7 +6,8 @@ matrix:
         - cd backend/
         - pip install -r requirements.txt
       script:
-        - python -m tests.test_all
+        - export PYTHONPATH=`pwd`:$PYTHONPATH
+        - pytest
 
     - language: node_js
       node_js:

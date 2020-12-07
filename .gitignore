@@ -1,7 +1,6 @@
 frontend/src/credential.js
 frontend/src/awsOptions.js
-backend/run.sh
-backend/config.py
+backend/secrets.sh
 backend/build
 
 .DS_Store
