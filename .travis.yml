@@ -2,6 +2,10 @@ matrix:
   include:
     - language: python
       python: 3.7
+      services:
+        - mysql
+      before_install:
+        - mysql -e 'CREATE DATABASE YesOKTest;'
       install:
         - cd backend/
         - pip install -r requirements.txt
