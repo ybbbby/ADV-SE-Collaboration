@@ -39,8 +39,8 @@ TABLES['event'] = (
     CONSTRAINT `host_to_user`
       FOREIGN KEY (`host`)
     REFERENCES `user` (`email`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
     '''
 )
 
