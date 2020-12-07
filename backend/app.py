@@ -23,9 +23,11 @@ from models.like import Like
 
 
 app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
-smtp_obj = smtplib.SMTP('smtp.gmail.com', 587)
-smtp_obj.starttls()
-smtp_obj.login(config.SMTP_EMAIL, config.SMTP_PWD)
+smtp_obj = None
+if not config.TRAVIS:
+    smtp_obj = smtplib.SMTP('smtp.gmail.com', 587)
+    smtp_obj.starttls()
+    smtp_obj.login(config.SMTP_EMAIL, config.SMTP_PWD)
 LINK = "http://yes-ok.herokuapp.com"
 app.secret_key = config.FN_FLASK_SECRET_KEY
 app.register_blueprint(google_auth.app)
@@ -352,7 +354,8 @@ def join_notification(recipients, event):
                  visit <a href={eventlink}>here</a></p>
                """.format(name=event.name,
                           host=event.author, eventlink=event_link)
-    mail_service.send(smtp_obj, title, recipients, content, False)
+    if not config.TRAVIS:
+        mail_service.send(smtp_obj, title, recipients, content, False)
 
 
 def delete_notification(recipients, event):
@@ -368,7 +371,8 @@ def delete_notification(recipients, event):
             registered is canceled. To see details, please
              visit <a href={eventlink}>here</a></p>
     """.format(name=event.name, eventlink=event_link)
-    mail_service.send(smtp_obj, title, recipients, content, True)
+    if not config.TRAVIS:
+        mail_service.send(smtp_obj, title, recipients, content, True)
 
 # # Test create user method in User
 # @app.route('/user/create', methods=['GET'])

@@ -18,3 +18,4 @@ FN_FLASK_SECRET_KEY = os.environ['FN_FLASK_SECRET_KEY']
 SMTP_EMAIL = os.environ['SMTP_EMAIL']
 SMTP_PWD = os.environ['SMTP_PWD']
 TEST = bool(os.environ['TEST'])
+TRAVIS = False if 'TRAVIS' not in os.environ else bool(os.environ['TRAVIS'])
