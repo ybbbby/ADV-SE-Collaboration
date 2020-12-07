@@ -4,7 +4,7 @@ matrix:
       python: 3.7
       services:
         - mysql
-      before_script:
+      before_install:
         - wget https://repo.mysql.com//mysql-apt-config_0.8.10-1_all.deb
         - sudo dpkg -i mysql-apt-config_0.8.10-1_all.deb
         - sudo apt-get update -q
@@ -12,7 +12,6 @@ matrix:
         - sudo systemctl restart mysql
         - sudo mysql_upgrade
         - mysql --version
-      before_install:
         - mysql -e 'CREATE DATABASE YesOKTest;'
       install:
         - cd backend/
