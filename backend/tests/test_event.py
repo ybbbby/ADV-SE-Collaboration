@@ -91,14 +91,50 @@ class TestEvent(unittest.TestCase):
         event.user_email = "fake@test.com"
         self.assertRaises(mysql.connector.Error, Event.create_event, event)
 
+    def test_create_event_3_boundary(self):
+        """
+        Test create_event
+        Event name at boundary 50
+        """
+        event = create_event()
+        event.name = "event" * 10 # length=50
+        event_id = Event.create_event(event)
+        self.event_ids.append(event_id)
+        ret_event = Event.get_event_by_id(event_id, event.user_email)
+        self.assertEqual(ret_event.event_id, event_id)
+        self.assertEqual(ret_event.user_email, event.user_email)
+        self.assertEqual(ret_event.name, event.name)
+        self.assertEqual(ret_event.address, event.address)
+        self.assertEqual(ret_event.time, event.time)
+        self.assertAlmostEqual(ret_event.longitude, event.longitude)
+        self.assertAlmostEqual(ret_event.latitude, event.latitude)
+
     def test_create_event_3(self):
         """
         Test create_event
         Event name too long
         """
         event = create_event()
-        event.name = "event" * 20
+        event.name = "event" * 10 + "1" # length=51
         self.assertRaises(mysql.connector.Error, Event.create_event, event)
+
+    def test_create_event_4_boundary(self):
+        """
+        Test create_event
+        Address length at boundary 200
+        """
+        event = create_event()
+        event.address = "aa" * 100
+        event_id = Event.create_event(event)
+        self.event_ids.append(event_id)
+        ret_event = Event.get_event_by_id(event_id, event.user_email)
+        self.assertEqual(ret_event.event_id, event_id)
+        self.assertEqual(ret_event.user_email, event.user_email)
+        self.assertEqual(ret_event.name, event.name)
+        self.assertEqual(ret_event.address, event.address)
+        self.assertEqual(ret_event.time, event.time)
+        self.assertAlmostEqual(ret_event.longitude, event.longitude)
+        self.assertAlmostEqual(ret_event.latitude, event.latitude)
 
     def test_create_event_4(self):
         """
@@ -106,8 +142,26 @@ class TestEvent(unittest.TestCase):
         Address length too long
         """
         event = create_event()
-        event.name = "address" * 200
+        event.address = "aa" * 100 + "1"
         self.assertRaises(mysql.connector.Error, Event.create_event, event)
+
+    def test_create_event_5_boundary(self):
+        """
+        Test create_event
+        Description length at boundary 600
+        """
+        event = create_event()
+        event.description = "aaabbb" * 100
+        event_id = Event.create_event(event)
+        self.event_ids.append(event_id)
+        ret_event = Event.get_event_by_id(event_id, event.user_email)
+        self.assertEqual(ret_event.event_id, event_id)
+        self.assertEqual(ret_event.user_email, event.user_email)
+        self.assertEqual(ret_event.name, event.name)
+        self.assertEqual(ret_event.address, event.address)
+        self.assertEqual(ret_event.time, event.time)
+        self.assertAlmostEqual(ret_event.longitude, event.longitude)
+        self.assertAlmostEqual(ret_event.latitude, event.latitude)
 
     def test_create_event_5(self):
         """
@@ -115,8 +169,26 @@ class TestEvent(unittest.TestCase):
         Description length too long
         """
         event = create_event()
-        event.description = "description" * 600
+        event.description = "aaabbb" * 100 + '1'
         self.assertRaises(mysql.connector.Error, Event.create_event, event)
+
+    def test_create_event_6_boundary(self):
+        """
+        Test create_event
+        Image path length at boundary 200
+        """
+        event = create_event()
+        event.image = "http://path.com/1234" * 10
+        event_id = Event.create_event(event)
+        self.event_ids.append(event_id)
+        ret_event = Event.get_event_by_id(event_id, event.user_email)
+        self.assertEqual(ret_event.event_id, event_id)
+        self.assertEqual(ret_event.user_email, event.user_email)
+        self.assertEqual(ret_event.name, event.name)
+        self.assertEqual(ret_event.address, event.address)
+        self.assertEqual(ret_event.time, event.time)
+        self.assertAlmostEqual(ret_event.longitude, event.longitude)
+        self.assertAlmostEqual(ret_event.latitude, event.latitude)
 
     def test_create_event_6(self):
         """
@@ -124,8 +196,26 @@ class TestEvent(unittest.TestCase):
         Image path length too long
         """
         event = create_event()
-        event.image = "http://path.com/123" * 200
+        event.image = "http://path.com/1234" * 10 + "1"
         self.assertRaises(mysql.connector.Error, Event.create_event, event)
+
+    def test_create_event_7_boundary(self):
+        """
+        Test create_event
+        Category length at boundary 20
+        """
+        event = create_event()
+        event.category = "aa" * 10
+        event_id = Event.create_event(event)
+        self.event_ids.append(event_id)
+        ret_event = Event.get_event_by_id(event_id, event.user_email)
+        self.assertEqual(ret_event.event_id, event_id)
+        self.assertEqual(ret_event.user_email, event.user_email)
+        self.assertEqual(ret_event.name, event.name)
+        self.assertEqual(ret_event.address, event.address)
+        self.assertEqual(ret_event.time, event.time)
+        self.assertAlmostEqual(ret_event.longitude, event.longitude)
+        self.assertAlmostEqual(ret_event.latitude, event.latitude)
 
     def test_create_event_7(self):
         """
@@ -133,7 +223,7 @@ class TestEvent(unittest.TestCase):
         Category length too long
         """
         event = create_event()
-        event.category = "category" * 200
+        event.category = "aa" * 10 + "1"
         self.assertRaises(mysql.connector.Error, Event.create_event, event)
 
     def test_delete_event_1(self):
