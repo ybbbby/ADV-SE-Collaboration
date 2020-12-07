@@ -1,10 +1,10 @@
 export default [
   {
-    name: 'Deku',
+    username: 'Deku',
     email: 'Deku@hero.com',
   },
   {
-    name: 'Zenitsu',
+    username: 'Zenitsu',
     email: 'Zenitsu@thunder.com',
   },
 ]

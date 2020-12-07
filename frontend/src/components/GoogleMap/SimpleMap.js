@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React, { Component } from 'react'
 import GoogleMapReact from 'google-map-react'
 import Crendential from '../../credential'

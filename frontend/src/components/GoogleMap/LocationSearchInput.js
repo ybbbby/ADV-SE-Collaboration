@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React from 'react'
 import Crendential from '../../credential'
 import PlacesAutocomplete from 'react-places-autocomplete'

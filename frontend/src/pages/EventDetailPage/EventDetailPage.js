@@ -20,7 +20,7 @@ import { format } from 'date-fns'
 import MuiAlert from '@material-ui/lab/Alert'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import ShareIcon from '@material-ui/icons/Share'
-import useRouter from 'use-react-router'
+import { useRouteMatch } from 'react-router-dom'
 import LoginModal from '../../components/LoginModal/LoginModal'
 import { red } from '@material-ui/core/colors'
 import ShareModal from '../../components/ShareModal/ShareModal'
@@ -65,8 +65,8 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function EventDetail() {
-  const router = useRouter()
-  const { eventID } = router.match.params
+  const router = useRouteMatch()
+  const { eventID } = router.params
   const user = localStorage.getItem('userEmail')
   const [like, setLike] = useState(false)
   const [attend, setAttend] = useState(false)
@@ -144,6 +144,7 @@ export default function EventDetail() {
     return () => (isSubscribed = false)
   }, [eventID])
 
+  /* istanbul ignore next */
   const UpdateInfo = (t, newValue) => {
     const requestForm = new FormData()
     requestForm.append('Type', t)
@@ -211,10 +212,9 @@ export default function EventDetail() {
         setServerity('success')
         setAlertOpen(true)
         getEventAttendees(eventID).then((data) => {
-          if (!data) {
-            return
+          if (data) {
+            setParticipants(data)
           }
-          setParticipants(data)
         })
       } else {
         setfailInfo('Fail to update due to connection error with server')
@@ -224,15 +224,14 @@ export default function EventDetail() {
     })
   }
 
+  /* istanbul ignore next */
   const handleClose = (value) => {
     setOpenInput(false)
     if (!value) {
       return
     }
     console.log(value)
-    if (type === 1) {
-      UpdateInfo('time', value)
-    } else if (type === 2) {
+    if (type === 2) {
       UpdateInfo('time', value)
     } else if (type === 3) {
       UpdateInfo('description', value)
@@ -256,10 +255,6 @@ export default function EventDetail() {
   }
 
   const clickLike = () => {
-    if (!user) {
-      setLoginOpen(true)
-      return
-    }
     const currentStatus = like
     const color = currentStatus ? 'rgba(0, 0, 0, 0.54)' : red[500]
     postLike(eventID, !currentStatus).then((res) => {
@@ -274,8 +269,6 @@ export default function EventDetail() {
           setServerity('info')
         }
         setAlertOpen(true)
-      } else {
-        console.error('ababa')
       }
     })
   }
@@ -296,9 +289,14 @@ export default function EventDetail() {
 
       <Grid container spacing={2}>
         <Grid item xs={4}>
-          <IconButton aria-label="add to favorites" onClick={clickLike}>
-            <FavoriteIcon style={{ color: likeButtonColor }} />
-          </IconButton>
+          {!user ? (
+            <></>
+          ) : (
+            <IconButton aria-label="add to favorites" onClick={clickLike}>
+              <FavoriteIcon style={{ color: likeButtonColor }} />
+            </IconButton>
+          )}
+
           <IconButton
             aria-label="share"
             onClick={() => {
@@ -307,18 +305,24 @@ export default function EventDetail() {
           >
             <ShareIcon />
           </IconButton>
-          <IconButton
-            aria-label="check participants"
-            onClick={() => {
-              setParticipantsOpen(true)
-            }}
-          >
-            <PeopleIcon />
-          </IconButton>
+          {!user ? (
+            <></>
+          ) : (
+            <IconButton
+              aria-label="check participants"
+              onClick={() => {
+                setParticipantsOpen(true)
+              }}
+            >
+              <PeopleIcon />
+            </IconButton>
+          )}
         </Grid>
         <Grid item xs={4}></Grid>
         <Grid item xs={4}>
-          {isAuthor ? (
+          {!user ? (
+            <></>
+          ) : isAuthor ? (
             <Button
               variant="contained"
               color="primary"
@@ -490,7 +494,10 @@ export default function EventDetail() {
           {failInfo}
         </Alert>
       </Snackbar>
-      <LoginModal handleClose={() => setLoginOpen(false)} open={loginOpen} />
+      <LoginModal
+        handleClose={/* istanbul ignore next */ () => setLoginOpen(false)}
+        open={loginOpen}
+      />
     </div>
   )
 }

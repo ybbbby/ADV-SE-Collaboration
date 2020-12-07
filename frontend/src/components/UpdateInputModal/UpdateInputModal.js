@@ -50,22 +50,25 @@ function UpdateInputModal(props) {
   const [newDescription, setNewDescription] = useState(description)
   const [newAddress, setNewAddress] = useState('')
   const [addressError, setAddressError] = useState(false)
+
+  /* istanbul ignore next */
   const handleDateChange = (date) => {
     setSelectedDate(date)
   }
+
   const handleDesChange = (des) => {
     setNewDescription(des.target.value)
   }
+
   const handleCloseWithNoUpdate = () => {
     handleClose()
     setSelectedDate(date)
     setNewDescription(description)
     setNewAddress('')
   }
+  /* istanbul ignore next */
   const handleCloseWithUpdate = () => {
-    if (type === 1) {
-      handleClose(selectedDate)
-    } else if (type === 2) {
+    if (type === 2) {
       handleClose(selectedDate)
     } else if (type === 3) {
       handleClose(newDescription)

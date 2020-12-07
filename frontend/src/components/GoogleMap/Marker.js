@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import React from 'react'
 import './Marker.css'
 import PropTypes from 'prop-types'

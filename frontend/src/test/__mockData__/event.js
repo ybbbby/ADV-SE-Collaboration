@@ -12,7 +12,7 @@ export default {
   longitude: '-73.956104',
   name: 'event name',
   num_likes: 0,
-  time: '2020-12-25 17:49:00',
+  time: '2021-12-25 17:49:00',
   user_email: 'test@columbia.edu',
   zipcode: '10025',
 }

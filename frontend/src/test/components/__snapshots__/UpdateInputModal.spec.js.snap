@@ -1,0 +1,156 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UpdateInputModal snapshot when date change 1`] = `
+<WithStyles(ForwardRef(Dialog))
+  aria-labelledby="form-dialog-title"
+  onClose={[Function]}
+  open={true}
+>
+  <WithStyles(ForwardRef(DialogTitle))
+    id="form-dialog-title"
+  >
+    <WithStyles(ForwardRef(IconButton))
+      aria-label="close"
+      className="makeStyles-closeButton-46"
+      onClick={[Function]}
+    >
+      <Memo([object Object]) />
+    </WithStyles(ForwardRef(IconButton))>
+  </WithStyles(ForwardRef(DialogTitle))>
+  <WithStyles(ForwardRef(DialogContent))
+    className="makeStyles-content-47"
+  >
+    <MuiPickersUtilsProvider
+      utils={[Function]}
+    >
+      <PickerWithState
+        allowKeyboardControl={true}
+        ampm={false}
+        disablePast={true}
+        id="time-picker"
+        invalidDateMessage="Invalid Date Format"
+        label="Change time"
+        maxDate={2100-01-01T00:00:00.000Z}
+        maxDateMessage="Date should not be after maximal date"
+        minDate={1900-01-01T00:00:00.000Z}
+        minDateMessage="Date should not be before minimal date"
+        onChange={[Function]}
+        openTo="date"
+        orientation="portrait"
+        showTabs={true}
+        value={1922-02-02T03:04:05.000Z}
+        views={
+          Array [
+            "year",
+            "date",
+            "hours",
+            "minutes",
+          ]
+        }
+        wider={true}
+      />
+    </MuiPickersUtilsProvider>
+  </WithStyles(ForwardRef(DialogContent))>
+  <WithStyles(ForwardRef(Button))
+    className="makeStyles-confirmButton-48"
+    color="primary"
+    onClick={[Function]}
+    variant="contained"
+  >
+    Confirm
+  </WithStyles(ForwardRef(Button))>
+</WithStyles(ForwardRef(Dialog))>
+`;
+
+exports[`UpdateInputModal snapshot when description change 1`] = `
+<WithStyles(ForwardRef(Dialog))
+  aria-labelledby="form-dialog-title"
+  onClose={[Function]}
+  open={true}
+>
+  <WithStyles(ForwardRef(DialogTitle))
+    id="form-dialog-title"
+  >
+    <WithStyles(ForwardRef(IconButton))
+      aria-label="close"
+      className="makeStyles-closeButton-46"
+      onClick={[Function]}
+    >
+      <Memo([object Object]) />
+    </WithStyles(ForwardRef(IconButton))>
+  </WithStyles(ForwardRef(DialogTitle))>
+  <WithStyles(ForwardRef(DialogContent))
+    className="makeStyles-content-47"
+  >
+    <Styled(MuiBox)
+      className="makeStyles-textInput-49"
+    >
+      <WithStyles(ForwardRef(TextField))
+        fullWidth={true}
+        id="standard-multiline-static"
+        inputProps={
+          Object {
+            "maxLength": 600,
+          }
+        }
+        label="Change event description"
+        margin="normal"
+        multiline={true}
+        onChange={[Function]}
+        rows={7}
+        value="Hello"
+      />
+    </Styled(MuiBox)>
+  </WithStyles(ForwardRef(DialogContent))>
+  <WithStyles(ForwardRef(Button))
+    className="makeStyles-confirmButton-48"
+    color="primary"
+    onClick={[Function]}
+    variant="contained"
+  >
+    Confirm
+  </WithStyles(ForwardRef(Button))>
+</WithStyles(ForwardRef(Dialog))>
+`;
+
+exports[`UpdateInputModal snapshot when location change 1`] = `
+<WithStyles(ForwardRef(Dialog))
+  aria-labelledby="form-dialog-title"
+  onClose={[Function]}
+  open={true}
+>
+  <WithStyles(ForwardRef(DialogTitle))
+    id="form-dialog-title"
+  >
+    <WithStyles(ForwardRef(IconButton))
+      aria-label="close"
+      className="makeStyles-closeButton-46"
+      onClick={[Function]}
+    >
+      <Memo([object Object]) />
+    </WithStyles(ForwardRef(IconButton))>
+  </WithStyles(ForwardRef(DialogTitle))>
+  <WithStyles(ForwardRef(DialogContent))
+    className="makeStyles-content-47"
+  >
+    <Styled(MuiBox)
+      className="makeStyles-addressInput-50"
+    >
+      <LocationSearchInput
+        address=""
+        error={false}
+        setAddress={[Function]}
+        setError={[Function]}
+      />
+    </Styled(MuiBox)>
+  </WithStyles(ForwardRef(DialogContent))>
+  <WithStyles(ForwardRef(Button))
+    className="makeStyles-confirmButton-48"
+    color="primary"
+    onClick={[Function]}
+    variant="contained"
+  >
+    Confirm
+  </WithStyles(ForwardRef(Button))>
+</WithStyles(ForwardRef(Dialog))>
+`;
