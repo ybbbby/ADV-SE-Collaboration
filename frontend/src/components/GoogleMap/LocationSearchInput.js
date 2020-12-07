@@ -1,6 +1,5 @@
 /* istanbul ignore file */
 import React from 'react'
-import Crendential from '../../credential'
 import PlacesAutocomplete from 'react-places-autocomplete'
 import { TextField } from '@material-ui/core'
 import PropTypes from 'prop-types'
@@ -35,7 +34,8 @@ class LocationSearchInput extends React.Component {
     gmapScriptEl.id = 'IamOneAndTheOnly'
     gmapScriptEl.src =
       `https://maps.googleapis.com/maps/api/js?key=` +
-      Crendential.key +
+      // eslint-disable-next-line no-undef
+      process.env.REACT_APP_GMAP_KEY +
       `&libraries=places&callback=initMap`
     document
       .querySelector(`body`)

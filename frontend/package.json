@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "set PORT=2000 & react-scripts start",
+    "start": "PORT=2000 react-scripts start",
     "build": "react-scripts build",
     "test": "jest",
     "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",

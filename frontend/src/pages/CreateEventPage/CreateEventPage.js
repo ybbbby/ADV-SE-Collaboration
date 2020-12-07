@@ -123,7 +123,7 @@ const CreateEventPage = (props) => {
       setTitleError(true)
       return
     }
-    if (!pictures[0]) {
+    if (!pictures || !pictures[0]) {
       setAlertText('Please upload the event picture.')
       setAlertOpen(true)
       return

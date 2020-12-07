@@ -47,13 +47,11 @@ export default function AlignItemsList(props) {
     eventHost,
   } = props
   const user = localStorage.getItem('userEmail')
-  console.log(user)
   const [text, setText] = useState('')
   const handleDataChange = (e) => {
     setText(e.target.value)
   }
   const handleKeyDown = (e) => {
-    console.log(e.keyCode)
     if (e.keyCode === 13) {
       handleSend()
     }
@@ -90,7 +88,6 @@ export default function AlignItemsList(props) {
           channel: eventHost,
           message: `${user} adds a new comment: ${text}`,
         })
-        console.log(id)
         setComments([
           {
             user: user,

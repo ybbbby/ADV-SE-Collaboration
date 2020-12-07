@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 import React, { Component } from 'react'
 import GoogleMapReact from 'google-map-react'
-import Crendential from '../../credential'
 import Marker from './Marker'
 import PropTypes from 'prop-types'
 
@@ -23,7 +22,8 @@ class SimpleMap extends Component {
       // Important! Always set the container height explicitly
       <div style={{ height: '30vh', width: '100%' }}>
         <GoogleMapReact
-          bootstrapURLKeys={{ key: Crendential.key }}
+          // eslint-disable-next-line no-undef
+          bootstrapURLKeys={{ key: process.env.REACT_APP_GMAP_KEY }}
           center={this.props.center ? this.props.center : this.state.center}
           defaultZoom={this.state.zoom}
         >

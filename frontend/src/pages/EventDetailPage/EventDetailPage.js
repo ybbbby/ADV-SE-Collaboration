@@ -112,7 +112,6 @@ export default function EventDetail() {
       if (!data || !isSubscribed) {
         return
       }
-      console.log(data)
       setAddress(data.address)
       setCenter({
         lat: Number(data.latitude),
