@@ -43,6 +43,8 @@ def index():
     Display homepage
     :return: index.html
     """
+    if config.TRAVIS:
+        return "", status.HTTP_200_OK
     return app.send_static_file('index.html')
 
 
@@ -53,6 +55,8 @@ def not_found(event):
     :return: index.html
     """
     print(event)
+    if config.TRAVIS:
+        return "", status.HTTP_200_OK
     return app.send_static_file('index.html')
 
 
