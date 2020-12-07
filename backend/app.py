@@ -54,7 +54,6 @@ def not_found(event):
     Handle 404
     :return: index.html
     """
-    print(event)
     if config.TRAVIS:
         return "", status.HTTP_200_OK
     return app.send_static_file('index.html')

@@ -19,7 +19,7 @@ matrix:
         - pip install -r requirements.txt
       script:
         - export PYTHONPATH=`pwd`:$PYTHONPATH
-        - pytest
+        - pytest --cov=. tests
 
     - language: node_js
       node_js:

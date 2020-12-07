@@ -9,3 +9,4 @@ backend/build
 **/.vscode
 **/.pytest_cache
 *.pyc
+.coverage
