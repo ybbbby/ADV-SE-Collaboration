@@ -11,7 +11,7 @@ describe('test getEventAttendees api', () => {
     fetch.mockResponseOnce(JSON.stringify(mockEvent))
     getEventAttendees('1605497505188481').then((data) => {
       expect(data).toBeDefined()
-      expect(data[0].name).toEqual('Deku')
+      expect(data[0].username).toEqual('Deku')
     })
   })
 

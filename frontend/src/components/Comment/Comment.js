@@ -41,7 +41,6 @@ export default function AlignItemsList(props) {
     setfailInfo,
     setServerity,
     setAlertOpen,
-    setLoginOpen,
     eventId,
     comments,
     setComments,
@@ -53,6 +52,7 @@ export default function AlignItemsList(props) {
     setText(e.target.value)
   }
   const handleKeyDown = (e) => {
+    console.log(e.keyCode)
     if (e.keyCode === 13) {
       handleSend()
     }
@@ -62,6 +62,7 @@ export default function AlignItemsList(props) {
       if (data) {
         var array = [...comments]
         for (var i = 0; i < array.length; i++) {
+          /* istanbul ignore else */
           if (array[i].id == id) {
             array.splice(i, 1)
             setComments(array)
@@ -78,10 +79,6 @@ export default function AlignItemsList(props) {
     })
   }
   const handleSend = () => {
-    if (!user) {
-      setLoginOpen(true)
-      return
-    }
     const requestForm = new FormData()
     requestForm.append('Content', text)
     const date = new Date()
@@ -228,8 +225,7 @@ AlignItemsList.propTypes = {
   setfailInfo: PropTypes.func.isRequired,
   setServerity: PropTypes.func.isRequired,
   setAlertOpen: PropTypes.func.isRequired,
-  setLoginOpen: PropTypes.func.isRequired,
-  eventId: PropTypes.string.isRequired,
+  eventId: PropTypes.string,
   comments: PropTypes.any,
   setComments: PropTypes.func,
   eventHost: PropTypes.string.isRequired,

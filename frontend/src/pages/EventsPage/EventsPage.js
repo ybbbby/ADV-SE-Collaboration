@@ -257,7 +257,10 @@ export default function EventsPage() {
           </Grid>
         </Box>
       </Container>
-      <LoginModal handleClose={() => setLoginOpen(false)} open={loginOpen} />
+      <LoginModal
+        handleClose={/* istanbul ignore next */ () => setLoginOpen(false)}
+        open={loginOpen}
+      />
     </div>
   )
 }

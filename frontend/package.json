@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "PORT=2000 react-scripts start",
+    "start": "set PORT=2000 & react-scripts start",
     "build": "react-scripts build",
     "test": "jest",
     "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",
@@ -28,6 +28,7 @@
     "goeasy": "^1.1.1",
     "google-map-react": "^2.1.9",
     "google-maps-react": "^2.0.6",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "26.6.0",
     "jest-fetch-mock": "^3.0.3",
     "react": "^16.8.0",
@@ -39,7 +40,6 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "latest",
     "react-transition-group": "^4.4.1",
-    "socket.io-client": "^3.0.3",
     "use-react-router": "^1.0.7"
   },
   "browserslist": {
@@ -72,6 +72,10 @@
     ],
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
-    ]
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less)$": "identity-obj-proxy"
+    }
   }
 }
