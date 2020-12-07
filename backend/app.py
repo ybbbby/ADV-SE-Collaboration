@@ -150,8 +150,10 @@ def get_event_by_id(event_id):
     :param event_id: event id
     :return: json of the event
     """
-    user_info = google_auth.get_user_info()
-    email = user_info["email"]
+    email = None
+    if google_auth.is_logged_in():
+        user_info = google_auth.get_user_info()
+        email = user_info["email"]
     try:
         event = Event.get_event_by_id(event_id, email)
         if not event:
