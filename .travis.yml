@@ -1,5 +1,16 @@
 matrix:
   include:
+    - language: node_js
+      node_js:
+        - 14
+      before_script:
+        - cd frontend
+        - yarn install
+      script:
+        - yarn test --coverage --REACT_APP_GMAP_KEY=$GMAP_KEY
+      after_success:
+        - yarn coveralls
+
     - language: python
       python: 3.7
       services:
@@ -20,18 +31,9 @@ matrix:
       script:
         - export PYTHONPATH=`pwd`:$PYTHONPATH
         - pytest --cov=. tests
-
-    - language: node_js
-      node_js:
-        - 14
-      before_script:
-        - cd frontend
-        - yarn install
-      script:
-        - yarn test --coverage
-      after_script:
-        - COVERALLS_REPO_TOKEN=1zhoh7CB1VGzg1Z2BC1R6DuVe8kTBObpP yarn coveralls
+      after_success:
+        - coveralls
 
 notifications:
-  email:
-    - dq2146@columbia.edu
+  webhooks:
+    - https://coveralls.io/webhook

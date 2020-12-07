@@ -80,7 +80,6 @@ export default function EventsPage() {
   const filterEvents = (key1, key2, key3) => {
     const hostKey = key3 ? 'host' : 'all'
     const key = `${key1},${key2},${hostKey}`
-    console.log(key)
     if (cache.current[key]) {
       setEventList(cache.current[key])
     } else {
