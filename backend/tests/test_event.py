@@ -226,7 +226,7 @@ class TestEvent(unittest.TestCase):
                                                                       "longitude": longitude,
                                                                       "latitude": latitude}, event_id)
 
-    def test_get_event_id1(self):
+    def test_get_event_id_1(self):
         """
         Test get_event_id
         Test case1: event id does not exist
@@ -235,10 +235,10 @@ class TestEvent(unittest.TestCase):
         event = Event.get_event_by_id(event_id)
         self.assertIsNone(event)
 
-    def test_get_event_id2(self):
+    def test_get_event_id_2(self):
         """
         Test get_event_id
-        Test case2: get event not exists
+        Test case2: get event exists
         """
         event = create_event()
         event_id = Event.create_event(event)
@@ -289,7 +289,7 @@ class TestEvent(unittest.TestCase):
     def test_get_all_event_liked_by_user_1(self):
         """
         Test get_all_event_liked_by_user
-        Case2: user has liked some events
+        Case1: user exists, and user has liked some events
         """
 
         latitude = 40.730610
@@ -375,6 +375,24 @@ class TestEvent(unittest.TestCase):
         for res in result:
             self.assertTrue(res.event_id in self.event_ids)
         self.assertEqual(5, len(result))
+
+    def test_get_all_history_event_by_user_2(self):
+        """
+        Test get_all_history_event_by_user
+        Case2: user does not have  history events
+        """
+
+        result = Event.get_all_history_event_by_user(self.useremail)
+        self.assertEqual(0, len(result))
+
+    def test_get_all_history_event_by_user_3(self):
+        """
+        Test get_all_history_event_by_user
+        Case3: user not exist
+        """
+
+        result = Event.get_all_history_event_by_user("fakeuser@test.com")
+        self.assertEqual(0, len(result))
 
     def test_get_all_event_joined_by_user_1(self):
         """
