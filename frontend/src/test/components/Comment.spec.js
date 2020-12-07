@@ -15,6 +15,7 @@ jest.mock('../../global', () => {
 describe('Comment', () => {
   beforeEach(() => {
     fetch.resetMocks()
+    localStorage.clear()
   })
   test('render comment unsuccessfully', async () => {
     let failInfo = ''
@@ -154,7 +155,7 @@ describe('Comment', () => {
     const setAlertOpen = jest.fn((a) => (alertOpen = a))
     const setLoginOpen = jest.fn((l) => (loginOpen = l))
     const setComments = jest.fn((c) => (comments = c))
-    const { queryByText, getByPlaceholderText, getByRole } = render(
+    const { queryByPlaceholderText } = render(
       <Comment
         setfailInfo={setfailInfo}
         setServerity={setServerity}
@@ -166,17 +167,8 @@ describe('Comment', () => {
         eventHost={'deku'}
       />
     )
-    fireEvent.change(getByPlaceholderText('Be the first one to comment!'), {
-      target: { value: 'Deku The hero' },
-    })
-    expect(queryByText('Deku The hero')).toBeDefined()
-    fireEvent.keyDown(getByRole('textbox', { name: '' }), {
-      key: 'Enter',
-      keyCode: 13,
-      charCode: 13,
-    })
     await waitFor(() => {
-      expect(queryByText('Deku The hero')).toBeNull()
+      expect(queryByPlaceholderText('Be the first one to comment!')).toBeNull()
       expect(comments.length).toEqual(0)
       expect(failInfo).toEqual('')
       expect(serverity).toEqual('')
