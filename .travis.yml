@@ -13,6 +13,7 @@ matrix:
         - sudo mysql_upgrade
         - mysql --version
         - mysql -e 'CREATE DATABASE YesOKTest;'
+        - mysql -e 'SET GLOBAL log_bin_trust_function_creators = 1;'
       install:
         - cd backend/
         - pip install -r requirements.txt
