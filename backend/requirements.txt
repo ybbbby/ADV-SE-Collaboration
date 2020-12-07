@@ -50,7 +50,7 @@ requests==2.25.0
 rsa==3.4.2
 s3transfer==0.3.2
 simplejson==3.17.2
-six
+six==1.13
 toml==0.10.2
 typed-ast==1.4.1
 uritemplate==3.0.1
