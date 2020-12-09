@@ -28,7 +28,7 @@ if not config.TRAVIS:
     smtp_obj = smtplib.SMTP('smtp.gmail.com', 587)
     smtp_obj.starttls()
     smtp_obj.login(config.SMTP_EMAIL, config.SMTP_PWD)
-LINK = "http://yes-ok.herokuapp.com"
+LINK = "https://yes-ok.herokuapp.com"
 app.secret_key = config.FN_FLASK_SECRET_KEY
 app.register_blueprint(google_auth.app)
 clients = {}
