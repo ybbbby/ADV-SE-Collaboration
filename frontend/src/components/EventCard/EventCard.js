@@ -186,7 +186,7 @@ function EventCard(props) {
         </Card>
       </Badge>
       <ShareModal
-        url={`http://yes-ok.herokuapp.com/#/event/${config.event_id}`}
+        url={`https://yes-ok.herokuapp.com/#/event/${config.event_id}`}
         handleClose={() => setShareModalOpen(false)}
         open={shareModalOpen}
       />

@@ -484,7 +484,7 @@ export default function EventDetail() {
         participants={participants}
       />
       <ShareModal
-        url={`http://yes-ok.herokuapp.com/#/event/${eventID}`}
+        url={`https://yes-ok.herokuapp.com/#/event/${eventID}`}
         handleClose={() => setShareModalOpen(false)}
         open={shareModalOpen}
       />
