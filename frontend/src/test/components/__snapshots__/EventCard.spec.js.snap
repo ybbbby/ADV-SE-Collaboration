@@ -97,7 +97,7 @@ exports[`EventCard snapshot when logged in 1`] = `
   <ShareModal
     handleClose={[Function]}
     open={false}
-    url="http://yes-ok.herokuapp.com/#/event/160685996825045"
+    url="https://yes-ok.herokuapp.com/#/event/160685996825045"
   />
   <WithStyles(ForwardRef(Snackbar))
     autoHideDuration={3000}
@@ -211,7 +211,7 @@ exports[`EventCard snapshot when not logged in 1`] = `
   <ShareModal
     handleClose={[Function]}
     open={false}
-    url="http://yes-ok.herokuapp.com/#/event/160685996825045"
+    url="https://yes-ok.herokuapp.com/#/event/160685996825045"
   />
   <WithStyles(ForwardRef(Snackbar))
     autoHideDuration={3000}
