@@ -5,6 +5,8 @@ from typing import List
 import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
+import traceback
+import config
 
 
 def send(smtp_obj: 'SMTP', title: str, recipients: List, content: str, hide: bool):
@@ -16,7 +18,9 @@ def send(smtp_obj: 'SMTP', title: str, recipients: List, content: str, hide: boo
     :param content: email content
     :param hide: if recipients address need to be hidden
     """
-
+    smtp_obj = smtplib.SMTP('smtp.gmail.com', 587)
+    smtp_obj.starttls()
+    smtp_obj.login(config.SMTP_EMAIL, config.SMTP_PWD)
     sender = "no-reply@yesok.com"
     msg = MIMEText(content, 'html')
     msg["From"] = str(Header('YesOKGroup <no-reply@yesok.com>'))
@@ -28,5 +32,5 @@ def send(smtp_obj: 'SMTP', title: str, recipients: List, content: str, hide: boo
     try:
         smtp_obj.sendmail(sender, recipients, msg.as_string())
     except smtplib.SMTPException:
-        print("Email send error")
-    # smtp_obj.quit()
+        traceback.print_exc()
+    smtp_obj.quit()
