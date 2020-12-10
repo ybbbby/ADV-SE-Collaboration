@@ -348,7 +348,7 @@ def join_notification(recipients, event):
     :param event: event object
     """
     title = "You have registered the event successfully!"
-    event_link = LINK + "/event/" + event.event_id
+    event_link = LINK + "event/" + event.event_id
     content = """
                 <p>You have registered the event {name}  
                 hosted by {host} successfully! To see details, please
@@ -366,7 +366,7 @@ def delete_notification(recipients, event):
     :param event: event object
     """
     title = "The event you registered is canceled"
-    event_link = LINK + "/#/event/" + event.event_id
+    event_link = LINK + "event/" + event.event_id
     content = """
             <p>Unfortunately, the event {name} you 
             registered is canceled. To see details, please
